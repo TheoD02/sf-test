@@ -1,0 +1,26 @@
+meta {
+  name: Patch
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{url}}/api/articles/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: {{articleId}}
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+body:json {
+  {
+    "title": "cool nah ?",
+    "content": "cool content"
+  }
+}

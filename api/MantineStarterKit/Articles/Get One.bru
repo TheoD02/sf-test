@@ -1,0 +1,15 @@
+meta {
+  name: Get One
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/api/articles/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: {{articleId}}
+}

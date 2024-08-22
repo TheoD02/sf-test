@@ -64,6 +64,31 @@ RUN set -eux; \
 
 COPY --link frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
+# Install fish shell
+ARG XDG_CONFIG_HOME=/home/www-data/.config
+ENV XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
+
+ARG XDG_DATA_HOME=/home/www-data/.local/share
+ENV XDG_DATA_HOME=${XDG_DATA_HOME}
+
+RUN mkdir -p ${XDG_CONFIG_HOME}/fish
+RUN mkdir -p ${XDG_DATA_HOME}
+
+RUN apt-get update && apt-get install -y fish
+
+# Init non-root user
+ARG USER=www-data
+
+# Remove default user and group
+RUN deluser www-data || true \
+    && delgroup www-data || true
+
+# Create new user and group with the same id as the host user
+RUN groupadd -g 1000 www-data \
+    && useradd -u 1000 -ms /bin/bash -g www-data www-data
+
+RUN chown -R ${USER}:${USER} /home /tmp /app /home/${USER} ${XDG_CONFIG_HOME} ${XDG_DATA_HOME}
+
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 
 # Prod FrankenPHP image

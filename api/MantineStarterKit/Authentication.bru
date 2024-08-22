@@ -1,0 +1,18 @@
+meta {
+  name: Authentication
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/auth
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@domain.tld",
+    "password": "admin"
+  }
+}
