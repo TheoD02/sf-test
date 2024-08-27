@@ -8,11 +8,10 @@ use Castor\Context;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use function Castor\context;
 use function Castor\finder;
+use function Castor\fingerprint;
 use function Castor\fs;
 use function Castor\hasher;
 use function Castor\io;
-use function Castor\run;
-use function TheoD\MusicAutoTagger\delayed_fingerprint;
 use function TheoD\MusicAutoTagger\root_context;
 use function TheoD\MusicAutoTagger\Runner\composer;
 
@@ -60,7 +59,7 @@ function install_tools(): void
 
         $needForceInstall = fs()->exists("{$toolDirectory}/vendor") === false;
 
-        delayed_fingerprint(
+        fingerprint(
             callback: static function () use ($toolName) {
                 io()->write(' Installing...');
                 composer(context()->withQuiet())
@@ -69,7 +68,8 @@ function install_tools(): void
                     ->add("--working-dir=\"/tools/{$toolName}\"")
                     ->run();
             },
-            fingerprint: fn() => getHash($toolDirectory),
+            id: "composer-{$toolName}",
+            fingerprint: getHash($toolDirectory),
             force: $needForceInstall
         );
         io()->writeln(' <info>OK</info>');

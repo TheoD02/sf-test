@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Castor\Attribute\AsArgument;
 use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
-use Symfony\Component\DependencyInjection\Container;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\DockerUtils;
 
@@ -13,14 +12,12 @@ use function Castor\Attribute\AsArgument;
 use function Castor\capture;
 use function Castor\context;
 use function Castor\finder;
+use function Castor\fingerprint;
 use function Castor\import;
 use function Castor\io;
-use function Castor\notify;
 use function Castor\run;
-use function TheoD\MusicAutoTagger\delayed_fingerprint;
 use function TheoD\MusicAutoTagger\docker;
 use function TheoD\MusicAutoTagger\fgp;
-use function TheoD\MusicAutoTagger\root_context;
 use function TheoD\MusicAutoTagger\Runner\composer;
 use function TheoD\MusicAutoTagger\Runner\pnpm;
 use function TheoD\MusicAutoTagger\Runner\qa;
@@ -41,7 +38,7 @@ function start(bool $force = false): void
     }
 
     if (
-        !delayed_fingerprint(
+        !fingerprint(
             callback: static fn() => docker()
                 ->compose(
                     '-f',
@@ -54,7 +51,8 @@ function start(bool $force = false): void
                     '--no-cache'
                 )
                 ->run(),
-            fingerprint: static fn() => fgp()->php_docker(),
+            id: 'docker',
+            fingerprint: fgp()->php_docker(),
             force: $force
         )
     ) {
@@ -77,16 +75,7 @@ function start(bool $force = false): void
 #[AsTask]
 function stop(): void
 {
-    docker()->compose(
-        '-f',
-        'compose.yaml',
-        '-f',
-        'compose.override.yaml',
-        '--profile',
-        'app',
-        'down',
-        '--remove-orphans',
-    )->run();
+    docker()->compose('--profile', 'app', 'down')->run();
 }
 
 #[AsTask]
@@ -104,9 +93,10 @@ function install(bool $force = false): void
     io()->title('Installing dependencies');
     io()->section('Composer');
     $forceVendor = $force || !is_dir(context()->workingDirectory . '/vendor');
-    if (!delayed_fingerprint(
+    if (!fingerprint(
         callback: static fn() => composer()->install()->run(),
-        fingerprint: static fn() => fgp()->composer(),
+        id: 'composer',
+        fingerprint: fgp()->composer(),
         force: $forceVendor || $force
     )) {
         io()->note('Composer dependencies are already installed.');
@@ -120,9 +110,10 @@ function install(bool $force = false): void
     if (pnpm()->hasPackageJson()) {
         io()->section('NPM');
         $forceNodeModules = $force || !is_dir(context()->workingDirectory . '/node_modules');
-        if (!delayed_fingerprint(
+        if (!fingerprint(
             callback: static fn() => pnpm()->install()->run(),
-            fingerprint: static fn() => fgp()->npm(),
+            id: 'npm',
+            fingerprint: fgp()->npm(),
             force: $forceNodeModules || $force
         )) {
             io()->note('NPM dependencies are already installed.');

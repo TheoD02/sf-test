@@ -10,3 +10,4 @@
 ###< symfony/framework-bundle ###
 
 tools/*/vendor
+/.castor/.castor.stub.php
