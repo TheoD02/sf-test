@@ -57,4 +57,10 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
 fi
 
+chmod +x /tools/bin/* || true
+ln -s /tools/bin/* /usr/local/bin/ || true
+
+# Add /tools/bin to PATH
+export PATH=$PATH:/tools/bin
+
 exec docker-php-entrypoint "$@"

@@ -46,7 +46,7 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
         io()->note('Docker containers are not running. Starting them.');
         start();
     } else {
-        if (fingerprint_exists(fgp()->php_docker()) === false) {
+        if (fingerprint_exists('docker', fgp()->php_docker()) === false) {
             io()->note(
                 'Some docker related files seems to has been changed. Please consider to restart the containers.'
             );
@@ -184,7 +184,7 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
     $outdatedDeps = [];
 
     if (is_file(root_context()->workingDirectory . '/composer.json')) {
-        if (fingerprint_exists(fgp()->composer()) === false) {
+        if (fingerprint_exists('composer', fgp()->composer()) === false) {
             $outdatedDeps[] = 'Composer';
         }
     }
@@ -193,7 +193,7 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
         is_file(root_context()->workingDirectory . '/package.json')
         || is_file(root_context()->workingDirectory . '/yarn.lock')
     ) {
-        if (fingerprint_exists(fgp()->npm()) === false) {
+        if (fingerprint_exists('npm', fgp()->npm()) === false) {
             $outdatedDeps[] = 'Node Modules';
         }
     }
