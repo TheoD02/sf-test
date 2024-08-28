@@ -22,7 +22,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	file \
 	gettext \
 	git \
-	&& rm -rf /var/lib/apt/lists/*
+    gosu \
+	;
+
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
 	install-php-extensions \
@@ -31,6 +34,7 @@ RUN set -eux; \
 		intl \
 		opcache \
 		zip \
+    	pdo_pgsql \
 	;
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
@@ -39,6 +43,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
 ###> recipes ###
+###> doctrine/doctrine-bundle ###
+###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
