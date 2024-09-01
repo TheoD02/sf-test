@@ -46,7 +46,7 @@ function qa_context(): Context
     return root_context()->withWorkingDirectory(__DIR__);
 }
 
-#[AsTask(name: 'tools:install')]
+#[AsTask(name: 'qa:install')]
 function install_tools(): void
 {
     io()->writeln('Checking tools installation');
@@ -62,11 +62,7 @@ function install_tools(): void
         fingerprint(
             callback: static function () use ($toolName) {
                 io()->write(' Installing...');
-                composer(context()->withQuiet())
-                    ->withContainerDefinition(ContainerDefinitionBag::tools($toolName))
-                    ->install()
-                    ->add("--working-dir=\"/tools/{$toolName}\"")
-                    ->run();
+                install_tool($toolName);
             },
             id: "composer-{$toolName}",
             fingerprint: getHash($toolDirectory),
@@ -77,7 +73,16 @@ function install_tools(): void
     io()->newLine();
 }
 
-#[AsTask(name: 'tools:update')]
+function install_tool(string $toolName): void
+{
+    composer(context()->withQuiet())
+        ->withContainerDefinition(ContainerDefinitionBag::tools($toolName))
+        ->install()
+        ->add("--working-dir=\"/tools/{$toolName}\"")
+        ->run();
+}
+
+#[AsTask(name: 'qa:update')]
 function update_tools(
     #[AsArgument]
     string $tool = '',
@@ -109,11 +114,7 @@ function update_tools(
 
         $containerDefinition = ContainerDefinitionBag::php();
         $containerDefinition->workingDirectory = "/tools/{$toolName}";
-        composer(qa_context()->withQuiet())
-            ->withContainerDefinition($containerDefinition)
-            ->update()
-            ->add("--working-dir=\"/tools/{$toolName}\"")
-            ->run();
+        install_tool($toolName);
         io()->writeln(' <info>OK</info>');
     }
 }
