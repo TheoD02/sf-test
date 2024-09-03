@@ -25,8 +25,8 @@ class Fingerprint
     public function composer(): string
     {
         return hasher()
-            ->writeFile(path('composer.json'))
-            ->writeFile(path('composer.lock'))
+            ->writeFile(path('composer.json', app_context()))
+            ->writeFile(path('composer.lock', app_context()))
             ->finish()
         ;
     }
@@ -34,8 +34,8 @@ class Fingerprint
     public function npm(): string
     {
         return hasher()
-            ->writeFile(path('package.json'))
-            ->writeFile(path('pnpm-lock.yaml'))
+            ->writeFile(path('package.json', app_context()))
+            ->writeFile(path('pnpm-lock.yaml', app_context()))
             ->finish()
         ;
     }

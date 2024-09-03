@@ -20,3 +20,9 @@ function root_context(): Context
         workingDirectory: ROOT_DIR
     );
 }
+
+#[AsContext]
+function app_context(): Context
+{
+    return root_context()->withWorkingDirectory(ROOT_DIR . '/app');
+}

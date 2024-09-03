@@ -5,7 +5,7 @@ services:
       context: .
       target: frankenphp_dev
     volumes:
-      - ./:/app
+      - ./app:/app
       - ./tools:/tools
       - ./.castor:/.castor
       - ~/.ssh:/home/www-data/.ssh:ro

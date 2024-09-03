@@ -9,6 +9,7 @@ use Castor\Event\AfterExecuteTaskEvent;
 use Castor\Event\BeforeExecuteTaskEvent;
 use Symfony\Component\Process\ExecutableFinder;
 
+use function Castor\app;
 use function Castor\context;
 use function Castor\fingerprint_exists;
 use function Castor\fs;
@@ -66,7 +67,7 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
         return;
     }
 
-    $destination = root_context()->workingDirectory;
+    $destination = app_context()->workingDirectory;
     if (is_file("{$destination}/composer.json") === false) {
         $response = http_request('GET', 'https://symfony.com/releases.json')->toArray();
         $versions = [
@@ -144,15 +145,15 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
 
     $deps = [];
 
-    if (is_file(root_context()->workingDirectory . '/composer.json')) {
-        $deps['Composer'] = root_context()->workingDirectory . '/vendor';
+    if (is_file(app_context()->workingDirectory . '/composer.json')) {
+        $deps['Composer'] = app_context()->workingDirectory . '/vendor';
     }
 
     if (
-        is_file(root_context()->workingDirectory . '/package.json')
-        || is_file(root_context()->workingDirectory . '/yarn.lock')
+        is_file(app_context()->workingDirectory . '/package.json')
+        || is_file(app_context()->workingDirectory . '/yarn.lock')
     ) {
-        $deps['Node Modules'] = root_context()->workingDirectory . '/node_modules';
+        $deps['Node Modules'] = app_context()->workingDirectory . '/node_modules';
     }
 
     foreach (getToolDirectories() as $directoryName => $directoryFullPath) {
@@ -183,15 +184,15 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
     // Check if deps is latest
     $outdatedDeps = [];
 
-    if (is_file(root_context()->workingDirectory . '/composer.json')) {
+    if (is_file(app_context()->workingDirectory . '/composer.json')) {
         if (fingerprint_exists('composer', fgp()->composer()) === false) {
             $outdatedDeps[] = 'Composer';
         }
     }
 
     if (
-        is_file(root_context()->workingDirectory . '/package.json')
-        || is_file(root_context()->workingDirectory . '/yarn.lock')
+        is_file(app_context()->workingDirectory . '/package.json')
+        || is_file(app_context()->workingDirectory . '/yarn.lock')
     ) {
         if (fingerprint_exists('npm', fgp()->npm()) === false) {
             $outdatedDeps[] = 'Node Modules';
