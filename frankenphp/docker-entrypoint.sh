@@ -53,8 +53,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		fi
 	fi
 
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var /data /config /app
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var /data /config /app
+	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
+	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
 fi
 
-gosu 'www-data:www-data' docker-php-entrypoint "$@"
+exec docker-php-entrypoint "$@"
