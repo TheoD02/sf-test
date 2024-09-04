@@ -59,6 +59,8 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
+COPY --link --chmod=755 frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
+
 ENV APP_ENV=dev XDEBUG_MODE=off
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
@@ -116,6 +118,7 @@ RUN set -eux; \
 
 # copy sources
 COPY --link ./app ./
+RUN ls
 RUN rm -Rf frankenphp/
 
 RUN set -eux; \
