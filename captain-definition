@@ -1,5 +1,6 @@
 {
   "schemaVersion": 2,
+  "dockerComposeFilePath": "./compose.prod.yaml",
   "dockerfilePath": "./Dockerfile",
   "serviceName": "webapp",
   "containerHttpPort": "80"
