@@ -12,12 +12,12 @@ class Fingerprint
     {
         return hasher()
             ->writeFile(path('Dockerfile', root_context()))
-            ->writeFile(path('frankenphp/docker-entrypoint.sh', root_context()))
-            ->writeFile(path('frankenphp/Caddyfile', root_context()))
-            ->writeFile(path('frankenphp/worker.Caddyfile', root_context()))
-            ->writeFile(path('frankenphp/conf.d/10-app.ini', root_context()))
-            ->writeFile(path('frankenphp/conf.d/20-app.dev.ini', root_context()))
-            ->writeFile(path('frankenphp/conf.d/20-app.prod.ini', root_context()))
+            ->writeFile(path('.docker/frankenphp/docker-entrypoint.sh', root_context()))
+            ->writeFile(path('.docker/frankenphp/Caddyfile', root_context()))
+            ->writeFile(path('.docker/frankenphp/worker.Caddyfile', root_context()))
+            ->writeFile(path('.docker/frankenphp/conf.d/10-app.ini', root_context()))
+            ->writeFile(path('.docker/frankenphp/conf.d/20-app.dev.ini', root_context()))
+            ->writeFile(path('.docker/frankenphp/conf.d/20-app.prod.ini', root_context()))
             ->finish()
         ;
     }

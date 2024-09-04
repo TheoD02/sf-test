@@ -47,9 +47,9 @@ ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
-COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
-COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
+COPY --link ./.docker/frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
+COPY --link --chmod=755 ./.docker/frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY --link ./.docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
@@ -59,7 +59,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
-COPY --link --chmod=755 frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
+COPY --link --chmod=755 ./.docker/frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
 
 ENV APP_ENV=dev XDEBUG_MODE=off
 
@@ -70,7 +70,7 @@ RUN set -eux; \
 		xdebug \
 	;
 
-COPY --link frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
+COPY --link ./.docker/frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 # Install fish shell
 ARG XDG_CONFIG_HOME=/home/www-data/.config
@@ -107,8 +107,8 @@ ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY --link frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
-COPY --link frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
+COPY --link ./.docker/frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
+COPY --link ./.docker/frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
 # prevent the reinstallation of vendors at every changes in the source code
 COPY --link ./app/composer.* ./app/symfony.* ./
@@ -119,7 +119,7 @@ RUN set -eux; \
 # copy sources
 COPY --link ./app ./
 RUN ls
-RUN rm -Rf frankenphp/
+RUN rm -Rf ./.docker/frankenphp/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
