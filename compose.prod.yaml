@@ -5,6 +5,8 @@ services:
       context: .
       target: frankenphp_prod
     environment:
+      FRANKENPHP_CONFIG: 'worker ./public/index.php'
+      APP_RUNTIME: 'Runtime\\FrankenPhpSymfony\\Runtime'
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
