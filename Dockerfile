@@ -59,7 +59,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
-COPY --link --chmod=755 .docker/frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
+COPY --link .docker/frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
 
 ENV APP_ENV=dev XDEBUG_MODE=off
 
