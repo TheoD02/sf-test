@@ -16,6 +16,7 @@ use function Castor\fingerprint;
 use function Castor\import;
 use function Castor\io;
 use function Castor\run;
+use function TheoD\MusicAutoTagger\app_context;
 use function TheoD\MusicAutoTagger\docker;
 use function TheoD\MusicAutoTagger\fgp;
 use function TheoD\MusicAutoTagger\Runner\composer;
@@ -158,10 +159,10 @@ function shell(
 #[AsTask]
 function generate_domain_dir(string $domainName): void
 {
-    $srcDirectory = context()->workingDirectory . '/src';
+    $srcDirectory = app_context()->workingDirectory . '/src';
     $domainName = ucfirst($domainName);
 
-    $domainDirectory = $srcDirectory . '/' . $domainName;
+    $domainDirectory = "$srcDirectory/$domainName";
 
     if (is_dir($domainDirectory)) {
         io()->error("Domain directory {$domainName} already exists");
