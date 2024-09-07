@@ -1,0 +1,21 @@
+meta {
+  name: Patch
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{url}}/api/users/4
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+body:json {
+  {
+    "email": "test-patched@gmail.com"
+  }
+}

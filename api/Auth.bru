@@ -1,17 +1,13 @@
 meta {
-  name: Root
+  name: Auth
   type: http
-  seq: 2
+  seq: 3
 }
 
-get {
-  url: {{url}}/api/docs
+post {
+  url: {{url}}/auth
   body: json
-  auth: bearer
-}
-
-auth:bearer {
-  token: 
+  auth: none
 }
 
 body:json {

@@ -1,0 +1,21 @@
+meta {
+  name: Remove
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{url}}/api/users/4
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+body:json {
+  {
+    "email": "test-patched@gmail.com"
+  }
+}

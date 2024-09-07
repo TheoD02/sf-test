@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Factory\UserFactory;
@@ -8,11 +10,12 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         UserFactory::new()->create([
-            'email' => 'admin@example.com',
-            'password' => '$2y$10$2b2cU8CPhOTaKRmyFDkZo.1uUpQHN0wJaPeFBMd7bC0bXga18C3O2', // password
+            'email' => 'admin@domain.tld',
+            'password' => '$2y$13$2tqYsgWC3r/xtFMipQCvt.m1aJ4uvfjk4ng8dYW50SlGdiLCWgtT2', // adminyes
             'roles' => ['ROLE_ADMIN'],
         ]);
 

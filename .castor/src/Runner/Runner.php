@@ -244,12 +244,12 @@ class Runner
             $this->isDockerInteractive() ? '-i' : '',
             $this->isDockerTty() ? '-t' : '',
             ...$dockerEnvs,
-            sprintf('--user="%s"', $containerDefinition->user),
-            sprintf('-w "%s"', $containerDefinition->workingDirectory),
+            \sprintf('--user="%s"', $containerDefinition->user),
+            \sprintf('-w "%s"', $containerDefinition->workingDirectory),
             $containerDefinition->name,
             $this->dockerShell,
             '-c',
-            sprintf('"%s"', implode(' ', [...$baseCommands, ...$this->commands])),
+            \sprintf('"%s"', implode(' ', [...$baseCommands, ...$this->commands])),
         ];
 
         return $this->commands;

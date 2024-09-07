@@ -49,7 +49,7 @@ function start(bool $force = false): void
                     '--profile',
                     'app',
                     'build',
-//                    '--no-cache'
+                    //                    '--no-cache'
                 )
                 ->run(),
             id: 'docker',
@@ -162,7 +162,7 @@ function generate_domain_dir(string $domainName): void
     $srcDirectory = app_context()->workingDirectory . '/src';
     $domainName = ucfirst($domainName);
 
-    $domainDirectory = "$srcDirectory/$domainName";
+    $domainDirectory = "{$srcDirectory}/{$domainName}";
 
     if (is_dir($domainDirectory)) {
         io()->error("Domain directory {$domainName} already exists");
@@ -191,7 +191,7 @@ function generate_domain_dir(string $domainName): void
                 'Payload' => [],
                 'Query' => [],
                 'State' => [
-                    'State' => [],
+                    'Provider' => [],
                     'Processor' => [],
                 ],
             ],
@@ -324,7 +324,7 @@ function db_reset(): void
 {
     // Check if the database app exists
     $output = docker(context()->withQuiet())->compose(
-        "exec -it database sh -c \"psql -d app -c '\l'\""
+        "exec -it database sh -c \"psql -d app -c '\\l'\""
     )->run()->getOutput();
     if (str_contains($output, 'app')) {
         if (io()->confirm('The database "app" already exists. Do you want to drop it?', false) === false) {
