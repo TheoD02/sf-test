@@ -13,6 +13,7 @@ use function Castor\capture;
 use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint;
+use function Castor\fs;
 use function Castor\import;
 use function Castor\io;
 use function Castor\run;
@@ -103,6 +104,13 @@ function install(bool $force = false): void
         io()->note('Composer dependencies are already installed.');
     } else {
         io()->success('Composer dependencies installed');
+    }
+
+    io()->section('Generate auth Keypair');
+    if (fs()->exists(app_context()->workingDirectory . '/config/jwt/private.pem')) {
+        io()->note('Auth keypair already exists');
+    } else {
+        symfony()->console('lexik:jwt:generate-keypair')->run();
     }
 
     io()->section('QA tools');
