@@ -133,7 +133,7 @@ function install(bool $force = false): void
         pnpm()->add('run', 'build')->run();
     }
 
-    //    db_reset();
+    db_reset();
 
     //    notify('Dependencies installed');
 }
