@@ -13,3 +13,5 @@ if (method_exists(Dotenv::class, 'bootEnv')) {
 if ($_SERVER['APP_DEBUG']) {
     umask(0o000);
 }
+
+(new \Symfony\Component\Filesystem\Filesystem())->remove(__DIR__ . '/../var/cache/test');

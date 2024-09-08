@@ -18,11 +18,12 @@ class UserPostProcessor extends AbstractProcessor
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-    ) {
+    )
+    {
     }
 
     #[\Override]
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): UserResource
     {
         $user = $this->map($data, User::class);
 
