@@ -3,13 +3,37 @@
 # Versions
 FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
+FROM frankenphp_upstream as frankenphp_upstream_node
+
+WORKDIR /app
+
+# Install NVM
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 20.17.0
+
+RUN mkdir -p $NVM_DIR
+
+RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.1/install.sh | bash
+
+RUN source $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm && corepack use pnpm@9.9
 
 # Base FrankenPHP image
-FROM frankenphp_upstream AS frankenphp_base
+FROM frankenphp_upstream_node AS frankenphp_base
 
 WORKDIR /app
 

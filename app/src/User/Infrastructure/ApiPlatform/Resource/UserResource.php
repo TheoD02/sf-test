@@ -16,6 +16,7 @@ use App\User\Infrastructure\ApiPlatform\State\Processor\UserDeleteProcessor;
 use App\User\Infrastructure\ApiPlatform\State\Processor\UserPatchProcessor;
 use App\User\Infrastructure\ApiPlatform\State\Processor\UserPostProcessor;
 use App\User\Infrastructure\ApiPlatform\State\Provider\UserCollectionProvider;
+use App\User\Infrastructure\ApiPlatform\State\Provider\UserMeProvider;
 use App\User\Infrastructure\ApiPlatform\State\Provider\UserProvider;
 
 #[ApiResource(
@@ -23,6 +24,7 @@ use App\User\Infrastructure\ApiPlatform\State\Provider\UserProvider;
     operations: [
         new GetCollection(provider: UserCollectionProvider::class),
         new Get(provider: UserProvider::class),
+        new Get(uriTemplate: '/me', provider: UserMeProvider::class),
         new Post(input: CreateUserInput::class, processor: UserPostProcessor::class),
         new Patch(input: PatchUserInput::class, read: false, processor: UserPatchProcessor::class),
         new Delete(read: false, processor: UserDeleteProcessor::class),

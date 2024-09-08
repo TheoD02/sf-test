@@ -16,3 +16,13 @@ body:json {
     "password": "admin"
   }
 }
+
+script:post-response {
+  const body = res.getBody();
+  console.log(body);
+  const token = body.token;
+  
+  bru.setEnvVar("access_token", token);
+  
+  
+}

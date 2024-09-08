@@ -4,6 +4,8 @@ services:
     build:
       context: .
       target: frankenphp_dev
+    ports:
+      - "3151:3151" # React Hot Module
     volumes:
       - ./app:/app
       - ./tools:/tools
@@ -32,10 +34,10 @@ services:
     networks:
       - traefik
 
-###> symfony/mercure-bundle ###
-###< symfony/mercure-bundle ###
+  ###> symfony/mercure-bundle ###
+  ###< symfony/mercure-bundle ###
 
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database:
     ports:
       - "5433:5432"
