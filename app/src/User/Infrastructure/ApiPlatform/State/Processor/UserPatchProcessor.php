@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Infrastructure\ApiPlatform\State\Processor;
 
 use ApiPlatform\Metadata\Operation;
+use App\User\Domain\PermissionEnum;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Infrastructure\ApiPlatform\Payload\PatchUserInput;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
@@ -28,6 +29,8 @@ class UserPatchProcessor extends AbstractProcessor
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): UserResource
     {
         $user = $this->userRepository->find($uriVariables['id'] ?? null) ?? throw new NotFoundException();
+
+        $this->denyAccessUnlessGranted(PermissionEnum::UPDATE->value, $user);
 
         $this->map($data, $user);
 

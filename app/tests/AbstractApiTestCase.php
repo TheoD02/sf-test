@@ -23,7 +23,7 @@ class AbstractApiTestCase extends ApiTestCase
     protected static function getResponse(bool $collection = false): array
     {
         $response = self::$client->getResponse()->toArray();
-        
+
         if ($collection) {
             self::assertArrayHasKey('hydra:member', $response);
             $response = $response['hydra:member'];
@@ -68,8 +68,8 @@ class AbstractApiTestCase extends ApiTestCase
         $this->user = UserFactory::new()->withoutPersisting()->create([
             'email' => 'user@phpunit.com',
             'password' => 'test',
-            'roles' => $roles,
-        ]);
+            'roles' => array_map(static fn(string|\BackedEnum $role) => is_string($role) ? $role : $role->value, $roles),
+        ])->_real();
 
         self::$client->loginUser($this->user);
     }

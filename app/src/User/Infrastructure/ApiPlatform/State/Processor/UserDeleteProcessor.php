@@ -4,6 +4,7 @@ namespace App\User\Infrastructure\ApiPlatform\State\Processor;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\User\Domain\PermissionEnum;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Infrastructure\ApiPlatform\Payload\CreateUserInput;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
@@ -27,6 +28,7 @@ class UserDeleteProcessor extends AbstractProcessor
     {
         $user = $this->userRepository->find($uriVariables['id'] ?? null) ?? throw new NotFoundException();
 
+        $this->denyAccessUnlessGranted(PermissionEnum::DELETE->value, $user);
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();

@@ -5,6 +5,7 @@ namespace App\Tests\User;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Factory\UserFactory;
 use App\Tests\AbstractApiTestCase;
+use App\User\Domain\PermissionEnum;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Zenstruck\Foundry\Persistence\Proxy;
@@ -19,6 +20,7 @@ class UserResourceTest extends AbstractApiTestCase
     public function testGetUser(): void
     {
         // Arrange
+        $this->loginAsUser([PermissionEnum::GET_ONE]);
         UserFactory::new()->createOne([
             'email' => 'user1@test.test',
         ]);
@@ -37,6 +39,7 @@ class UserResourceTest extends AbstractApiTestCase
     public function testGetCollection(): void
     {
         // Arrange
+        $this->loginAsUser([PermissionEnum::GET_COLLECTION]);
         $users = UserFactory::new()->createMany(5);
 
         // Act
@@ -57,6 +60,7 @@ class UserResourceTest extends AbstractApiTestCase
     public function testCreateUser(): void
     {
         // Act
+        $this->loginAsUser([PermissionEnum::CREATE]);
         $this->request('POST', '/api/users', [
             'json' => [
                 'email' => 'test@test.com',
@@ -73,6 +77,7 @@ class UserResourceTest extends AbstractApiTestCase
     public function testUpdateUser(): void
     {
         // Arrange
+        $this->loginAsUser([PermissionEnum::UPDATE]);
         UserFactory::new()->createOne([
             'email' => 'old@test.com',
         ]);
@@ -97,6 +102,7 @@ class UserResourceTest extends AbstractApiTestCase
     public function testDeleteUser(): void
     {
         // Arrange
+        $this->loginAsUser([PermissionEnum::DELETE, 'ROLE_ADMIN']);
         UserFactory::new()->createOne();
 
         // Act
