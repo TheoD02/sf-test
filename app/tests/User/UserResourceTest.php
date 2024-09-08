@@ -31,9 +31,9 @@ final class UserResourceTest extends AbstractApiTestCase
         $this->request('GET', '/api/users/1');
 
         // Assert
-        $this->assertResponseIsSuccessful();
-        $this->assertMatchesResourceItemJsonSchema(UserResource::class);
-        $this->assertPartialResponseContent([
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(UserResource::class);
+        self::assertPartialResponseContent([
             'email' => 'user1@test.test',
         ]);
     }
@@ -49,13 +49,13 @@ final class UserResourceTest extends AbstractApiTestCase
 
         // Assert
         $response = self::getResponse(true);
-        $this->assertResponseIsSuccessful();
-        $this->assertMatchesResourceCollectionJsonSchema(UserResource::class);
-        $this->assertCount(5, $response);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceCollectionJsonSchema(UserResource::class);
+        self::assertCount(5, $response);
 
         foreach ($users as $index => $user) {
             $userResponse = $response[$index];
-            $this->assertSame($user->getEmail(), $userResponse['email']);
+            self::assertSame($user->getEmail(), $userResponse['email']);
         }
     }
 
@@ -72,8 +72,8 @@ final class UserResourceTest extends AbstractApiTestCase
         ]);
 
         // Assert
-        $this->assertResponseIsSuccessful();
-        $this->assertMatchesResourceItemJsonSchema(UserResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(UserResource::class);
     }
 
     public function testUpdateUser(): void
@@ -94,9 +94,9 @@ final class UserResourceTest extends AbstractApiTestCase
         ]);
 
         // Assert
-        $this->assertResponseIsSuccessful();
-        $this->assertMatchesResourceItemJsonSchema(UserResource::class);
-        $this->assertPartialResponseContent([
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(UserResource::class);
+        self::assertPartialResponseContent([
             'email' => 'new@test.com',
         ]);
     }
@@ -111,6 +111,6 @@ final class UserResourceTest extends AbstractApiTestCase
         $this->request('DELETE', '/api/users/1');
 
         // Assert
-        $this->assertResponseStatusCodeSame(204);
+        self::assertResponseStatusCodeSame(204);
     }
 }

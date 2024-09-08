@@ -16,6 +16,8 @@ use Rector\Php74\Rector\Assign\NullCoalescingOperatorRector;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\PHPUnit\AnnotationsToAttributes\Rector\Class_\AnnotationWithValueToAttributeRector;
 use Rector\PHPUnit\AnnotationsToAttributes\Rector\ClassMethod\DataProviderAnnotationToAttributeRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\PHPUnit\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
@@ -64,7 +66,6 @@ return RectorConfig::configure()
         removeUnusedImports: true,
     )
     ->withSets([
-        SymfonySetList::SYMFONY_64,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         DoctrineSetList::DOCTRINE_ORM_214,
@@ -75,11 +76,14 @@ return RectorConfig::configure()
         PHPUnitSetList::PHPUNIT_CODE_QUALITY,
 //        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
         LevelSetList::UP_TO_PHP_83,
+        SymfonySetList::SYMFONY_71,
     ])
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
+        PreferPHPUnitSelfCallRector::class,
     ])
     ->withSkip([
+        PreferPHPUnitThisCallRector::class,
         EncapsedStringsToSprintfRector::class,
         RenamePropertyToMatchTypeRector::class,
         NullCoalescingOperatorRector::class,
