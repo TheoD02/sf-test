@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
@@ -90,4 +91,5 @@ return RectorConfig::configure()
         AnnotationWithValueToAttributeRector::class,
         RenameVariableToMatchMethodCallReturnTypeRector::class,
         RemoveNonExistingVarAnnotationRector::class,
+        MakeInheritedMethodVisibilitySameAsParentRector::class,
     ]);

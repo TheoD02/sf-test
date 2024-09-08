@@ -25,7 +25,7 @@ class AbstractApiTestCase extends ApiTestCase
         self::assertEquals($expected, $response);
     }
 
-    private static function getResponse(bool $collection = false): array
+    public static function getResponse(bool $collection = false): array
     {
         $response = self::$client->getResponse()->toArray();
 
@@ -69,7 +69,7 @@ class AbstractApiTestCase extends ApiTestCase
             'password' => 'test',
             'roles' => array_map(
                 static fn (string|\BackedEnum $role): int|string => \is_string($role) ? $role : $role->value,
-                $roles
+                $roles,
             ),
         ])->_real();
 
