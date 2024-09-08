@@ -23,38 +23,52 @@ class Qa extends Runner
     public function __construct(
         ?Context $context = null,
         ?ContainerDefinition $containerDefinition = null,
-        bool $preventRunningUsingDocker = false
+        bool $preventRunningUsingDocker = false,
     ) {
         parent::__construct(
             context: $context,
             containerDefinition: $containerDefinition ?? ContainerDefinitionBag::php(),
-            preventRunningUsingDocker: $preventRunningUsingDocker
+            preventRunningUsingDocker: $preventRunningUsingDocker,
         );
 
         $this->addIf($containerDefinition?->name, '--container', $containerDefinition?->name);
     }
 
-    protected function preRunCommand(): void
+    #[AsTaskMethod(aliases: ['qa:phpunit'])]
+    public function phpunit(): Process
     {
-        if (self::$runOnce) {
-            return;
-        }
+        $this->disableInstall();
 
-        if (self::$runInstall) {
-            $this->install();
-        }
-
-        self::$runOnce = true;
-    }
-
-    public function install(): void
-    {
-        install_tools();
+        return $this
+            ->add('vendor/bin/phpunit', '--configuration', '/app/phpunit.xml.dist')
+            ->run()
+        ;
     }
 
     public function disableInstall(): void
     {
         self::$runInstall = false;
+    }
+
+    #[AsTaskMethod]
+    public function preCommit(): void
+    {
+        io()->title('Running QA tools - Pre-commit hook');
+
+        io()->section('Running ECS');
+        $this->ecs(fix: true);
+
+        io()->section('Running Rector');
+        $this->rector(fix: true);
+
+        io()->section('Running PHPStan');
+        $this->phpstan();
+
+        io()->section('Running PHParkitect');
+        $this->phparkitect();
+
+        io()->section('Running PHPMD');
+        $this->phpmd();
     }
 
     #[AsTaskMethod]
@@ -68,7 +82,17 @@ class Qa extends Runner
     }
 
     #[AsTaskMethod]
-    public function phpstan(bool $pro = false): Process
+    public function rector(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
+    {
+        $this->add('rector', 'process', '--clear-cache', '--config', '/tools/rector/rector.php');
+
+        $this->addIf(! $fix, '--dry-run');
+
+        return $this->run(qa_context()->withAllowFailure(! $fix));
+    }
+
+    #[AsTaskMethod]
+    public function phpstan(bool $pro = false, bool $watch = false): Process
     {
         $this->add('phpstan', 'clear-result-cache')->run();
 
@@ -77,16 +101,6 @@ class Qa extends Runner
             ->addIf($pro, '--pro')
             ->run()
         ;
-    }
-
-    #[AsTaskMethod]
-    public function rector(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
-    {
-        $this->add('rector', 'process', '--clear-cache', '--config', '/tools/rector/rector.php');
-
-        $this->addIf(! $fix, '--dry-run');
-
-        return $this->run(qa_context()->withAllowFailure(! $fix));
     }
 
     #[AsTaskMethod(aliases: ['qa:arki'])]
@@ -111,36 +125,22 @@ class Qa extends Runner
         return $process;
     }
 
-    #[AsTaskMethod(aliases: ['qa:phpunit'])]
-    public function phpunit(): Process
+    protected function preRunCommand(): void
     {
-        $this->disableInstall();
+        if (self::$runOnce) {
+            return;
+        }
 
-        return $this
-            ->add('vendor/bin/phpunit', '--configuration', '/app/phpunit.xml.dist')
-            ->run()
-        ;
+        if (self::$runInstall) {
+            $this->install();
+        }
+
+        self::$runOnce = true;
     }
 
-    #[AsTaskMethod]
-    public function preCommit(): void
+    public function install(): void
     {
-        io()->title('Running QA tools - Pre-commit hook');
-
-        io()->section('Running ECS');
-        $this->ecs(fix: true);
-
-        io()->section('Running Rector');
-        $this->rector(fix: true);
-
-        io()->section('Running PHPStan');
-        $this->phpstan();
-
-        io()->section('Running PHParkitect');
-        $this->phparkitect();
-
-        io()->section('Running PHPMD');
-        $this->phpmd();
+        install_tools();
     }
 }
 

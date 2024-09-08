@@ -11,6 +11,7 @@ parameters:
     level: max
     paths:
         - %currentWorkingDirectory%/src
+        - %currentWorkingDirectory%/tests
 #    symfony:
 #        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
     checkAlwaysTrueCheckTypeFunctionCall: true
@@ -63,7 +64,8 @@ parameters:
         -
             message: "#^Class .*ApiPlatform\\\\Payload\\\\.*Input.*#"
             identifier: property.uninitialized
-
+        - "#^Method .*Factory\\:\\:defaults\\(\\) return type has no value type specified in iterable type array\\.$#"
+        - "#^Return type \\(array\\) of method .*Factory\\:\\:defaults\\(\\) should be covariant with return type \\(.*\\) of method .*Factory.*\\:\\:defaults\\(\\)$#"
     type_perfect:
         no_mixed: true
         null_over_false: true

@@ -54,6 +54,7 @@ final class UserResourceTest extends AbstractApiTestCase
         self::assertCount(5, $response);
 
         foreach ($users as $index => $user) {
+            /** @var array{email: string} $userResponse */
             $userResponse = $response[$index];
             self::assertSame($user->getEmail(), $userResponse['email']);
         }

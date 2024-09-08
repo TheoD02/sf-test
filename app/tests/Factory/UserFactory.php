@@ -19,7 +19,7 @@ final class UserFactory extends PersistentProxyObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'email' => self::faker()->email(),
