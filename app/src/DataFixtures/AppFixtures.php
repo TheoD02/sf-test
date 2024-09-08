@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Factory\UserFactory;
+use App\Tests\Factory\UserFactory;
 use App\User\Domain\PermissionEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
             'roles' => ['ROLE_USER', ...PermissionEnum::cases()],
         ]);
 
-        UserFactory::new()->createMany(10);
+        UserFactory::new()->createMany(100);
 
         $manager->flush();
     }

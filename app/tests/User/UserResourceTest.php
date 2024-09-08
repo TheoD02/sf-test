@@ -2,13 +2,10 @@
 
 namespace App\Tests\User;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Factory\UserFactory;
 use App\Tests\AbstractApiTestCase;
+use App\Tests\Factory\UserFactory;
 use App\User\Domain\PermissionEnum;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 

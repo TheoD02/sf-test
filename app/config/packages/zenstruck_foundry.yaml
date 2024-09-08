@@ -1,2 +1,3 @@
 zenstruck_foundry:
-
+    make_factory:
+        default_namespace: App\Tests\Factory

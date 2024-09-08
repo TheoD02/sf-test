@@ -4,9 +4,8 @@ namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\Factory\UserFactory;
+use App\Tests\Factory\UserFactory;
 use App\User\Domain\Model\User;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class AbstractApiTestCase extends ApiTestCase
