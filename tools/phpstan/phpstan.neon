@@ -11,10 +11,6 @@ parameters:
     level: max
     paths:
         - %currentWorkingDirectory%/src
-    excludePaths:
-        - %currentWorkingDirectory%/src/Shared/ApiPlatform/Api/FilterHandlerResourceMetadataFactory.php
-        - %currentWorkingDirectory%/src/Shared/ApiPlatform/Transformer/RequestToDTOTransformer.php
-        - %currentWorkingDirectory%/src/Shared/Infrastructure/Symfony/Kernel.php
 #    symfony:
 #        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
     checkAlwaysTrueCheckTypeFunctionCall: true
@@ -63,12 +59,11 @@ parameters:
         param_type: 100
         property_type: 100
     ignoreErrors:
-        - "#^Method .*CollectionStateProvider::provide\\(\\) should return Rekalogika\\\\ApiLite\\\\Paginator\\\\MappingPaginatorDecorator<.*> but returns iterable<.*>.$#"
-        - "#^Property .* type mapping mismatch: property can contain .*\\|null but database expects .*.$#"
-        - "#^Parameter .*\\$where of method Doctrine\\\\ORM\\\\QueryBuilder::andWhere\\(\\) expects array\\|object\\|literal-string, non-falsy-string given.$#"
-        - "#^Parameters should have .*string\\|false.* types as the only types passed to this method$#" # Until type_perfect is fixed
-        - "#^Method .*Factory::defaults\\(\\) return type has no value type specified in iterable type array.$#"
-        - "#^Return type \\(array\\) of method .*Factory::defaults\\(\\).*$#"
+        - "#^Method .*Provider::provide\\(\\) should return Rekalogika\\\\ApiLite\\\\Paginator\\\\MappingPaginatorDecorator<.*> but returns iterable<.*>.$#"
+        -
+            message: "#^Class .*ApiPlatform\\\\Payload\\\\.*Input.*#"
+            identifier: property.uninitialized
+
     type_perfect:
         no_mixed: true
         null_over_false: true

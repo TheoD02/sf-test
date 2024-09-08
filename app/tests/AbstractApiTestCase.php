@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
@@ -8,9 +10,13 @@ use App\Tests\Factory\UserFactory;
 use App\User\Domain\Model\User;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @internal
+ */
 class AbstractApiTestCase extends ApiTestCase
 {
     private static Client $client;
+
     protected ?User $user = null;
 
     public static function assertResponseContent(array $expected): void
@@ -19,7 +25,7 @@ class AbstractApiTestCase extends ApiTestCase
         self::assertEquals($expected, $response);
     }
 
-    protected static function getResponse(bool $collection = false): array
+    private static function getResponse(bool $collection = false): array
     {
         $response = self::$client->getResponse()->toArray();
 
@@ -40,19 +46,13 @@ class AbstractApiTestCase extends ApiTestCase
         }
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        self::$client = static::createClient();
-    }
-
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
-        if ($this->user === null) {
+        if (! $this->user instanceof User) {
             $this->loginAsUser();
         }
 
-        if (!isset($options['headers']['Content-Type'])) {
+        if (! isset($options['headers']['Content-Type'])) {
             $options['headers']['Content-Type'] = 'application/ld+json';
             if ($method === 'PATCH') {
                 $options['headers']['Content-Type'] = 'application/merge-patch+json';
@@ -67,9 +67,19 @@ class AbstractApiTestCase extends ApiTestCase
         $this->user = UserFactory::new()->withoutPersisting()->create([
             'email' => 'user@phpunit.com',
             'password' => 'test',
-            'roles' => array_map(static fn(string|\BackedEnum $role) => is_string($role) ? $role : $role->value, $roles),
+            'roles' => array_map(
+                static fn (string|\BackedEnum $role): int|string => \is_string($role) ? $role : $role->value,
+                $roles
+            ),
         ])->_real();
 
         self::$client->loginUser($this->user);
+    }
+
+    #[\Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        self::$client = static::createClient();
     }
 }

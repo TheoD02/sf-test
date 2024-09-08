@@ -14,16 +14,15 @@ use Rekalogika\ApiLite\State\AbstractProvider;
 /**
  * @extends AbstractProvider<UserResource>
  */
-class   UserProvider extends AbstractProvider
+class UserProvider extends AbstractProvider
 {
     public function __construct(
         private readonly UserRepository $userRepository,
-    )
-    {
+    ) {
     }
 
     #[\Override]
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): UserResource
     {
         $user = $this->userRepository->find($uriVariables['id'] ?? null) ?? throw new NotFoundException();
 

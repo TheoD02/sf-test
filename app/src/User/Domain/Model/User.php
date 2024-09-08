@@ -8,6 +8,7 @@ use App\User\Domain\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -19,27 +20,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(length: 180)]
-    private ?string $email = null;
+    private string $email = '';
 
     /**
-     * @var list<string> The user roles
+     * @var non-empty-list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ['ROLE_USER'];
 
-    /**
-     * @var ?string The hashed password
-     */
     #[ORM\Column]
-    private ?string $password = null;
+    private string $password = '';
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -59,13 +59,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[\Override]
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        if ($this->email === '') {
+            throw new \LogicException('User Identifier cannot be empty');
+        }
+
+        return $this->email;
     }
 
     /**
-     * @return list<string>
-     * @see UserInterface
+     * @return non-empty-list<string>
      *
+     * @see UserInterface
      */
     #[\Override]
     public function getRoles(): array
@@ -74,11 +78,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
-     * @param list<string> $roles
+     * @param non-empty-list<string> $roles
      */
     public function setRoles(array $roles): static
     {
