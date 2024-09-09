@@ -14,7 +14,8 @@
         "shipmonk/phpstan-rules": "^2.11",
         "staabm/phpstan-todo-by": "^0.1.25",
         "phpstan/phpstan-doctrine": "^1.3",
-        "rector/type-perfect": "^0.1.6"
+        "rector/type-perfect": "^0.1.6",
+        "ticketswap/phpstan-error-formatter": "^1.0"
     },
     "config": {
         "allow-plugins": {

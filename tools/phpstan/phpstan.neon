@@ -9,6 +9,7 @@ includes:
 
 parameters:
     level: max
+    errorFormat: ticketswap
     paths:
         - %currentWorkingDirectory%/src
         - %currentWorkingDirectory%/tests
@@ -38,8 +39,6 @@ parameters:
     reportStaticMethodSignatures: true
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
-#    editorUrl: 'phpstorm://open?file=/home/t/franken-base/%%relFile%%&line=%%line%%'
-    editorUrlTitle: '%%relFile%%:%%line%%'
 #    doctrine: # see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#configuration
 #        ormRepositoryClass: Doctrine\ORM\EntityRepository
 #        odmRepositoryClass: Doctrine\ODM\MongoDB\DocumentRepository

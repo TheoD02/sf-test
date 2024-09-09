@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb4dec55160e228a4245e936e377819c",
+    "content-hash": "08261529262001242f9b74181987d6ce",
     "packages": [
         {
             "name": "ergebnis/phpstan-rules",
@@ -1214,6 +1214,52 @@
                 "source": "https://github.com/thecodingmachine/phpstan-strict-rules/tree/v1.0.0"
             },
             "time": "2021-11-08T09:10:49+00:00"
+        },
+        {
+            "name": "ticketswap/phpstan-error-formatter",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TicketSwap/phpstan-error-formatter.git",
+                "reference": "abbc241713ffd1c291aa7ff758872ee0519dd909"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TicketSwap/phpstan-error-formatter/zipball/abbc241713ffd1c291aa7ff758872ee0519dd909",
+                "reference": "abbc241713ffd1c291aa7ff758872ee0519dd909",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "phpstan/phpstan": "^1.11"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TicketSwap\\PHPstanErrorFormatter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A minimalistic error formatter for PHPStan",
+            "keywords": [
+                "PHPStan",
+                "dev"
+            ],
+            "support": {
+                "issues": "https://github.com/TicketSwap/phpstan-error-formatter/issues",
+                "source": "https://github.com/TicketSwap/phpstan-error-formatter/tree/1.0.2"
+            },
+            "time": "2024-09-09T10:13:09+00:00"
         },
         {
             "name": "tomasvotruba/type-coverage",

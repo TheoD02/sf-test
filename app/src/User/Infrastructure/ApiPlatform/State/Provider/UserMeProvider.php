@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\ApiPlatform\State\Provider;
 
 use ApiPlatform\Metadata\Operation;
@@ -8,6 +10,9 @@ use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 use Rekalogika\ApiLite\State\AbstractProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @extends AbstractProvider<UserResource>
+ */
 class UserMeProvider extends AbstractProvider
 {
     public function __construct(
@@ -16,7 +21,8 @@ class UserMeProvider extends AbstractProvider
     {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    #[\Override]
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?UserResource
     {
         $user = $this->security->getUser();
 
