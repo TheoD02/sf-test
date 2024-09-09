@@ -4,6 +4,7 @@ namespace App\Battery\Domain\Model;
 
 use App\Battery\Domain\Repository\BatteryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Clock\Clock;
 
 #[ORM\Entity(repositoryClass: BatteryRepository::class)]
 #[ORM\Table(name: '`battery`')]
@@ -25,7 +26,7 @@ class Battery
 
     public function __construct()
     {
-        $this->recordedAt = new \DateTimeImmutable();
+        $this->recordedAt = Clock::get()->withTimeZone('Europe/Paris')->now();
     }
 
     public function getId(): ?int
