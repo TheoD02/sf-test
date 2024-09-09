@@ -3,13 +3,13 @@
 # Versions
 FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
 FROM frankenphp_upstream as frankenphp_upstream_node
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /app
 
@@ -31,6 +31,8 @@ ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable pnpm && corepack use pnpm@9.9
+
+SHELL ["/bin/sh", "-o", "pipefail", "-c"]
 
 # Base FrankenPHP image
 FROM frankenphp_upstream_node AS frankenphp_base
