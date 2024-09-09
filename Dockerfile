@@ -32,7 +32,7 @@ ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable pnpm && corepack use pnpm@9.9
 
-SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+SHELL ["/bin/sh", "-c"]
 
 # Base FrankenPHP image
 FROM frankenphp_upstream_node AS frankenphp_base
