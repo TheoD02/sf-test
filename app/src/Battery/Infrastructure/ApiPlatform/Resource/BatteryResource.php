@@ -22,6 +22,8 @@ class BatteryResource
 
     private ?int $level = null;
 
+    private ?string $reason = null;
+
     private ?\DateTimeImmutable $recordedAt = null;
 
     public function getId(): ?int
@@ -43,6 +45,17 @@ class BatteryResource
     public function setLevel(?int $level): BatteryResource
     {
         $this->level = $level;
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(?string $reason): BatteryResource
+    {
+        $this->reason = $reason;
         return $this;
     }
 

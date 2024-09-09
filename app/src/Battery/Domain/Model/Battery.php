@@ -17,6 +17,9 @@ class Battery
     #[ORM\Column]
     private int $level = 0;
 
+    #[ORM\Column()]
+    private string $reason = '';
+
     #[ORM\Column]
     private \DateTimeImmutable $recordedAt;
 
@@ -38,6 +41,18 @@ class Battery
     public function setLevel(int $level): static
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): static
+    {
+        $this->reason = $reason;
 
         return $this;
     }
