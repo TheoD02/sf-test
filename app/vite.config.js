@@ -28,11 +28,13 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      "@api": path.resolve(__dirname, "./assets/api"),
-      "@components": path.resolve(__dirname, "./assets/components"),
-      "@hooks": path.resolve(__dirname, "./assets/hooks"),
-    },
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "./assets") },
+      { find: "@api", replacement: path.resolve(__dirname, "./assets/api") },
+      { find: "@components", replacement: path.resolve(__dirname, "./assets/components") },
+      { find: "@hooks", replacement: path.resolve(__dirname, "./assets/hooks") },
+      { find: "@routes", replacement: path.resolve(__dirname, "./assets/routes") },
+    ]
   },
   server: {
     // watch: {

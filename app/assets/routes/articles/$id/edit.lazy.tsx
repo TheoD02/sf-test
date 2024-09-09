@@ -1,6 +1,6 @@
 import $api from '@api/api';
 import {components} from '@api/schema';
-import {queryClient} from '@app';
+import {queryClient} from '@/app.tsx';
 import {Button, Group, Skeleton, Textarea, TextInput} from '@mantine/core';
 import {useForm, zodResolver} from '@mantine/form';
 import {notifications} from '@mantine/notifications';

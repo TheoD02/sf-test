@@ -14,7 +14,6 @@ import {
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
-import {IconBrandSpotifyFilled} from "@tabler/icons-react";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {useContext} from "react";
 import $api from '@api/api';

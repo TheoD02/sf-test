@@ -4,7 +4,7 @@ import {useForm, zodResolver} from "@mantine/form";
 import {z} from "zod";
 import $api from "@api/api";
 import {notifications} from "@mantine/notifications";
-import {queryClient} from "@app";
+import {queryClient} from "@/app.tsx";
 
 export const Route = createLazyFileRoute("/articles/create")({
   component: CreateArticle,

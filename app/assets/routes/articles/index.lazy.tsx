@@ -12,7 +12,7 @@ import {ActionIcon, Text, Button, Container, Group} from "@mantine/core";
 import {IconEdit, IconTrash} from "@tabler/icons-react";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
-import { queryClient } from '../../app';
+import {queryClient} from '../../app';
 
 export const Route = createLazyFileRoute("/articles/")({
   component: Articles,
