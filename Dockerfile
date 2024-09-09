@@ -156,5 +156,4 @@ RUN set -eux; \
 
 RUN set -eux; \
     pnpm install --no-frozen-lockfile --production; \
-    pnpm cache clean --all; \
     pnpm run build;
