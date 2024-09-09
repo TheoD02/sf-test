@@ -81,7 +81,7 @@ HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 # Dev FrankenPHP image
-FROM frankenphp_base AS frankenphp_dev
+FROM frankenphp_upstream_node AS frankenphp_dev
 
 COPY --link --chmod=755 .docker/frankenphp/docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint
 
