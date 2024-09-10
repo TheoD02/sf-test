@@ -128,6 +128,9 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
 
+ARG SERVER_NAME=localhost
+ENV SERVER_NAME=${SERVER_NAME}
+
 ENV APP_ENV=prod
 ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
 
@@ -138,13 +141,11 @@ COPY --link .docker/frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
 # prevent the reinstallation of vendors at every changes in the source code
 COPY --link ./app/composer.* ./app/symfony.* ./
-RUN ls
 RUN set -eux; \
 	composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
 # copy sources
 COPY --link ./app ./
-RUN ls
 RUN rm -Rf .docker/frankenphp/
 
 RUN set -eux; \

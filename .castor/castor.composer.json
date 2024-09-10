@@ -13,7 +13,8 @@
     }
   },
   "require": {
-    "theod02/castor-class-task": "dev-main"
+    "theod02/castor-class-task": "dev-main",
+    "phlak/semver": "dev-master"
   },
   "repositories": [
     {

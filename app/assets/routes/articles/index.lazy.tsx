@@ -31,14 +31,13 @@ function Articles() {
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
     []
   );
-  const {data: articles, isFetching} = $api.useQuery("get", "/api/articles", {
+  const {data: articles, isFetching} = $api.useQuery("get", "/api/batteries", {
     params: {
       query: removeEmptyValues({
         // Maybe we can do that directly in querySerializer of client ?
         page: pagination.pageIndex + 1,
         id: columnFilters.find((f) => f.id === "id")?.value ?? "",
-        title: columnFilters.find((f) => f.id === "title")?.value ?? "",
-        content: columnFilters.find((f) => f.id === "content")?.value ?? "",
+        reason: columnFilters.find((f) => f.id === "reason")?.value ?? "",
       }),
     },
   });
@@ -52,32 +51,13 @@ function Articles() {
         header: "ID",
       },
       {
-        accessorKey: "title",
-        header: "Title",
-      },
-      {
-        accessorKey: "content",
-        header: "Content",
+        accessorKey: "reason",
+        header: "Reason",
       },
     ],
     []
   );
   const navigate = useNavigate();
-  const {mutate: deleteArticle} = $api.useMutation(
-    "delete",
-    "/api/articles/{id}",
-    {
-      onSuccess: () => {
-        notifications.show({
-          title: "Article deleted",
-          message: "Article deleted successfully",
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/api/articles"],
-        });
-      },
-    }
-  );
 
   const table = useMantineReactTable({
     columns,
@@ -90,54 +70,10 @@ function Articles() {
     manualFiltering: true,
     onColumnFiltersChange: setColumnFilters,
     enableRowActions: true,
-    renderRowActions: ({row}) => (
-      <Group align="center" justify="flex-end">
-        <ActionIcon
-          color="orange"
-          onClick={() =>
-            navigate({
-              to: `/articles/$id/edit`,
-              params: {id: row.original.id?.toString() ?? ""},
-            })
-          }
-        >
-          <IconEdit/>
-        </ActionIcon>
-
-        <ActionIcon
-          color="red"
-          onClick={() =>
-            modals.openConfirmModal({
-              title: "Delete Article",
-              children: (
-                <Text>Are you sure you want to delete this article?</Text>
-              ),
-              onConfirm: () => {
-                deleteArticle({
-                  params: {
-                    path: {
-                      id: row.original.id?.toString() ?? "",
-                    },
-                  },
-                });
-              },
-              labels: {confirm: "Delete", cancel: "Cancel"},
-            })
-          }
-        >
-          <IconTrash/>
-        </ActionIcon>
-      </Group>
-    ),
   });
 
   return (
     <Container fluid>
-      <Group pb={10}>
-        <Button component={Link} to="/articles/create">
-          Create
-        </Button>
-      </Group>
       <MantineReactTable table={table}/>
     </Container>
   );
