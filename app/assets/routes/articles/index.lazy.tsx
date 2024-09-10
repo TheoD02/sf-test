@@ -37,6 +37,7 @@ function Articles() {
         // Maybe we can do that directly in querySerializer of client ?
         page: pagination.pageIndex + 1,
         id: columnFilters.find((f) => f.id === "id")?.value ?? "",
+        level: columnFilters.find((f) => f.id === "level")?.value ?? "",
         reason: columnFilters.find((f) => f.id === "reason")?.value ?? "",
       }),
     },
@@ -49,6 +50,10 @@ function Articles() {
       {
         accessorKey: "id",
         header: "ID",
+      },
+      {
+        accessorKey: "level",
+        header: "Level",
       },
       {
         accessorKey: "reason",

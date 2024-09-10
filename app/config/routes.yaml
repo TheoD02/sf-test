@@ -2,6 +2,12 @@ auth:
     path: /auth
     methods: [ 'POST' ]
 
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
 react:
     path: /{path?}
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
