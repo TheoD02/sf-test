@@ -36,18 +36,19 @@ class BatteryRepository extends ServiceEntityRepository
 
 
         $levelAtStart = $this->createQueryBuilder('b2')
+            ->distinct()
             ->select('b2.level')
             ->where('b2.recordedAt = MIN(b1.recordedAt)')
             ->getQuery()
-            ->setMaxResults(1)
             ->getDQL();
 
         $levelAtEnd = $this->createQueryBuilder('b3')
+            ->distinct()
             ->select('b3.level')
             ->where('b3.recordedAt = MAX(b1.recordedAt)')
-            ->setMaxResults(1)
             ->getQuery()
             ->getDQL();
+
 
         $qb->addSelect("({$levelAtStart}) AS levelAtStart");
         $qb->addSelect("({$levelAtEnd}) AS levelAtEnd");
