@@ -19,19 +19,6 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    
-    Itspire\MonologLoki\Handler\LokiHandler:
-        arguments:
-            $apiConfig:
-                entrypoint: 'https://granafa-loki.theo-corp.fr'
-                context:
-                    app: SF-TEST
-                labels:
-                    env: '%env(APP_ENV)%'
-                client_name: sf-test
-                curl_options:
-                    !php/const CURLOPT_CONNECTTIMEOUT_MS: 500,
-                    !php/const CURLOPT_TIMEOUT_MS: 600
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
