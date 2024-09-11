@@ -50,12 +50,12 @@ function start(bool $force = false): void
                     '--profile',
                     'app',
                     'build',
-                    //                    '--no-cache'
+                //                    '--no-cache'
                 )
                 ->run(),
             id: 'docker',
             fingerprint: fgp()->php_docker(),
-            force: $force
+            force: $force,
         )
     ) {
         io()->note('Docker images are already built.');
@@ -70,7 +70,7 @@ function start(bool $force = false): void
         'app',
         'up',
         '-d',
-        '--wait'
+        '--wait',
     )->run();
 }
 
@@ -99,7 +99,7 @@ function install(bool $force = false): void
         callback: static fn () => composer()->install()->run(),
         id: 'composer',
         fingerprint: fgp()->composer(),
-        force: $forceVendor || $force
+        force: $forceVendor || $force,
     )) {
         io()->note('Composer dependencies are already installed.');
     } else {
@@ -123,7 +123,7 @@ function install(bool $force = false): void
             callback: static fn () => pnpm()->install()->run(),
             id: 'npm',
             fingerprint: fgp()->npm(),
-            force: $forceNodeModules || $force
+            force: $forceNodeModules || $force,
         )) {
             io()->note('NPM dependencies are already installed.');
         } else {
@@ -150,17 +150,17 @@ function sync(): void
 #[AsTask]
 function shell(
     #[AsOption(name: 'no-check', description: 'Don\'t check the dependencies')]
-    bool $noCheck = false, // Not used here, but used in listeners.php,
+    bool    $noCheck = false, // Not used here, but used in listeners.php,
     #[AsArgument(name: 'cmd', description: 'Command to run')]
     ?string $command = null,
-): void {
+): void
+{
     docker(context()->withTty())
         ->compose('exec')
         ->add('--user', 'www-data')
         ->add(ContainerDefinitionBag::php()->composeName, 'fish')
         ->addIf($command !== null, '-c', "\"{$command}\"")
-        ->run()
-    ;
+        ->run();
 }
 
 /** @noinspection t */
@@ -248,8 +248,7 @@ function import_sql(): void
         ->name('*.sql')
         ->name('*.sql.gz')
         ->sortByName()
-        ->getIterator()
-    ;
+        ->getIterator();
 
     $selectedDump = io()->choice('Select the SQL file to import', iterator_to_array($sqlFiles), $sqlFilename);
 
@@ -279,8 +278,7 @@ function ui_format(): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'npx', '@biomejs/biome', 'format', '--write', './src')
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:lint')]
@@ -291,8 +289,7 @@ function ui_lint(): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'npx', '@biomejs/biome', 'lint', './src')
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:ts')]
@@ -304,8 +301,7 @@ function ui_ts(bool $fix = false): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'pnpm', 'run', $run)
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:http:schema')]
@@ -321,10 +317,9 @@ function ui_http_schema(): void
             'openapi-typescript',
             'http://mantine-starter-kit.web.localhost/api/docs.json',
             '-o',
-            './src/api/schema.d.ts'
+            './src/api/schema.d.ts',
         )
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'db:reset')]
@@ -332,7 +327,7 @@ function db_reset(): void
 {
     // Check if the database app exists
     $output = docker(context()->withQuiet())->compose(
-        "exec -it database sh -c \"psql -d app -c '\\l'\""
+        "exec -it database sh -c \"psql -d app -c '\\l'\"",
     )->run()->getOutput();
     if (str_contains($output, 'app')) {
         if (io()->confirm('The database "app" already exists. Do you want to drop it?', false) === false) {
@@ -342,6 +337,6 @@ function db_reset(): void
 
     symfony()->console('doctrine:database:drop', '--force', '--if-exists')->run();
     symfony()->console('doctrine:database:create')->run();
-    symfony()->console('doctrine:schema:update', '--force')->run();
-    symfony()->console('doctrine:fixtures:load', '--no-interaction')->run();
+    symfony()->console('doctrine:migrations:migrate')->run();
+    symfony()->console('doctrine:fixtures:load', '--no-interaction', '--append')->run();
 }
