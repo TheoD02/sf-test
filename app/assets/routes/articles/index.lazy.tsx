@@ -1,4 +1,4 @@
-import {createLazyFileRoute, Link, useNavigate} from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import $api from "@api/api";
 import {
   MantineReactTable,
@@ -6,13 +6,10 @@ import {
   useMantineReactTable,
   type MRT_ColumnDef,
 } from "mantine-react-table";
-import {useMemo, useState} from "react";
-import {components} from "@api/schema";
-import {ActionIcon, Text, Button, Container, Group} from "@mantine/core";
-import {IconEdit, IconTrash} from "@tabler/icons-react";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
-import {queryClient} from '../../app';
+import { useMemo, useState } from "react";
+import { components } from "@api/schema";
+import { Container } from "@mantine/core";
+import { BarChart } from '@mantine/charts';
 
 export const Route = createLazyFileRoute("/articles/")({
   component: Articles,
@@ -31,7 +28,18 @@ function Articles() {
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
     []
   );
-  const {data: articles, isFetching} = $api.useQuery("get", "/api/batteries", {
+  const { data: articles, isFetching } = $api.useQuery("get", "/api/batteries", {
+    params: {
+      query: removeEmptyValues({
+        // Maybe we can do that directly in querySerializer of client ?
+        page: pagination.pageIndex + 1,
+        id: columnFilters.find((f) => f.id === "id")?.value ?? "",
+        level: columnFilters.find((f) => f.id === "level")?.value ?? "",
+        reason: columnFilters.find((f) => f.id === "reason")?.value ?? "",
+      }),
+    },
+  });
+  const { data: batteryPerHour, isFetching: isFetchingBatteryPerHour } = $api.useQuery("get", "/api/batteries/stats/per-hour", {
     params: {
       query: removeEmptyValues({
         // Maybe we can do that directly in querySerializer of client ?
@@ -67,8 +75,8 @@ function Articles() {
   const table = useMantineReactTable({
     columns,
     data: articles?.["hydra:member"] ?? [],
-    state: {isLoading: isFetching, pagination, columnFilters},
-    initialState: {density: "xs"},
+    state: { isLoading: isFetching, pagination, columnFilters },
+    initialState: { density: "xs" },
     onPaginationChange: setPagination,
     manualPagination: true,
     rowCount: articles?.["hydra:totalItems"] ?? 0,
@@ -77,9 +85,17 @@ function Articles() {
     enableRowActions: true,
   });
 
+  console.log((batteryPerHour?.["hydra:member"] ?? []).map((item) => ({ item: new Date(item.hour).toLocaleTimeString(), value: item.levelAtStart })));
   return (
     <Container fluid>
-      <MantineReactTable table={table}/>
+      <BarChart
+        h={300}
+        data={(batteryPerHour?.["hydra:member"] ?? []).map((item) => ({ item: new Date(item.hour).toLocaleTimeString(), 'Battery change in %': item.levelChange, standalone: true }))}
+        dataKey="item"
+        type="waterfall"
+        series={[{ name: 'Battery change in %', color: 'blue' }]}
+      />
+      <MantineReactTable table={table} />
     </Container>
   );
 }
