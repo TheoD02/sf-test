@@ -59,7 +59,7 @@ function tag(string $tag = 'latest'): void
             variable('image'),
             variable('registry'),
             variable('image'),
-            $tag
+            $tag,
         );
 
         io()->writeln('Tagging Docker image...');
@@ -116,7 +116,7 @@ function deploy(
     if ($override) {
         io()->warning('Version overriden');
         if (io()->confirm('You are sure you want to override the version?')) {
-            buildAndPush($version);
+            buildAndPush((string) $version);
         }
 
         return;
@@ -153,6 +153,6 @@ function deploy(
 
     if (io()->confirm('Do you want to build and push the image?')) {
         file_put_contents('VERSION', (string) $version);
-        buildAndPush($version);
+        buildAndPush((string) $version);
     }
 }
