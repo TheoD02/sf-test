@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Battery\Infrastructure\ApiPlatform\State\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use App\Battery\Domain\Repository\BatteryRepository;
 use App\Battery\Infrastructure\ApiPlatform\Resource\BatteryResource;
-use Rekalogika\ApiLite\State\AbstractProvider;
 use Rekalogika\ApiLite\Paginator\MappingPaginatorDecorator;
+use Rekalogika\ApiLite\State\AbstractProvider;
 
 /**
  * @extends AbstractProvider<BatteryResource>
@@ -15,8 +17,7 @@ class BatteryCollectionProvider extends AbstractProvider
 {
     public function __construct(
         private readonly BatteryRepository $batteryRepository,
-    )
-    {
+    ) {
     }
 
     /**

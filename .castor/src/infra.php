@@ -1,12 +1,13 @@
 <?php
 
-use Castor\Attribute\AsArgument;
+declare(strict_types=1);
+
 use Castor\Attribute\AsContext;
 use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
-
 use Castor\Context;
 use PHLAK\SemVer\Version;
+
 use function Castor\io;
 use function Castor\run;
 use function Castor\variable;
@@ -53,7 +54,13 @@ function build(): void
 function tag(string $tag = 'latest'): void
 {
     with(static function () use ($tag) {
-        $command = sprintf('docker tag %s "%s/%s:%s"', variable('image'), variable('registry'), variable('image'), $tag);
+        $command = sprintf(
+            'docker tag %s "%s/%s:%s"',
+            variable('image'),
+            variable('registry'),
+            variable('image'),
+            $tag
+        );
 
         io()->writeln('Tagging Docker image...');
         run($command);
@@ -94,10 +101,10 @@ function buildAndPush(string $tag = 'latest'): void
 function deploy(
     #[AsOption(name: 'override', description: 'Keep the current version, and rebuild the image')]
     bool $override = false,
-): void
-{
+): void {
     if (! file_exists('VERSION')) {
         file_put_contents('VERSION', 'v0.0.0-dev');
+
         return;
     }
 
@@ -111,6 +118,7 @@ function deploy(
         if (io()->confirm('You are sure you want to override the version?')) {
             buildAndPush($version);
         }
+
         return;
     }
 
@@ -138,7 +146,7 @@ function deploy(
             }
             break;
         default:
-            throw new \RuntimeException('Invalid release type');
+            throw new RuntimeException('Invalid release type');
     }
 
     io()->writeln(sprintf('New version is %s', $version));

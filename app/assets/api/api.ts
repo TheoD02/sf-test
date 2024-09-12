@@ -18,7 +18,6 @@ const contentTypeBasedOnHttpMethod: Middleware = {
 const injectApiToken: Middleware = {
   async onRequest({request}) {
     const token = localStorage.getItem("token");
-    console.log(token)
 
     if (token && token !== "null") {
       request.headers.set("Authorization", `Bearer ${token.replaceAll('"', '')}`)

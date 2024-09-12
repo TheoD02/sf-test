@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Battery\Domain\Model;
 
 use App\Battery\Domain\Repository\BatteryRepository;

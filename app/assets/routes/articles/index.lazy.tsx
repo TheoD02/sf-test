@@ -8,8 +8,10 @@ import {
 } from "mantine-react-table";
 import { useMemo, useState } from "react";
 import { components } from "@api/schema";
-import { Container } from "@mantine/core";
+import { Box, Button, Container, LoadingOverlay, Select } from "@mantine/core";
 import { BarChart } from '@mantine/charts';
+import { useForm } from "@mantine/form";
+import { DatePicker, DatePickerInput, DateTimePicker } from "@mantine/dates";
 
 export const Route = createLazyFileRoute("/articles/")({
   component: Articles,
@@ -39,14 +41,21 @@ function Articles() {
       }),
     },
   });
+  const chartFilters = useForm({
+    initialValues: {
+      range: "hour",
+      dateRange: [new Date(), null],
+    },
+  });
+
+  console.log(chartFilters.values);
   const { data: batteryPerHour, isFetching: isFetchingBatteryPerHour } = $api.useQuery("get", "/api/batteries/stats/per-hour", {
     params: {
       query: removeEmptyValues({
         // Maybe we can do that directly in querySerializer of client ?
-        page: pagination.pageIndex + 1,
-        id: columnFilters.find((f) => f.id === "id")?.value ?? "",
-        level: columnFilters.find((f) => f.id === "level")?.value ?? "",
-        reason: columnFilters.find((f) => f.id === "reason")?.value ?? "",
+        from: chartFilters.values.dateRange[0]?.toISOString(),
+        to: chartFilters.values.dateRange[1]?.toISOString(),
+        range: chartFilters.values.range,
       }),
     },
   });
@@ -70,8 +79,6 @@ function Articles() {
     ],
     []
   );
-  const navigate = useNavigate();
-
   const table = useMantineReactTable({
     columns,
     data: articles?.["hydra:member"] ?? [],
@@ -85,16 +92,55 @@ function Articles() {
     enableRowActions: true,
   });
 
-  console.log((batteryPerHour?.["hydra:member"] ?? []).map((item) => ({ item: new Date(item.hour).toLocaleTimeString(), value: item.levelAtStart })));
   return (
     <Container fluid>
-      <BarChart
-        h={300}
-        data={(batteryPerHour?.["hydra:member"] ?? []).map((item) => ({ item: new Date(item.hour).toLocaleTimeString(), 'Battery change in %': item.levelChange, standalone: true }))}
-        dataKey="item"
-        type="waterfall"
-        series={[{ name: 'Battery change in %', color: 'blue' }]}
-      />
+      <Box pos="relative">
+        <LoadingOverlay visible={isFetchingBatteryPerHour} zIndex={1000} />
+        <Select
+          data={[
+            { value: "hour", label: "Per hour" },
+            { value: "tenMinute", label: "Per 10 minutes" },
+          ]}
+          label="Range"
+          placeholder="Pick range"
+          {...chartFilters.getInputProps("range")}
+        />
+        <DatePickerInput
+          type="range"
+          label="Pick dates range"
+          placeholder="Pick dates range"
+          allowSingleDateInRange
+          highlightToday
+          clearable
+          {...chartFilters.getInputProps("dateRange")}
+        />
+        <BarChart
+          h={300}
+          data={(batteryPerHour?.["hydra:member"] ?? []).map((item) => ({
+            item: new Date(item.hour).toLocaleString(),
+            'Battery change in %': item.levelChange,
+            'Battery level at start in %': item.levelAtStart,
+            'Battery level at end in %': item.levelAtEnd,
+            standalone: true,
+          }))}
+          dataKey="item"
+          type="waterfall"
+          series={[
+            { name: 'Battery change in %', color: 'blue', },
+            { name: 'Battery level at start in %', color: 'green' },
+            { name: 'Battery level at end in %', color: 'orange' },
+          ]}
+          withLegend
+          referenceLines={[
+            { y: 10, color: 'red', label: 'Critical battery level' },
+            { y: 20, color: 'orange', label: 'Warning battery level' },
+            { y: 50, color: 'cyan', label: 'Good battery level' },
+            { y: 80, color: 'blue', label: 'Safe battery level' },
+            { y: 100, color: 'green', label: 'Full battery level' },
+          ]}
+          withBarValueLabel
+        />
+      </Box>
       <MantineReactTable table={table} />
     </Container>
   );

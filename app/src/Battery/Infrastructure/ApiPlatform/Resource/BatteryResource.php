@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Battery\Infrastructure\ApiPlatform\Resource;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -16,7 +18,11 @@ use App\Battery\Infrastructure\ApiPlatform\State\Provider\BatteryStatsPerHourPro
     shortName: 'Battery',
     operations: [
         new GetCollection(provider: BatteryCollectionProvider::class),
-        new Get(uriTemplate: '/batteries/stats/per-hour', output: BatteryStatsPerHourOutput::class, provider: BatteryStatsPerHourProvider::class),
+        new Get(
+            uriTemplate: '/batteries/stats/per-hour',
+            output: BatteryStatsPerHourOutput::class,
+            provider: BatteryStatsPerHourProvider::class
+        ),
         new Post(input: CreateBatteryInput::class, processor: BatteryPostProcessor::class),
     ]
 )]
@@ -35,9 +41,10 @@ class BatteryResource
         return $this->id;
     }
 
-    public function setId(?int $id): BatteryResource
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -46,9 +53,10 @@ class BatteryResource
         return $this->level;
     }
 
-    public function setLevel(?int $level): BatteryResource
+    public function setLevel(?int $level): self
     {
         $this->level = $level;
+
         return $this;
     }
 
@@ -57,9 +65,10 @@ class BatteryResource
         return $this->reason;
     }
 
-    public function setReason(?string $reason): BatteryResource
+    public function setReason(?string $reason): self
     {
         $this->reason = $reason;
+
         return $this;
     }
 
@@ -68,9 +77,10 @@ class BatteryResource
         return $this->recordedAt;
     }
 
-    public function setRecordedAt(?\DateTimeImmutable $recordedAt): BatteryResource
+    public function setRecordedAt(?\DateTimeImmutable $recordedAt): self
     {
         $this->recordedAt = $recordedAt;
+
         return $this;
     }
 }
