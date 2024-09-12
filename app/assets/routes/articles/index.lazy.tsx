@@ -12,6 +12,7 @@ import { Box, Button, Container, LoadingOverlay, Select } from "@mantine/core";
 import { BarChart } from '@mantine/charts';
 import { useForm } from "@mantine/form";
 import { DatePicker, DatePickerInput, DateTimePicker } from "@mantine/dates";
+import { format, formatDistance } from "date-fns";
 
 export const Route = createLazyFileRoute("/articles/")({
   component: Articles,
@@ -117,7 +118,7 @@ function Articles() {
         <BarChart
           h={300}
           data={(batteryPerHour?.["hydra:member"] ?? []).map((item) => ({
-            item: new Date(item.hour).toLocaleString(),
+            item: formatDistance(new Date(item.hour), new Date(), { addSuffix: true }),
             'Battery change in %': item.levelChange,
             'Battery level at start in %': item.levelAtStart,
             'Battery level at end in %': item.levelAtEnd,
