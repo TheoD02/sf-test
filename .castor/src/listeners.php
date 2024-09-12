@@ -25,7 +25,7 @@ function check_tool_deps(BeforeExecuteTaskEvent $event): void
             [
                 'Docker is required for running this application',
                 'Check documentation: https://docs.docker.com/engine/install',
-            ]
+            ],
         );
         exit(1);
     }
@@ -40,15 +40,15 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 
     $context = context()->withQuiet();
     if (str_contains(
-        docker($context)->compose('ps')->run()->getOutput(),
-        ContainerDefinitionBag::php()->name
-    ) === false) {
+            docker($context)->compose('ps')->run()->getOutput(),
+            ContainerDefinitionBag::php()->name,
+        ) === false) {
         io()->note('Docker containers are not running. Starting them.');
         start();
     } else {
         if (fingerprint_exists('docker', fgp()->php_docker()) === false) {
             io()->note(
-                'Some docker related files seems to has been changed. Please consider to restart the containers.'
+                'Some docker related files seems to has been changed. Please consider to restart the containers.',
             );
         }
     }
@@ -59,10 +59,10 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
 {
     if ($event instanceof BeforeExecuteTaskEvent && \in_array(
-        $event->task->getName(),
-        ['start', 'prod:up', 'prod:build'],
-        true
-    )) {
+            $event->task->getName(),
+            ['start', 'prod:up', 'prod:build'],
+            true,
+        )) {
         return;
     }
 
@@ -76,20 +76,20 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
         ];
         $mapping = [
             substr($response['symfony_versions']['stable'], 0, 3) => substr(
-                $response['symfony_versions']['stable'],
-                0,
-                3
-            ) . '.*',
+                    $response['symfony_versions']['stable'],
+                    0,
+                    3,
+                ) . '.*',
             substr($response['symfony_versions']['lts'], 0, 3) => substr(
-                $response['symfony_versions']['lts'],
-                0,
-                3
-            ) . '.*',
+                    $response['symfony_versions']['lts'],
+                    0,
+                    3,
+                ) . '.*',
             substr($response['symfony_versions']['next'], 0, 3) => substr(
-                $response['symfony_versions']['next'],
-                0,
-                3
-            ) . '.*-dev',
+                    $response['symfony_versions']['next'],
+                    0,
+                    3,
+                ) . '.*-dev',
         ];
 
         $diff = array_diff($response['maintained_versions'], array_keys($versions));
@@ -131,10 +131,10 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
     }
 
     if ($event instanceof BeforeExecuteTaskEvent && \in_array(
-        $event->task->getName(),
-        ['start', 'stop', 'restart', 'install'],
-        true
-    )) {
+            $event->task->getName(),
+            ['start', 'stop', 'restart', 'install'],
+            true,
+        )) {
         return;
     }
 
@@ -200,7 +200,7 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
 
     if ($outdatedDeps !== []) {
         io()->newLine();
-        io()->error('Some dependencies are outdated:');
+        io()->warning('Some dependencies are outdated:');
         io()->listing($outdatedDeps);
 
         io()->note('Run `castor install` to install them.');
