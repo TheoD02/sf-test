@@ -4,82 +4,6 @@
  */
 
 export interface paths {
-    "/api/articles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Retrieves the collection of Article resources.
-         * @description Retrieves the collection of Article resources.
-         */
-        get: operations["api_articles_get_collection"];
-        put?: never;
-        /**
-         * Creates a Article resource.
-         * @description Creates a Article resource.
-         */
-        post: operations["api_articles_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/articles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Retrieves a Article resource.
-         * @description Retrieves a Article resource.
-         */
-        get: operations["api_articles_id_get"];
-        /**
-         * Replaces the Article resource.
-         * @description Replaces the Article resource.
-         */
-        put: operations["api_articles_id_put"];
-        post?: never;
-        /**
-         * Removes the Article resource.
-         * @description Removes the Article resource.
-         */
-        delete: operations["api_articles_id_delete"];
-        options?: never;
-        head?: never;
-        /**
-         * Updates the Article resource.
-         * @description Updates the Article resource.
-         */
-        patch: operations["api_articles_id_patch"];
-        trace?: never;
-    };
-    "/api/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Retrieves a User resource.
-         * @description Retrieves a User resource.
-         */
-        get: operations["api_logout_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/me": {
         parameters: {
             query?: never;
@@ -98,6 +22,58 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of User resources.
+         * @description Retrieves the collection of User resources.
+         */
+        get: operations["api_users_get_collection"];
+        put?: never;
+        /**
+         * Creates a User resource.
+         * @description Creates a User resource.
+         */
+        post: operations["api_users_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a User resource.
+         * @description Retrieves a User resource.
+         */
+        get: operations["api_users_id_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Removes the User resource.
+         * @description Removes the User resource.
+         */
+        delete: operations["api_users_id_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates the User resource.
+         * @description Updates the User resource.
+         */
+        patch: operations["api_users_id_patch"];
         trace?: never;
     };
     "/auth": {
@@ -124,28 +100,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Article: {
-            readonly id?: number;
-            title?: string;
-            content?: string;
-            /** Format: date-time */
-            createdAt?: string;
+        "User.CreateUserInput.jsonld": {
+            email?: string;
+            password?: string;
         };
-        "Article.jsonld": {
-            readonly "@context"?: string | ({
-                "@vocab": string;
-                /** @enum {string} */
-                hydra: "http://www.w3.org/ns/hydra/core#";
-            } & {
-                [key: string]: unknown;
-            });
-            readonly "@id"?: string;
-            readonly "@type"?: string;
-            readonly id?: number;
-            title?: string;
-            content?: string;
-            /** Format: date-time */
-            createdAt?: string;
+        "User.PatchUserInput": {
+            email?: string;
+            password?: string;
         };
         "User.jsonld": {
             readonly "@context"?: string | ({
@@ -157,15 +118,10 @@ export interface components {
             });
             readonly "@id"?: string;
             readonly "@type"?: string;
-            readonly id?: number;
-            uuid?: string;
+            id?: number | null;
+            email?: string | null;
             /** @description The user roles */
             roles?: string[];
-            /** @description The hashed password */
-            password?: string;
-            spotifyId?: string | null;
-            /** @description A visual identifier that represents this user. */
-            readonly userIdentifier?: string;
         };
     };
     responses: never;
@@ -176,15 +132,38 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    api_articles_get_collection: {
+    api_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User resource */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["User.jsonld"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_users_get_collection: {
         parameters: {
             query?: {
-                /** @description The collection page number */
-                page?: number;
-                id?: number;
-                "id[]"?: number[];
-                title?: string;
-                content?: string;
+                /** @description The collection page identifier */
+                page?: string;
             };
             header?: never;
             path?: never;
@@ -192,14 +171,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Article collection */
+            /** @description User collection */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/ld+json": {
-                        "hydra:member": components["schemas"]["Article.jsonld"][];
+                        "hydra:member": components["schemas"]["User.jsonld"][];
                         "hydra:totalItems"?: number;
                         /** @example {
                          *       "@id": "string",
@@ -238,27 +217,27 @@ export interface operations {
             };
         };
     };
-    api_articles_post: {
+    api_users_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description The new Article resource */
+        /** @description The new User resource */
         requestBody: {
             content: {
-                "application/ld+json": components["schemas"]["Article.jsonld"];
+                "application/ld+json": components["schemas"]["User.CreateUserInput.jsonld"];
             };
         };
         responses: {
-            /** @description Article resource created */
+            /** @description User resource created */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/ld+json": components["schemas"]["Article.jsonld"];
+                    "application/ld+json": components["schemas"]["User.jsonld"];
                 };
             };
             /** @description Invalid input */
@@ -277,194 +256,14 @@ export interface operations {
             };
         };
     };
-    api_articles_id_get: {
+    api_users_id_get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Article identifier */
+                /** @description User identifier */
                 id: string;
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Article resource */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/ld+json": components["schemas"]["Article.jsonld"];
-                };
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    api_articles_id_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Article identifier */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The updated Article resource */
-        requestBody: {
-            content: {
-                "application/ld+json": components["schemas"]["Article.jsonld"];
-            };
-        };
-        responses: {
-            /** @description Article resource updated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/ld+json": components["schemas"]["Article.jsonld"];
-                };
-            };
-            /** @description Invalid input */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    api_articles_id_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Article identifier */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Article resource deleted */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    api_articles_id_patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Article identifier */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /** @description The updated Article resource */
-        requestBody: {
-            content: {
-                "application/merge-patch+json": components["schemas"]["Article"];
-            };
-        };
-        responses: {
-            /** @description Article resource updated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/ld+json": components["schemas"]["Article.jsonld"];
-                };
-            };
-            /** @description Invalid input */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    api_logout_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description User resource */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/ld+json": unknown;
-                };
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    api_me_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -480,6 +279,83 @@ export interface operations {
             };
             /** @description Resource not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_users_id_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User resource deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_users_id_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The updated User resource */
+        requestBody: {
+            content: {
+                "application/merge-patch+json": components["schemas"]["User.PatchUserInput"];
+            };
+        };
+        responses: {
+            /** @description User resource updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["User.jsonld"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable entity */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };

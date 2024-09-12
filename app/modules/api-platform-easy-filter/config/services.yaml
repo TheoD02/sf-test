@@ -13,23 +13,14 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\:
+    Module\ApiPlatformEasyFilter\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    Itspire\MonologLoki\Handler\LokiHandler:
-        arguments:
-            $apiConfig:
-                entrypoint: 'https://grafana-loki.theo-corp.fr'
-                labels:
-                    env: '%env(APP_ENV)%'
-                client_name: '%env(APP_NAME)%'
-                curl_options:
-                    !php/const CURLOPT_CONNECTTIMEOUT_MS: 500,
-                    !php/const CURLOPT_TIMEOUT_MS: 600
-    
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    Module\ApiPlatformEasyFilter\FilterHandlerResourceMetadataFactory:
+        decorates: 'api_platform.metadata.resource.metadata_collection_factory'
+        arguments: [ '@Module\ApiPlatformEasyFilter\FilterHandlerResourceMetadataFactory.inner' ]
+        decoration_priority: -200

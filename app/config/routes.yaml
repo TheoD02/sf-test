@@ -5,8 +5,8 @@ auth:
 controllers:
     prefix: /api
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Shared/Controller/
+        namespace: App\Shared\Controller
     type: attribute
 
 react:

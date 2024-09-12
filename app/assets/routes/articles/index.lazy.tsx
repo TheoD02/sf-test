@@ -49,7 +49,6 @@ function Articles() {
     },
   });
 
-  console.log(chartFilters.values);
   const { data: batteryPerHour, isFetching: isFetchingBatteryPerHour } = $api.useQuery("get", "/api/batteries/stats/per-hour", {
     params: {
       query: removeEmptyValues({
@@ -62,7 +61,7 @@ function Articles() {
   });
 
   const columns = useMemo<
-    MRT_ColumnDef<components["schemas"]["Article.jsonld"]>[]
+    MRT_ColumnDef<components["schemas"]["Battery.jsonld"]>[]
   >(
     () => [
       {

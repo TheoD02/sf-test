@@ -22,9 +22,13 @@ api_platform:
         enabled: false
     resource_class_directories:
         - '%kernel.project_dir%/src/User/Infrastructure/ApiPlatform'
-        - '%kernel.project_dir%/src/Battery/Infrastructure/ApiPlatform'
     swagger:
         api_keys:
             JWT:
                 name: Authorization
                 type: header
+
+when@dev:
+    api_platform:
+        docs_formats:
+            json: [ 'application/json' ]
