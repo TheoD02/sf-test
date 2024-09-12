@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\Operation;
 use App\Battery\Domain\Repository\BatteryRepository;
 use App\Battery\Infrastructure\ApiPlatform\Output\BatteryStatsPerHourOutput;
 use Carbon\Carbon;
-use Rekalogika\ApiLite\Paginator\MappingPaginatorDecorator;
 use Rekalogika\ApiLite\State\AbstractProvider;
 use Rekalogika\Mapper\IterableMapperInterface;
 use Symfony\Component\Clock\Clock;
@@ -28,14 +27,11 @@ class BatteryStatsPerHourProvider extends AbstractProvider
     }
 
     /**
-     * @return MappingPaginatorDecorator<BatteryStatsPerHourOutput>
+     * @return \Generator<BatteryStatsPerHourOutput>
      */
     #[\Override]
-    public function provide(
-        Operation $operation,
-        array $uriVariables = [],
-        array $context = []
-    ): MappingPaginatorDecorator {
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): \Generator
+    {
         $request = $context['request'] ?? null;
         Assert::isInstanceOf($request, Request::class);
 
@@ -67,6 +63,7 @@ class BatteryStatsPerHourProvider extends AbstractProvider
             'tenMinute' => $this->batteryRepository->getBatteryStatsPerTenMinutesRawSql(from: $from, to: $to),
         };
 
+        /** @var \Generator<BatteryStatsPerHourOutput> */
         return $this->mapper->mapIterable(source: $source, target: BatteryStatsPerHourOutput::class);
     }
 }
