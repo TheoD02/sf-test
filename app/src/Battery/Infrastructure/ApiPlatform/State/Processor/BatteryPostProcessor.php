@@ -22,8 +22,12 @@ class BatteryPostProcessor extends AbstractProcessor
     }
 
     #[\Override]
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
-    {
+    public function process(
+        mixed $data,
+        Operation $operation,
+        array $uriVariables = [],
+        array $context = []
+    ): BatteryResource {
         $battery = $this->map($data, Battery::class);
 
         $this->em->persist($battery);

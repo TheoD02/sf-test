@@ -9,7 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends ServiceEntityRepository<Battery>
  */
 class BatteryRepository extends ServiceEntityRepository
 {
@@ -20,12 +20,11 @@ class BatteryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<array-key, array{hour: string, levelAtStart: int, levelAtEnd: int, levelChange: int, recordCount:
-     *                          int}>
+     * @return list<array{hour: string, levelAtStart: int, levelAtEnd: int, levelChange: int, recordCount: int}>
      */
     public function getBatteryStatsPerHourRawSql(
         ?\DateTimeImmutable $from = null,
-        ?\DateTimeImmutable $to = null
+        ?\DateTimeImmutable $to = null,
     ): array {
         $wheres = [];
         $parameters = [];
@@ -64,12 +63,16 @@ class BatteryRepository extends ServiceEntityRepository
                 hour;
             SQL;
 
+        /** @var list<array{hour: string, levelAtStart: int, levelAtEnd: int, levelChange: int, recordCount: int}> */
         return $this->getEntityManager()->getConnection()->executeQuery($sql, $parameters)->fetchAllAssociative();
     }
 
+    /**
+     * @return list<array{hour: string, levelAtStart: int, levelAtEnd: int, levelChange: int, recordCount: int}>
+     */
     public function getBatteryStatsPerTenMinutesRawSql(
         ?\DateTimeImmutable $from = null,
-        ?\DateTimeImmutable $to = null
+        ?\DateTimeImmutable $to = null,
     ): array {
         $wheres = [];
         $parameters = [];
@@ -122,6 +125,7 @@ class BatteryRepository extends ServiceEntityRepository
 
             SQL;
 
+        /** @var list<array{hour: string, levelAtStart: int, levelAtEnd: int, levelChange: int, recordCount: int}> */
         return $this->getEntityManager()->getConnection()->executeQuery($sql, $parameters)->fetchAllAssociative();
     }
 }

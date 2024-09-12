@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use App\Battery\Domain\Repository\BatteryRepository;
 use App\Battery\Infrastructure\ApiPlatform\Output\BatteryStatsPerHourOutput;
 use Carbon\Carbon;
+use Rekalogika\ApiLite\Paginator\MappingPaginatorDecorator;
 use Rekalogika\ApiLite\State\AbstractProvider;
 use Rekalogika\Mapper\IterableMapperInterface;
 use Symfony\Component\Clock\Clock;
@@ -26,29 +27,37 @@ class BatteryStatsPerHourProvider extends AbstractProvider
     ) {
     }
 
+    /**
+     * @return MappingPaginatorDecorator<BatteryStatsPerHourOutput>
+     */
     #[\Override]
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
-    {
+    public function provide(
+        Operation $operation,
+        array $uriVariables = [],
+        array $context = []
+    ): MappingPaginatorDecorator {
         $request = $context['request'] ?? null;
         Assert::isInstanceOf($request, Request::class);
 
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+        $fromQuery = $request->query->get('from');
+        $toQuery = $request->query->get('to');
 
         $range = $request->query->get('range', 'hour');
         if (! \in_array($range, ['hour', 'tenMinute'], true)) {
             throw new BadRequestHttpException('Invalid range should be hour or tenMinute');
         }
 
-        if ($from !== null) {
-            $from = Carbon::parse($from)->toDateTimeImmutable();
+        $from = null;
+        $to = null;
+        if ($fromQuery !== null) {
+            $from = Carbon::parse($fromQuery)->toDateTimeImmutable();
         }
 
-        if ($to !== null) {
-            $to = Carbon::parse($to)->toDateTimeImmutable();
+        if ($toQuery !== null) {
+            $to = Carbon::parse($toQuery)->toDateTimeImmutable();
         }
 
-        if (!$from instanceof \DateTimeImmutable && !$to instanceof \DateTimeImmutable) {
+        if (! $from instanceof \DateTimeImmutable && ! $to instanceof \DateTimeImmutable) {
             $from = Clock::get()->now()->sub(new \DateInterval('PT10H'));
             $to = Clock::get()->now()->add(new \DateInterval('PT10H'));
         }
@@ -56,7 +65,6 @@ class BatteryStatsPerHourProvider extends AbstractProvider
         $source = match ($range) {
             'hour' => $this->batteryRepository->getBatteryStatsPerHourRawSql(from: $from, to: $to),
             'tenMinute' => $this->batteryRepository->getBatteryStatsPerTenMinutesRawSql(from: $from, to: $to),
-            default => throw new BadRequestHttpException('Invalid range should be hour or tenMinute'),
         };
 
         return $this->mapper->mapIterable(source: $source, target: BatteryStatsPerHourOutput::class);

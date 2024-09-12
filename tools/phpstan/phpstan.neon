@@ -42,13 +42,14 @@ parameters:
 #    doctrine: # see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#configuration
 #        ormRepositoryClass: Doctrine\ORM\EntityRepository
 #        odmRepositoryClass: Doctrine\ODM\MongoDB\DocumentRepository
-#    exceptions:
-#        uncheckedExceptionClasses:
-#            - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
-#            - 'Symfony\Component\Security\Core\Exception\AccessDeniedException'
-#        check:
-#            missingCheckedExceptionInThrows: true
-#            tooWideThrowType: true
+    exceptions:
+        uncheckedExceptionClasses:
+            - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
+            - 'Symfony\Component\Security\Core\Exception\AccessDeniedException'
+            - 'Doctrine\DBAL\Exception'
+#    check:
+#        missingCheckedExceptionInThrows: true
+#        tooWideThrowType: true
     parallel:
         jobSize: 20
         maximumNumberOfProcesses: 32

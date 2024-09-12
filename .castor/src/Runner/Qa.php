@@ -96,11 +96,34 @@ class Qa extends Runner
     {
         $this->add('phpstan', 'clear-result-cache')->run();
 
-        return $this
-            ->add('phpstan', 'analyse', '--configuration', '/tools/phpstan/phpstan.neon', '--memory-limit=2G', '-vv')
-            ->addIf($pro, '--pro')
-            ->run()
-        ;
+        $runPhpstan = function () use ($pro): Process {
+            return $this
+                ->add(
+                    'phpstan',
+                    'analyse',
+                    '--configuration',
+                    '/tools/phpstan/phpstan.neon',
+                    '--memory-limit=2G',
+                    '-vv'
+                )
+                ->addIf($pro, '--pro')
+                ->run($this->context->withAllowFailure())
+            ;
+        };
+
+        if ($watch) {
+            do {
+                $process = $runPhpstan();
+                $hasFailed = $process->getExitCode() !== 0;
+            } while ($hasFailed === true && io()->confirm('Press enter to run phpstan again'));
+
+            io()->newLine();
+            io()->success('Oh, you\'ve done it! 🎉 You fixed all the issues! 🎉');
+
+            return $process;
+        }
+
+        return $runPhpstan();
     }
 
     #[AsTaskMethod(aliases: ['qa:arki'])]

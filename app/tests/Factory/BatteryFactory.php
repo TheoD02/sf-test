@@ -19,13 +19,13 @@ final class BatteryFactory extends PersistentProxyObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'level' => self::faker()->numberBetween(1, 100),
             'reason' => self::faker()->randomElement(['automatic_report', 'hour_report', 'open_app', 'close_app']),
             'recordedAt' => \DateTimeImmutable::createFromMutable(
-                self::faker()->dateTimeBetween(startDate: '-3 day', endDate: 'now', timezone: 'Europe/Paris')
+                self::faker()->dateTimeBetween(startDate: '-3 day', endDate: 'now', timezone: 'Europe/Paris'),
             ),
         ];
     }
