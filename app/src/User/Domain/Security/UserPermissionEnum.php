@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\User\Domain;
+namespace App\User\Domain\Security;
 
+use App\Shared\Trait\PermissionTrait;
 use ArchTech\Enums\Values;
 
-enum PermissionEnum: string
+enum UserPermissionEnum: string
 {
     use Values;
+    use PermissionTrait;
 
     case GET_ONE = 'USER_GET_ONE';
     case GET_COLLECTION = 'USER_GET_COLLECTION';

@@ -4,79 +4,88 @@ declare(strict_types=1);
 
 namespace App\User\Infrastructure\Security;
 
+use App\Shared\Security\AbstractPermissionVoter;
+use App\Shared\Trait\SecurityTrait;
 use App\User\Domain\Model\User;
-use App\User\Domain\PermissionEnum;
-use App\User\Domain\Repository\UserRepository;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\User\Domain\Security\UserPermissionEnum;
+use App\User\Infrastructure\Doctrine\UserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-use function Symfony\Component\String\u;
-
 /**
- * @extends Voter<value-of<PermissionEnum>, User>
+ * @extends Voter<value-of<UserPermissionEnum>, User>
  */
-class UserVoter extends Voter
+class UserVoter extends AbstractPermissionVoter
 {
-    public function __construct(
-        private readonly Security $security,
-    ) {
-    }
+    use SecurityTrait;
 
-    #[\Override]
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    public function getPermissionsEnum(): string
     {
-        // if the user token does not have the required role, deny access
-        if (! \in_array($attribute, $token->getRoleNames(), true)) {
-            return false;
-        }
-
-        $method = 'can' . ucfirst(u($attribute)->lower()->camel()->toString());
-        if (! method_exists($this, $method)) {
-            throw new \LogicException(\sprintf('Method "%s" does not exist', $method));
-        }
-
-        return (bool) $this->{$method}($attribute, $subject, $token);
+        return UserPermissionEnum::class;
     }
 
-    #[\Override]
+    public function getSubjectClass(): string
+    {
+        return User::class;
+    }
+
+    public function getAdditionalAuthorizedSubjects(): array
+    {
+        return [UserRepository::class];
+    }
+
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // if the subject is not a UserRepository or a User, deny access
-        if (! $subject instanceof UserRepository && ! $subject instanceof User) {
-            return false;
+        return true;
+    }
+
+    protected function canUserGetOne(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        if ($this->security->isGranted('ROLE_USER')) {
+            return true;
         }
 
-        // if the attribute is not a part of the PermissionEnum, deny access
-        return \in_array($attribute, PermissionEnum::values(), true);
+        return false;
     }
 
-    private function canUserGetOne(): bool
+    protected function canUserGetCollection(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return true;
-    }
-
-    private function canUserGetCollection(): bool
-    {
-        return true;
-    }
-
-    private function canUserCreate(): bool
-    {
-        return true;
-    }
-
-    private function canUserUpdate(): bool
-    {
-        return true;
-    }
-
-    private function canUserDelete(): bool
-    {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
-            throw new \LogicException('You must be an admin to delete a user');
+        if ($this->security->isGranted('ROLE_USER')) {
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+    protected function canUserCreate(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function canUserUpdate(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        $user = $this->security->getUser();
+        if ($subject instanceof User && $user instanceof User && $user?->getId() === $subject->getId()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function canUserDelete(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -8,13 +8,19 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\Factory\UserFactory;
 use App\User\Domain\Model\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
  */
-class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (don't need suffix for this class)
+abstract class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (don't need suffix for this class)
 {
+    use Factories;
+    use ResetDatabase;
+
     private static Client $client;
 
     protected ?User $user = null;
@@ -56,6 +62,8 @@ class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (don't nee
         }
     }
 
+    abstract public function url(array $parameters = []): string;
+
     /**
      * @param array<mixed> $options
      */
@@ -78,18 +86,27 @@ class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (don't nee
     /**
      * @param list<string|\BackedEnum> $roles
      */
-    public function loginAsUser(array $roles = ['ROLE_USER']): void
+    public function loginAsUser(array $roles = ['ROLE_USER'], array $attributes = [], bool $persist = false): User
     {
-        $this->user = UserFactory::new()->withoutPersisting()->create([
+        $user = UserFactory::new()->withoutPersisting()->create([
             'email' => 'user@phpunit.com',
             'password' => 'test',
             'roles' => array_map(
                 static fn (string|\BackedEnum $role): int|string => \is_string($role) ? $role : $role->value,
                 $roles,
             ),
-        ])->_real();
+            ...$attributes,
+        ]);
 
-        self::$client->loginUser($this->user);
+        if ($persist) {
+            $user->_save();
+        }
+
+        $this->user = $user->_real();
+
+        self::$client->loginUser($this->user, 'api');
+
+        return $this->user;
     }
 
     #[\Override]

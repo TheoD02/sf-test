@@ -17,12 +17,14 @@ final class DeleteOperationProcessorFix
 {
     public function __invoke(RequestEvent $event): void
     {
+        $request = $event->getRequest();
+
         /** @var Operation|null $operation */
-        $operation = $event->getRequest()->attributes->get('_api_operation');
+        $operation = $request->attributes->get('_api_operation');
         $processor = $operation?->getProcessor();
 
         if ($operation instanceof Delete && $processor !== null) {
-            $event->getRequest()->attributes->set('data', null);
+            $request->attributes->set('data', null);
         }
     }
 }

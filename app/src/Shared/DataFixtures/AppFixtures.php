@@ -6,7 +6,7 @@ namespace App\Shared\DataFixtures;
 
 use App\Tests\Factory\BatteryFactory;
 use App\Tests\Factory\UserFactory;
-use App\User\Domain\PermissionEnum;
+use App\User\Domain\Security\UserPermissionEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
         UserFactory::new()->create([
             'email' => 'admin@domain.tld',
             'password' => '$2y$13$2tqYsgWC3r/xtFMipQCvt.m1aJ4uvfjk4ng8dYW50SlGdiLCWgtT2', // admin
-            'roles' => ['ROLE_USER', ...PermissionEnum::cases()],
+            'roles' => ['ROLE_USER', ...UserPermissionEnum::cases()],
         ]);
 
         UserFactory::new()->createMany(100);

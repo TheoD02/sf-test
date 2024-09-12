@@ -6,7 +6,7 @@ namespace App\Tests\User;
 
 use App\Tests\AbstractApiTestCase;
 use App\Tests\Factory\UserFactory;
-use App\User\Domain\PermissionEnum;
+use App\User\Domain\Security\UserPermissionEnum;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -22,13 +22,13 @@ final class UserResourceTest extends AbstractApiTestCase
     public function testGetUser(): void
     {
         // Arrange
-        $this->loginAsUser([PermissionEnum::GET_ONE]);
+        $this->loginAsUser([UserPermissionEnum::GET_ONE]);
         UserFactory::new()->createOne([
             'email' => 'user1@test.test',
         ]);
 
         // Act
-        $this->request('GET', '/api/users/1');
+        $this->request('GET', $this->url(['id' => 1]));
 
         // Assert
         self::assertResponseIsSuccessful();
@@ -38,14 +38,23 @@ final class UserResourceTest extends AbstractApiTestCase
         ]);
     }
 
+    public function url(array $parameters = []): string
+    {
+        if (isset($parameters['id'])) {
+            return "/api/users/{$parameters['id']}";
+        }
+
+        return '/api/users';
+    }
+
     public function testGetCollection(): void
     {
         // Arrange
-        $this->loginAsUser([PermissionEnum::GET_COLLECTION]);
+        $this->loginAsUser([UserPermissionEnum::GET_COLLECTION]);
         $users = UserFactory::new()->createMany(5);
 
         // Act
-        $this->request('GET', '/api/users');
+        $this->request('GET', $this->url());
 
         // Assert
         $response = self::getResponse(true);
@@ -63,8 +72,8 @@ final class UserResourceTest extends AbstractApiTestCase
     public function testCreateUser(): void
     {
         // Act
-        $this->loginAsUser([PermissionEnum::CREATE]);
-        $this->request('POST', '/api/users', [
+        $this->loginAsUser([UserPermissionEnum::CREATE, 'ROLE_ADMIN']);
+        $this->request('POST', $this->url(), [
             'json' => [
                 'email' => 'test@test.com',
                 'password' => 'test',
@@ -80,13 +89,14 @@ final class UserResourceTest extends AbstractApiTestCase
     public function testUpdateUser(): void
     {
         // Arrange
-        $this->loginAsUser([PermissionEnum::UPDATE]);
-        UserFactory::new()->createOne([
-            'email' => 'old@test.com',
-        ]);
+        $user = $this->loginAsUser(
+            roles: [UserPermissionEnum::UPDATE],
+            attributes: ['email' => 'old@test.com'],
+            persist: true,
+        );
 
         // Act
-        $this->request('PATCH', '/api/users/1', [
+        $this->request('PATCH', $this->url(['id' => $user->getId()]), [
             'json' => [
                 'email' => 'new@test.com',
                 'password' => 'test',
@@ -105,11 +115,11 @@ final class UserResourceTest extends AbstractApiTestCase
     public function testDeleteUser(): void
     {
         // Arrange
-        $this->loginAsUser([PermissionEnum::DELETE, 'ROLE_ADMIN']);
+        $this->loginAsUser([UserPermissionEnum::DELETE, 'ROLE_ADMIN']);
         UserFactory::new()->createOne();
 
         // Act
-        $this->request('DELETE', '/api/users/1');
+        $this->request('DELETE', $this->url(['id' => 1]));
 
         // Assert
         self::assertResponseStatusCodeSame(204);
