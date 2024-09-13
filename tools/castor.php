@@ -52,7 +52,7 @@ function install_tools(): void
     io()->writeln('Checking tools installation');
     foreach (getToolDirectories() as $toolName => $toolDirectory) {
         io()->write("{$toolDirectory}...");
-        if (!fs()->exists("{$toolDirectory}/composer.json")) {
+        if (! fs()->exists("{$toolDirectory}/composer.json")) {
             io()->error("The tool {$toolDirectory} does not contain a composer.json file");
             exit(1);
         }
@@ -66,18 +66,18 @@ function install_tools(): void
             },
             id: "composer-{$toolName}",
             fingerprint: getHash($toolDirectory),
-            force: $needForceInstall
+            force: $needForceInstall,
         );
         io()->writeln(' <info>OK</info>');
     }
     io()->newLine();
 }
 
-function install_tool(string $toolName): void
+function install_tool(string $toolName, bool $update = false): void
 {
     composer(context()->withQuiet())
         ->withContainerDefinition(ContainerDefinitionBag::tools($toolName))
-        ->install()
+        ->add($update ? 'update' : 'install')
         ->add("--working-dir=\"/tools/{$toolName}\"")
         ->run();
 }
@@ -87,10 +87,10 @@ function update_tools(
     #[AsArgument]
     string $tool = '',
     #[AsOption]
-    bool   $all = false
+    bool   $all = false,
 ): void
 {
-    if ($tool === '' && !$all) {
+    if ($tool === '' && ! $all) {
         io()->error('You must specify a tool to update or use the --all option');
         exit(1);
     }
@@ -107,14 +107,14 @@ function update_tools(
 
     foreach ($tools as $toolName => $toolDirectory) {
         io()->write("{$toolDirectory}... Updating...");
-        if (!fs()->exists("{$toolDirectory}/composer.json")) {
+        if (! fs()->exists("{$toolDirectory}/composer.json")) {
             io()->error("The tool {$toolDirectory} does not contain a composer.json file");
             exit(1);
         }
 
         $containerDefinition = ContainerDefinitionBag::php();
         $containerDefinition->workingDirectory = "/tools/{$toolName}";
-        install_tool($toolName);
+        install_tool($toolName, true);
         io()->writeln(' <info>OK</info>');
     }
 }
