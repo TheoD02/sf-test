@@ -76,7 +76,7 @@ export interface paths {
         patch: operations["api_users_id_patch"];
         trace?: never;
     };
-    "/auth": {
+    "/auth/login": {
         parameters: {
             query?: never;
             header?: never;

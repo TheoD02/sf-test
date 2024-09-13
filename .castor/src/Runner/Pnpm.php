@@ -8,7 +8,9 @@ use Castor\Context;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\ContainerDefinition;
 
+use function Castor\app;
 use function Castor\io;
+use function TheoD\MusicAutoTagger\app_context;
 use function TheoD\MusicAutoTagger\root_context;
 
 class Pnpm extends Runner
@@ -31,7 +33,7 @@ class Pnpm extends Runner
 
     public function hasPackageJson(): bool
     {
-        return is_file(root_context()->workingDirectory . '/package.json');
+        return is_file(app_context()->workingDirectory . '/package.json');
     }
 
     protected function getBaseCommand(): ?string

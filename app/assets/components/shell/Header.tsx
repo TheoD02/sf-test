@@ -9,31 +9,18 @@ import {
   ScrollArea,
   rem,
   Menu,
-  Loader,
-  LoadingOverlay,
 } from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 import classes from "./Header.module.css";
 import {Link} from "@tanstack/react-router";
-import {useContext} from "react";
-import {AuthContext} from "@hooks/useAuth";
-import {notifications} from "@mantine/notifications";
 import {IconLogout} from "@tabler/icons-react";
+import { useAuth } from "@hooks/useAuth";
 
 export function Header() {
-  const {user, logout, isAuthenticating} = useContext(AuthContext);
+  const { user, logout, isLoading } = useAuth();
 
   const [drawerOpened, {toggle: toggleDrawer, close: closeDrawer}] =
     useDisclosure(false);
-
-  const handleLogout = () => {
-    logout();
-    notifications.show({
-      title: "Logged out",
-      message: "You have been successfully logged out",
-      color: "green",
-    });
-  };
 
   return (
     <Box>
@@ -72,13 +59,13 @@ export function Header() {
             {user !== null ? (
               <Menu trigger="hover" openDelay={100} closeDelay={400}>
                 <Menu.Target>
-                  <Button color="indigo">{user.userIdentifier}</Button>
+                  <Button color="indigo">{user?.id}</Button>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Actions</Menu.Label>
                   <Menu.Item
                     color="red"
-                    onClick={handleLogout}
+                    onClick={() => logout()}
                     leftSection={
                       <IconLogout style={{width: rem(14), height: rem(14)}}/>
                     }
@@ -93,14 +80,14 @@ export function Header() {
                   component={Link}
                   to="/auth/login"
                   variant="default"
-                  loading={isAuthenticating}
+                  loading={isLoading}
                 >
                   Log in
                 </Button>
                 <Button
                   component={Link}
                   to="/auth/register"
-                  loading={isAuthenticating}
+                  loading={isLoading}
                 >
                   Sign up
                 </Button>

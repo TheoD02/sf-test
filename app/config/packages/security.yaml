@@ -20,7 +20,7 @@ security:
             jwt: ~
         main:
             json_login:
-                check_path: auth # The name in routes.yaml is enough for mapping
+                check_path: auth_login # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -29,7 +29,7 @@ security:
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
-        - { path: ^/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
 

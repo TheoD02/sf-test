@@ -37,6 +37,9 @@
       "@routes": [
         "./assets/routes/*"
       ],
+      "@security": [
+        "./assets/security/*"
+      ],
     }
   },
   "include": [

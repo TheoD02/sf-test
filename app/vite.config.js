@@ -19,6 +19,11 @@ export default defineConfig({
       command: "npx openapi-typescript http://sf-test.web.localhost/api/docs.json -o ./assets/api/schema.d.ts",
       silent: true,
     }),
+    watch({
+      pattern: ["config/routes.yaml", "src/*/Infrastructure/ApiPlatform/**.php", "src/Shared/Controller/**.php"],
+      command: "npx @digitak/esrun \"./assets/security/roles-fetcher.ts\"",
+      silent: false,
+    }),
   ],
   build: {
     rollupOptions: {
@@ -34,6 +39,7 @@ export default defineConfig({
       { find: "@components", replacement: path.resolve(__dirname, "./assets/components") },
       { find: "@hooks", replacement: path.resolve(__dirname, "./assets/hooks") },
       { find: "@routes", replacement: path.resolve(__dirname, "./assets/routes") },
+      { find: "@security", replacement: path.resolve(__dirname, "./assets/security") },
     ]
   },
   server: {

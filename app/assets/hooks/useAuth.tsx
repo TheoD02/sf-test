@@ -1,85 +1,73 @@
 import $api from "@api/api";
-import {components} from "@api/schema";
-import {useLocalStorage} from "@mantine/hooks";
-import {createContext, ReactNode, useEffect, useState} from "react";
+import { components } from "@api/schema";
+import { useLocalStorage } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useState } from "react";
+import { useNavigate } from '@tanstack/react-router';
 
 type User = components["schemas"]["User.jsonld"];
-
-interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  login: (jwtToken: null | string, user: User) => void;
-  logout: () => void;
-  isAuthenticating: boolean;
-}
-
-export const AuthContext = createContext<AuthContextType>({
+const AuthContext = createContext({
   user: null,
-  token: null,
-  login: (jwtToken: null | string, user: User) => {
-    console.log("You should implement login");
-  },
-  logout: () => {
-    console.log("You should implement logout");
-  },
-  isAuthenticating: false,
+  login: (email: string, password: string) => {},
+  logout: () => {},
+  isLoading: false,
+  isError: false,
 });
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider = ({children}: AuthProviderProps) => {
-  const {data: loggedInUser, isLoading: isLoadingLoggedInUser} =
-    $api.useQuery(
-      "get",
-      "/api/me",
-      {},
-      {throwOnError: false, initialData: null, retry: false}
-    );
-
-  const {mutate: logoutApi} = $api.useMutation("get", "/api/logout", {
-    onSettled: () => {
-      window.location.href = "/";
-    },
-  });
-  const [user, setUser, removeUser] = useLocalStorage<User | null>({
-    key: "user",
-    defaultValue: loggedInUser,
-  });
-  const [token, setToken, removeToken] = useLocalStorage<string | null>({
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const [token, setToken] = useLocalStorage({
     key: "token",
     defaultValue: null,
   });
-  const [isAuthenticating, setIsAuthenticating] = useState(!(user || token));
+  const queryClient = useQueryClient();
 
-  const login = (jwtToken: null | string, user: User) => {
-    setUser(user);
-    setToken(jwtToken);
-    setIsAuthenticating(false);
-  };
+  // Mutation pour le login
+  const { mutate: loginMutation } = $api.useMutation("post", "/auth/login", {
+    onSuccess: async (data) => {
+      setToken(data.token);
+      queryClient.invalidateQueries({ queryKey: ["get", "/api/me"] });
+      notifications.show({
+        title: "Logged in",
+        message: "You have been successfully logged in",
+        color: "green",
+      });
+      navigate({ to: "/" });
+    },
+    onError: (error) => {
+      console.error('Erreur lors de la connexion:', error);
+    },
+  });
 
-  useEffect(() => {
-    login(null, loggedInUser);
-  }, [loggedInUser]);
+  const { data: userData, isLoading, isError } = $api.useQuery("get", "/api/me", {
+    onError: (error: any) => {
+      console.error('Erreur lors de la récupération des données utilisateur:', error);
+      setToken(null);
+    },
+  }, {
+    enabled: !!token,
+  });
 
+  const login = (email: string, password: string) => loginMutation({ body: { email, password } });
   const logout = () => {
-    if (token === null) {
-      logoutApi({});
-    }
-    removeToken();
-    removeUser();
-  };
-
-  if (isLoadingLoggedInUser) {
-    return <div>Loading...</div>;
+    setToken(null);
+    queryClient.clear(); // Nettoie le cache
+    notifications.show({
+      title: "Logged out",
+      message: "You have been successfully logged out",
+      color: "green",
+    });
+    navigate({ to: "/" });
   }
 
   return (
-    <AuthContext.Provider
-      value={{user, token, login, logout, isAuthenticating}}
-    >
+    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

@@ -1,4 +1,3 @@
-import {AuthContext} from "@hooks/useAuth";
 import {
   Anchor,
   Button,
@@ -10,13 +9,12 @@ import {
   PasswordInput,
   TextInput,
   Title,
-  ActionIcon,
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
-import {useContext} from "react";
 import $api from '@api/api';
+import { useAuth } from "@hooks/useAuth";
 
 export const Route = createFileRoute("/auth/login")({
   component: Login,
@@ -24,7 +22,7 @@ export const Route = createFileRoute("/auth/login")({
 
 function Login() {
   const navigate = useNavigate();
-  const {login} = useContext(AuthContext);
+  const {login, isLoading} = useAuth();
   const form = useForm({
     initialValues: {
       // TODO: Should not be set but for dev is good enough for now
@@ -32,22 +30,6 @@ function Login() {
       password: "admin",
     },
   });
-
-  const {mutate, isPending: isLoginPending} = $api.useMutation(
-    "post",
-    "/auth",
-    {
-      onSuccess: (data) => {
-        login(data.token, form.getValues());
-        notifications.show({
-          title: "Login successful",
-          message: "You are now logged in",
-          color: "green",
-        });
-        navigate({to: "/"});
-      },
-    }
-  );
 
   return (
     <Container size={420} my={40}>
@@ -59,7 +41,7 @@ function Login() {
         </Anchor>
       </Text>
 
-      <form onSubmit={form.onSubmit((values) => mutate({body: values}))}>
+      <form onSubmit={form.onSubmit((values) => login(values.email, values.password))}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             label="Email"
@@ -80,7 +62,7 @@ function Login() {
               Forgot password?
             </Anchor>
           </Group>
-          <Button type="submit" fullWidth mt="xl" loading={isLoginPending}>
+          <Button type="submit" fullWidth mt="xl" loading={isLoading}>
             Sign in
           </Button>
         </Paper>

@@ -25,10 +25,8 @@ export default function App() {
     <MantineProvider defaultColorScheme="dark">
       <QueryClientProvider client={queryClient}>
         <ModalsProvider>
-          <AuthProvider>
             <Notifications position="top-right"/>
             <RouterProvider router={router}/>
-          </AuthProvider>
         </ModalsProvider>
       </QueryClientProvider>
     </MantineProvider>
