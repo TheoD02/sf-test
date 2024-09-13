@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use App\Tests\Helper\GetterSetterTestHelperTrait;
 use PHPUnit\Framework\TestCase;
-use Random\RandomException;
 use Symfony\Component\Finder\Finder;
+
+use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
-class DtoGetterTesterTest extends TestCase
+/**
+ * @internal
+ */
+final class DtoGetterTesterTest extends TestCase
 {
     use GetterSetterTestHelperTrait;
 
     /**
-     * @dataProvider classProvider
-     * @throws \ReflectionException
-     * @throws RandomException
+     * @param class-string $class
+     *
+     * @dataProvider provideGetterSetterCases
      */
     public function testGetterSetter(string $class): void
     {
@@ -26,19 +32,28 @@ class DtoGetterTesterTest extends TestCase
         $this->populateObjectAndAssert();
     }
 
-    public function classProvider(): iterable
+    /**
+     * @return iterable<class-string, class-string>
+     */
+    public function provideGetterSetterCases(): iterable
     {
-        $files = (new Finder())
-            ->files()
+        $files = (new Finder()) // @phpstan-ignore-line (false positive, ignore exception, for test is not really problematic)
+        ->files()
             ->in([
-                dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Payload',
-                dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Resource',
-                dirname(__DIR__) . '/src/*/Domain/Model',
+                \dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Payload',
+                \dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Resource',
+                \dirname(__DIR__) . '/src/*/Domain/Model',
             ])
             ->name('*.php');
 
         foreach ($files as $file) {
+            if ($file->getRealPath() === false) {
+                continue;
+            }
             $content = file_get_contents($file->getRealPath());
+            if ($content === false) {
+                continue;
+            }
             preg_match('/namespace (.*);/', $content, $matches);
 
             if (empty($matches[1])) {
@@ -57,13 +72,14 @@ class DtoGetterTesterTest extends TestCase
 
             $className = u($className)->before(' extends ')->before(' implements ')->toString();
 
+            /** @var class-string $fqcn */
             $fqcn = $namespace . '\\' . $className;
 
             if (class_exists($fqcn) === false) {
                 continue;
             }
 
-            yield $fqcn => [$fqcn];
+            yield $fqcn => [$fqcn]; // @phpstan-ignore-line (false positive, that is OK)
         }
     }
 }

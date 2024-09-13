@@ -1,29 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Helper;
 
-use Random\RandomException;
-use function Zenstruck\Foundry\faker;
+use Webmozart\Assert\Assert;
 
 trait GetterSetterTestHelperTrait
 {
     /**
-     * @param array<string, mixed> $values
+     * @var array<string, mixed>
      */
     private array $values = [];
 
-    private \ReflectionClass $reflection;
+    /**
+     * @var ?\ReflectionClass<object>
+     */
+    private ?\ReflectionClass $reflection = null;
 
-    private object $instance;
+    private ?object $instance = null;
 
+    /**
+     * @var array<array-key, array{0: string, 1: string}>
+     */
     private array $testableMethods = [];
 
     /**
      * @param class-string $class
-     *
-     * @throws \ReflectionException
      */
-    protected function setupObject(string $class): void
+    public function setupObject(string $class): void
     {
         $this->reflection = new \ReflectionClass($class);
 
@@ -34,8 +39,8 @@ trait GetterSetterTestHelperTrait
             ->getMock();
 
         $this->testableMethods = [];
-        foreach ($this->reflection->getProperties() as $refProperty) {
-            $propertyName = $refProperty->getName();
+        foreach ($this->reflection->getProperties() as $reflectionProperty) {
+            $propertyName = $reflectionProperty->getName();
             $getterName = 'get' . ucfirst($propertyName);
             $setterName = 'set' . ucfirst($propertyName);
             if ($this->reflection->hasMethod($getterName) && $this->reflection->hasMethod($setterName)) {
@@ -46,47 +51,50 @@ trait GetterSetterTestHelperTrait
         $this->values = [];
     }
 
-    /**
-     * @throws RandomException
-     * @throws \ReflectionException
-     */
-    protected function populateObjectAndAssert(): void
+    public function populateObjectAndAssert(): void
     {
         if ($this->testableMethods === []) {
-            self::assertTrue(true);
+            self::assertTrue(true); // @phpstan-ignore-line instanceof.alwaysTrue (false positive, we want to have 1 assert if nothing is set)
+
             return;
         }
+
+        Assert::notNull($this->reflection);
 
         foreach ($this->testableMethods as [$getterName, $setterName]) {
             if ($getterName === 'getRoles') {
                 continue;
             }
+
             $refSetter = $this->reflection->getMethod($setterName);
             $refParams = $refSetter->getParameters();
-            if (1 === count($refParams)) {
+            if (\count($refParams) === 1) {
                 $refParam = $refParams[0];
                 $expectedValues = [];
                 if ($refParam->getType() instanceof \ReflectionNamedType === false) {
                     continue; // Skip complex types for now
                 }
+
                 try {
                     $expectedValues[] = $this->getParamMock($refParam->getType());
-                } catch (\Throwable $e) {
+                } catch (\Throwable) { // @phpstan-ignore-line (false positive, we want to catch all exceptions)
                     continue; // Skip complex types for now
                 }
-                if ($refParam->allowsNull() && null !== $refParam->getType()) {
+
+                if ($refParam->allowsNull()) {
                     $expectedValues[] = null;
                 }
+
                 foreach ($expectedValues as $expectedValue) {
                     $this->instance->{$setterName}($expectedValue);
                     $actualValue = $this->instance->{$getterName}();
 
-                    $message = sprintf(
+                    $message = \sprintf(
                         'Expected %s() value to equal "%s" (set using %s), got "%s"',
                         $getterName,
-                        print_r($expectedValue, 1),
+                        print_r($expectedValue, true), // @phpstan-ignore-line (OK, for this case)
                         $setterName,
-                        print_r($actualValue, 1),
+                        print_r($actualValue, true), // @phpstan-ignore-line (OK, for this case)
                     );
 
                     $this->assertEquals($expectedValue, $actualValue, $message);
@@ -95,11 +103,11 @@ trait GetterSetterTestHelperTrait
         }
     }
 
-    /**
-     * @throws RandomException
-     */
-    private function getParamMock(\ReflectionType|\ReflectionIntersectionType|\ReflectionNamedType|\ReflectionUnionType $refType): mixed
+    private function getParamMock(
+        \ReflectionType $refType,
+    ): mixed
     {
+        Assert::isInstanceOf($refType, \ReflectionNamedType::class);
         $type = $refType->getName();
 
         if (interface_exists($type)) {
@@ -112,7 +120,7 @@ trait GetterSetterTestHelperTrait
             'integer' => random_int(1, 100),
             'string' => str_shuffle('abcdefghijklmnopqrstuvxyz0123456789'),
             'array' => [],
-            default => $this->getMockBuilder($refType)->disableOriginalConstructor()->getMock(),
+            default => $this->getMockBuilder($type)->disableOriginalConstructor()->getMock(), // @phpstan-ignore-line (OK, for this case)
         };
     }
 }

@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Shared\Trait;
 
 use App\Shared\Trait\PermissionTrait;
 use PHPUnit\Framework\TestCase;
 
-class PermissionTraitTest extends TestCase
+/**
+ * @internal
+ */
+final class PermissionTraitTest extends TestCase
 {
-
     /**
-     * @dataProvider getMethodNameData
+     * @dataProvider provideGetMethodNameCases
      */
     public function testGetMethodName(string $value, string $expectedMethodName): void
     {
@@ -17,7 +21,10 @@ class PermissionTraitTest extends TestCase
         $permission = new class($value) {
             use PermissionTrait;
 
-            public function __construct(public string $value) // Normally is used in enum (replace $this->value by property for testing purposes)
+            public function __construct(
+                // Normally is used in enum (replace $this->value by property for testing purposes)
+                public string $value,
+            )
             {
             }
         };
@@ -29,13 +36,23 @@ class PermissionTraitTest extends TestCase
         self::assertSame($expectedMethodName, $methodName);
     }
 
-    public function getMethodNameData(): \Generator
+
+    /**
+     * @return iterable<string, array{value: string, expectedMethodName: string}>
+     */
+    public function provideGetMethodNameCases(): iterable
     {
-        yield 'normal' => ['SUPER_NAME', 'canSuperName'];
-        yield 'with-space' => ['SUPER NAME', 'canSuperName'];
-        yield 'with-dash' => ['SUPER-NAME', 'canSuperName'];
-        yield 'with-underscore' => ['SUPER_NAME', 'canSuperName'];
-        yield 'with-dot' => ['SUPER.NAME', 'canSuperName'];
-        yield 'with-slash' => ['SUPER/NAME', 'canSuperName'];
+        yield 'normal' => ['value' => 'SUPER_NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-space' => ['value' => 'SUPER NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-underscore' => ['value' => 'SUPER_NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dash' => ['value' => 'SUPER-NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot' => ['value' => 'SUPER.NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-space' => ['value' => 'SUPER. NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-underscore' => ['value' => 'SUPER.NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-dash' => ['value' => 'SUPER.-NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-dot' => ['value' => 'SUPER..NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-dot-space' => ['value' => 'SUPER.. NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-dot-underscore' => ['value' => 'SUPER..NAME', 'expectedMethodName' => 'canSuperName'];
+        yield 'normal-with-dot-dot-dash' => ['value' => 'SUPER..-NAME', 'expectedMethodName' => 'canSuperName'];
     }
 }

@@ -17,10 +17,9 @@ use Rekalogika\ApiLite\State\AbstractProcessor;
 class UserDeleteProcessor extends AbstractProcessor
 {
     public function __construct(
-        private readonly UserRepository         $userRepository,
+        private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     #[\Override]

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Infrastructure\Security;
 
 use App\Tests\AbstractVoterTestCase;
@@ -11,82 +13,145 @@ use App\User\Infrastructure\Security\UserVoter;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class UserVoterTest extends AbstractVoterTestCase
+/**
+ * @extends AbstractVoterTestCase<value-of<UserPermissionEnum>, User>
+ */
+final class UserVoterTest extends AbstractVoterTestCase
 {
+    /**
+     * @{inheritdoc}
+     */
+    #[\Override]
     public function providePermissions(): iterable
     {
-        foreach ($this->getVoterInstance()->getPermissionsCases() as $permission) {
-            yield $permission->value => [$permission->value, new User(), true];
+        foreach ($this->getPermissionsCases() as $permissionsCase) {
+            yield (string) $permissionsCase->value => ['attribute' => (string) $permissionsCase->value, 'subject' => new User(), 'expectedSupports' => true];
         }
 
-        yield 'custom-get-one' => [UserPermissionEnum::GET_ONE->value, new UserRepository($this->createMock(ManagerRegistry::class)), true];
-
-        yield 'not-exists' => ['not-exists', null, false];
+        yield 'custom-get-one' => [
+            'attribute' => UserPermissionEnum::GET_ONE->value,
+            'subject' => new UserRepository($this->createMock(ManagerRegistry::class)),
+            'expectedSupports' => true,
+        ];
     }
 
+    #[\Override]
     public function getPermissionsCases(): array
     {
         return UserPermissionEnum::cases();
     }
 
-    public function provideVoteOnAttributeData(): \Generator
+    #[\Override]
+    public function provideVoteOnAttributesCases(): \Generator
     {
-        yield 'user-get-one' => [['ROLE_USER'], [UserPermissionEnum::GET_ONE->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'admin-get-one' => [['ROLE_ADMIN'], [UserPermissionEnum::GET_ONE->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'user-get-collection' => [['ROLE_USER'], [UserPermissionEnum::GET_COLLECTION->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'admin-get-collection' => [['ROLE_ADMIN'], [UserPermissionEnum::GET_COLLECTION->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'user-create' => [['ROLE_USER'], [UserPermissionEnum::CREATE->value], null, VoterInterface::ACCESS_DENIED];
-        yield 'admin-create' => [['ROLE_ADMIN'], [UserPermissionEnum::CREATE->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'user-update' => [['ROLE_USER'], [UserPermissionEnum::UPDATE->value], null, VoterInterface::ACCESS_DENIED];
-        yield 'admin-update' => [['ROLE_ADMIN'], [UserPermissionEnum::UPDATE->value], null, VoterInterface::ACCESS_GRANTED];
-        yield 'user-delete' => [['ROLE_USER'], [UserPermissionEnum::DELETE->value], null, VoterInterface::ACCESS_DENIED];
-        yield 'admin-delete' => [['ROLE_ADMIN'], [UserPermissionEnum::DELETE->value], null, VoterInterface::ACCESS_GRANTED];
+        yield 'user-get-one' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::GET_ONE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'admin-get-one' => [
+            'roles' => ['ROLE_ADMIN'],
+            'attributes' => [UserPermissionEnum::GET_ONE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-get-collection' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::GET_COLLECTION->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'admin-get-collection' => [
+            'roles' => ['ROLE_ADMIN'],
+            'attributes' => [UserPermissionEnum::GET_COLLECTION->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-create' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::CREATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
+        ];
+        yield 'admin-create' => [
+            'roles' => ['ROLE_ADMIN'],
+            'attributes' => [UserPermissionEnum::CREATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-update' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::UPDATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
+        ];
+        yield 'admin-update' => [
+            'roles' => ['ROLE_ADMIN'],
+            'attributes' => [UserPermissionEnum::UPDATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-delete' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::DELETE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
+        ];
+        yield 'admin-delete' => [
+            'roles' => ['ROLE_ADMIN'],
+            'attributes' => [UserPermissionEnum::DELETE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
     }
 
     public function testVoteOnAttributesUpdateWithSelfUser(): void
     {
         // Arrange
-        $user = UserFactory::new()->createOne(['roles' => ['ROLE_USER']])->_real();
+        $user = UserFactory::new()->createOne([
+            'roles' => ['ROLE_USER'],
+        ])->_real();
         $this->loginUser($user);
 
         // Act
-        $vote = $this->voteOnAttributes(
-            attributes: [UserPermissionEnum::UPDATE->value],
-            subject: $user,
-        );
+        $vote = $this->voteOnAttributes(attributes: [UserPermissionEnum::UPDATE->value], subject: $user);
 
         // Assert
-        $this->assertVote(
-            actualVote: $vote,
-            expectedVote: VoterInterface::ACCESS_GRANTED,
-        );
+        $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_GRANTED);
     }
 
     public function testVoteOnAttributesUpdateWithOtherUser(): void
     {
         // Arrange
-        $user = UserFactory::new()->createOne(['roles' => ['ROLE_USER']])->_real();
-        $otherUser = UserFactory::new()->createOne(['roles' => ['ROLE_USER']])->_real();
+        $user = UserFactory::new()->createOne([
+            'roles' => ['ROLE_USER'],
+        ])->_real();
+        $otherUser = UserFactory::new()->createOne([
+            'roles' => ['ROLE_USER'],
+        ])->_real();
         $this->loginUser($user);
 
         // Act
-        $vote = $this->voteOnAttributes(
-            attributes: [UserPermissionEnum::UPDATE->value],
-            subject: $otherUser,
-        );
+        $vote = $this->voteOnAttributes(attributes: [UserPermissionEnum::UPDATE->value], subject: $otherUser);
 
         // Assert
-        $this->assertVote(
-            actualVote: $vote,
-            expectedVote: VoterInterface::ACCESS_DENIED,
-        );
+        $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
     }
 
+    /**
+     * @{inheritdoc}
+     */
+    #[\Override]
     public function getVoterFqcn(): string
     {
         return UserVoter::class;
     }
 
+    /**
+     * @{inheritdoc}
+     */
+    #[\Override]
     public function getDefaultSubject(): object
     {
         return UserFactory::new()->create();

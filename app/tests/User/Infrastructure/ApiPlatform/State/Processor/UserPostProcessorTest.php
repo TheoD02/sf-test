@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Infrastructure\ApiPlatform\State\Processor;
 
 use App\Tests\AbstractApiTestCase;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
-class UserPostProcessorTest extends AbstractApiTestCase
+/**
+ * @internal
+ */
+final class UserPostProcessorTest extends AbstractApiTestCase
 {
     public function testProcess(): void
     {
@@ -30,6 +35,7 @@ class UserPostProcessorTest extends AbstractApiTestCase
         ]);
     }
 
+    #[\Override]
     public function url(array $parameters = []): string
     {
         return '/api/users';

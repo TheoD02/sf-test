@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Shared\DataFixtures;
 
-use App\Tests\Factory\BatteryFactory;
 use App\Tests\Factory\UserFactory;
 use App\User\Domain\Security\UserPermissionEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -22,8 +21,6 @@ class AppFixtures extends Fixture
         ]);
 
         UserFactory::new()->createMany(100);
-
-        BatteryFactory::createMany(1000);
 
         $manager->flush();
     }

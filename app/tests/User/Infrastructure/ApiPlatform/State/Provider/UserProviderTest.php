@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Infrastructure\ApiPlatform\State\Provider;
 
 use App\Tests\AbstractApiTestCase;
 use App\Tests\Factory\UserFactory;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
-class UserProviderTest extends AbstractApiTestCase
+/**
+ * @internal
+ */
+final class UserProviderTest extends AbstractApiTestCase
 {
-
-    public function testProvide()
+    public function testProvide(): void
     {
         // Arrange
         $this->loginAsUser();
         $user = UserFactory::new()->create();
 
         // Act
-        $this->request('GET', $this->url(['id' => $user->getId()]));
+        $this->request('GET', $this->url([
+            'id' => $user->getId() ?? 0,
+        ]));
 
         // Assert
         self::assertResponseStatusCodeSame(200);
@@ -28,6 +34,10 @@ class UserProviderTest extends AbstractApiTestCase
         ]);
     }
 
+    /**
+     * @param array{id?: int} $parameters
+     */
+    #[\Override]
     public function url(array $parameters = []): string
     {
         if (! isset($parameters['id'])) {

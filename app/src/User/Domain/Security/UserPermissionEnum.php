@@ -9,8 +9,8 @@ use ArchTech\Enums\Values;
 
 enum UserPermissionEnum: string
 {
-    use Values;
     use PermissionTrait;
+    use Values;
 
     case GET_ONE = 'USER_GET_ONE';
     case GET_COLLECTION = 'USER_GET_COLLECTION';

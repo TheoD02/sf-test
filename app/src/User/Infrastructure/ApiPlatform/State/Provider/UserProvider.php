@@ -18,8 +18,7 @@ class UserProvider extends AbstractProvider
 {
     public function __construct(
         private readonly UserRepository $userRepository,
-    )
-    {
+    ) {
     }
 
     #[\Override]

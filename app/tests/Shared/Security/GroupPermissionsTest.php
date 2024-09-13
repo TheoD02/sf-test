@@ -1,20 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Shared\Security;
 
 use App\Shared\Security\GroupPermissions;
 use PHPUnit\Framework\TestCase;
 
-class GroupPermissionsTest extends TestCase
+/**
+ * @internal
+ */
+final class GroupPermissionsTest extends TestCase
 {
     public function testGetPermissions(): void
     {
         foreach (GroupPermissions::cases() as $groupPermission) {
-            self::assertIsArray($groupPermission->getPermissions());
             $fqcn = $groupPermission->getFqcn();
             $groupPermissions = $groupPermission->getPermissions();
+            /** @var array<\BackedEnum> $cases */
+            $cases = $fqcn::cases();
 
-            foreach ($fqcn::cases() as $permission) {
+            foreach ($cases as $permission) {
                 self::assertContains($permission->value, $groupPermissions);
             }
         }

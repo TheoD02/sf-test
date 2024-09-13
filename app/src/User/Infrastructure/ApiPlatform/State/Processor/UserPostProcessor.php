@@ -20,19 +20,17 @@ class UserPostProcessor extends AbstractProcessor
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserRepository         $userRepository,
-    )
-    {
+        private readonly UserRepository $userRepository,
+    ) {
     }
 
     #[\Override]
     public function process(
-        mixed     $data,
+        mixed $data,
         Operation $operation,
-        array     $uriVariables = [],
-        array     $context = [],
-    ): UserResource
-    {
+        array $uriVariables = [],
+        array $context = [],
+    ): UserResource {
         $this->denyAccessUnlessGranted(UserPermissionEnum::CREATE->value, $this->userRepository);
 
         $user = $this->map($data, User::class);

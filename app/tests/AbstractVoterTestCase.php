@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use App\Tests\Factory\UserFactory;
@@ -10,30 +12,44 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Test\Factories;
 
+/**
+ * @template TAttribute of string
+ * @template TSubject of mixed
+ */
 abstract class AbstractVoterTestCase extends KernelTestCase
 {
     use Factories;
     use KernelTestCaseUserAuthenticatorTrait;
 
+    /**
+     * @var array{attributes: array<string>, subject: mixed}|array{}
+     */
     private static array $currentContext = [];
 
     /**
-     * @return array<\BackedEnum>
+     * @return list<\BackedEnum>
      */
     abstract public function getPermissionsCases(): array;
 
     /**
      * @dataProvider providePermissions
      */
-    public function testVoterSupportsAttribute(string $attribute, mixed $subject = null, bool $expectedSupports = true): void
+    public function testVoterSupportsAttribute(
+        string $attribute,
+        mixed  $subject = null,
+        bool   $expectedSupports = true,
+    ): void
     {
         // Act
-        $permission = ($this->getVoterInstance())->supportsAttribute($attribute);
+        $permission = $this->getVoterInstance()->supportsAttribute($attribute);
 
         // Assert
         self::assertSame($expectedSupports, $permission);
     }
 
+    /**
+     * @return Voter<TAttribute, TSubject>
+     */
     public function getVoterInstance(): Voter
     {
         $class = $this->getVoterFqcn();
@@ -42,7 +58,7 @@ abstract class AbstractVoterTestCase extends KernelTestCase
     }
 
     /**
-     * @return class-string<Voter>
+     * @return class-string<Voter<TAttribute, TSubject>>
      */
     abstract public function getVoterFqcn(): string;
 
@@ -55,18 +71,31 @@ abstract class AbstractVoterTestCase extends KernelTestCase
         $subject ??= $this->getDefaultSubject();
 
         // Act
-        $permission = ($this->getVoterInstance())->supportsType(is_object($subject) ? get_class($subject) : get_debug_type($subject));
+        $permission = $this->getVoterInstance()->supportsType(is_object($subject) ? $subject::class : get_debug_type($subject));
 
         // Assert
-        self::assertTrue($permission);
+        if ($expectedSupports) {
+            self::assertTrue($permission);
+        } else {
+            self::assertFalse($permission);
+        }
     }
 
     abstract public function getDefaultSubject(): object;
 
     /**
-     * @dataProvider provideVoteOnAttributeData
+     * @param array<string>            $roles
+     * @param array<string>            $attributes
+     * @param VoterInterface::ACCESS_* $expectedVote
+     *
+     * @dataProvider provideVoteOnAttributesCases
      */
-    public function testVoteOnAttributes(array $roles, array $attributes, mixed $subject = null, int $expectedVote = VoterInterface::ACCESS_DENIED): void
+    public function testVoteOnAttributes(
+        array $roles,
+        array $attributes,
+        mixed $subject = null,
+        int   $expectedVote = VoterInterface::ACCESS_DENIED,
+    ): void
     {
         // Act
         $vote = $this->voteOnAttributes($roles, $attributes, $subject);
@@ -75,6 +104,10 @@ abstract class AbstractVoterTestCase extends KernelTestCase
         $this->assertVote($vote, $expectedVote);
     }
 
+    /**
+     * @param array<string> $roles
+     * @param array<string> $attributes
+     */
     public function voteOnAttributes(array $roles = [], array $attributes = [], mixed $subject = null): int
     {
         // Arrange
@@ -85,7 +118,9 @@ abstract class AbstractVoterTestCase extends KernelTestCase
         }
 
         if (! $this->isLoggedIn()) {
-            $user = UserFactory::new()->createOne(['roles' => $roles])->_real();
+            $user = UserFactory::new()->createOne([
+                'roles' => $roles,
+            ])->_real();
             $this->loginUser($user);
         }
 
@@ -101,33 +136,42 @@ abstract class AbstractVoterTestCase extends KernelTestCase
             'attributes' => $attributes,
             'subject' => $subject,
         ];
-        return ($voterInstance)->vote($this->getAuthenticatedToken(), $subject, $attributes);
+
+        return $voterInstance->vote($this->getAuthenticatedToken(), $subject, $attributes);
     }
 
+    /**
+     * @param VoterInterface::ACCESS_* $expectedVote
+     */
     public function assertVote(int $actualVote, int $expectedVote): void
     {
-        $friendlyName = static function (int $vote): string {
-            return match ($vote) {
-                VoterInterface::ACCESS_GRANTED => 'granted',
-                VoterInterface::ACCESS_DENIED => 'denied',
-                VoterInterface::ACCESS_ABSTAIN => 'abstain',
-                default => 'unknown',
-            };
+        // @phpstan-ignore-next-line shipmonk.unusedMatchResult (false positive, it used through callable)
+        $friendlyName = static fn (int $vote): string => match ($vote) {
+            VoterInterface::ACCESS_GRANTED => 'granted',
+            VoterInterface::ACCESS_DENIED => 'denied',
+            VoterInterface::ACCESS_ABSTAIN => 'abstain',
+            default => 'unknown',
         };
 
         // Assert
-        self::assertSame($expectedVote, $actualVote, sprintf(
+        self::assertSame($expectedVote, $actualVote, \sprintf(
             'Expected vote "%s" but got "%s" for "%s" with attributes "%s" and subject "%s". Roles: "%s"',
             $friendlyName($expectedVote),
             $friendlyName($actualVote),
             $this->getVoterInstance()::class,
-            implode('", "', self::$currentContext['attributes']),
-            is_object(self::$currentContext['subject']) ? self::$currentContext['subject']::class : get_debug_type(self::$currentContext['subject']),
+            implode('", "', self::$currentContext['attributes'] ?? []),
+            get_debug_type(self::$currentContext['subject'] ?? null),
             implode('", "', $this->getAuthenticatedUser()->getRoles()),
         ));
     }
 
-    abstract public function provideVoteOnAttributeData(): iterable;
+    /**
+     * @return iterable<array{roles: array<string>, attributes: array<string>, subject: mixed, expectedVote: VoterInterface::ACCESS_*}>
+     */
+    abstract public function provideVoteOnAttributesCases(): iterable;
 
+    /**
+     * @return iterable<string, array{attribute: string, subject: mixed, expectedSupports: bool}>
+     */
     abstract public function providePermissions(): iterable;
 }

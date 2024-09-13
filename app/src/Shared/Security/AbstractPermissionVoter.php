@@ -1,21 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Security;
 
+use App\Shared\Trait\PermissionTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * @template TAttribute of object
- * @template TSubject of object
+ * @template TAttribute of string
+ * @template TSubject of mixed
  *
  * @template-extends Voter<TAttribute, TSubject>
  */
 abstract class AbstractPermissionVoter extends Voter
 {
+    #[\Override]
     public function supportsType(string $subjectType): bool
     {
-        return is_a($subjectType, $this->getSubjectClass(), true) || \in_array($subjectType, $this->getAdditionalAuthorizedSubjects(), true);
+        return is_a($subjectType, $this->getSubjectClass(), true) || \in_array(
+                $subjectType,
+                $this->getAdditionalAuthorizedSubjects(),
+                true,
+            );
     }
 
     /**
@@ -31,18 +39,26 @@ abstract class AbstractPermissionVoter extends Voter
         return [];
     }
 
+    #[\Override]
     public function supportsAttribute(string $attribute): bool
     {
         return \in_array($attribute, $this->getPermissionValues(), true);
     }
 
+    /**
+     * @return list<string>
+     */
     protected function getPermissionValues(): array
     {
-        return call_user_func([$this->getPermissionsEnum(), 'values']);
+        $class = $this->getPermissionsEnum();
+        /** @var list<string> $values */
+        $values = $class::values();
+
+        return $values;
     }
 
     /**
-     * @return class-string<TAttribute>
+     * @return class-string
      */
     abstract public function getPermissionsEnum(): string;
 
@@ -51,21 +67,41 @@ abstract class AbstractPermissionVoter extends Voter
     {
         // TODO: This should be only run in dev mode
         foreach ($this->getPermissionsCases() as $permission) {
+            if (! method_exists($permission, 'getMethodName')) {
+                throw new \LogicException(\sprintf(
+                    'Please add use of "%s" trait to "%s"',
+                    PermissionTrait::class,
+                    $permission::class,
+                ));
+            }
+
+            /** @var string $methodName */
             $methodName = $permission->getMethodName();
-            if (! \method_exists($this::class, $methodName)) {
-                throw new \LogicException(sprintf('Please implement the "%s" method in "%s"', $methodName, $this::class));
+            if (! method_exists(static::class, $methodName)) {
+                throw new \LogicException(\sprintf(
+                    'Please implement the "%s" method in "%s"',
+                    $methodName,
+                    static::class,
+                ));
             }
         }
 
+        // @phpstan-ignore-next-line method.nonObject (Already checked in foreach on top)
         $methodName = $this->getPermissionsEnum()::from($attribute)->getMethodName();
+
+        /** @var bool */
         return $this->{$methodName}($attribute, $subject, $token);
     }
 
     /**
-     * @return list<TAttribute>
+     * @return list<\BackedEnum>
      */
     public function getPermissionsCases(): array
     {
-        return call_user_func([$this->getPermissionsEnum(), 'cases']);
+        $class = $this->getPermissionsEnum();
+        /** @var list<\BackedEnum> $cases */
+        $cases = $class::cases();
+
+        return $cases;
     }
 }

@@ -28,7 +28,9 @@ final class UserResourceTest extends AbstractApiTestCase
         ]);
 
         // Act
-        $this->request('GET', $this->url(['id' => 1]));
+        $this->request('GET', $this->url([
+            'id' => 1,
+        ]));
 
         // Assert
         self::assertResponseIsSuccessful();
@@ -38,6 +40,10 @@ final class UserResourceTest extends AbstractApiTestCase
         ]);
     }
 
+    /**
+     * @param array{id?: int} $parameters
+     */
+    #[\Override]
     public function url(array $parameters = []): string
     {
         if (isset($parameters['id'])) {
@@ -91,12 +97,16 @@ final class UserResourceTest extends AbstractApiTestCase
         // Arrange
         $user = $this->loginAsUser(
             roles: [UserPermissionEnum::UPDATE],
-            attributes: ['email' => 'old@test.com'],
+            attributes: [
+                'email' => 'old@test.com',
+            ],
             persist: true,
         );
 
         // Act
-        $this->request('PATCH', $this->url(['id' => $user->getId()]), [
+        $this->request('PATCH', $this->url([
+            'id' => $user->getId() ?? 0,
+        ]), [
             'json' => [
                 'email' => 'new@test.com',
                 'password' => 'test',
@@ -119,7 +129,9 @@ final class UserResourceTest extends AbstractApiTestCase
         UserFactory::new()->createOne();
 
         // Act
-        $this->request('DELETE', $this->url(['id' => 1]));
+        $this->request('DELETE', $this->url([
+            'id' => 1,
+        ]));
 
         // Assert
         self::assertResponseStatusCodeSame(204);

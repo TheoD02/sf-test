@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Shared\Listener;
 
 use ApiPlatform\Metadata\Delete;
@@ -9,9 +11,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class DeleteOperationProcessorFixTest extends TestCase
+/**
+ * @internal
+ */
+final class DeleteOperationProcessorFixTest extends TestCase
 {
-
     public function testDeleteOperationProcessorFix(): void
     {
         // Arrange

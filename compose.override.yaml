@@ -6,6 +6,7 @@ services:
       target: frankenphp_dev
     ports:
       - "3151:3151" # React Hot Module
+      - "11112:11112" # PHPStan
     volumes:
       - ./app:/app
       - ./tools:/tools

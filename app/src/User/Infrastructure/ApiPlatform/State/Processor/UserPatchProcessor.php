@@ -19,20 +19,18 @@ use Rekalogika\ApiLite\State\AbstractProcessor;
 class UserPatchProcessor extends AbstractProcessor
 {
     public function __construct(
-        private readonly UserRepository         $userRepository,
+        private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     #[\Override]
     public function process(
-        mixed     $data,
+        mixed $data,
         Operation $operation,
-        array     $uriVariables = [],
-        array     $context = [],
-    ): UserResource
-    {
+        array $uriVariables = [],
+        array $context = [],
+    ): UserResource {
         $user = $this->userRepository->find($uriVariables['id'] ?? null) ?? throw new NotFoundException();
 
         $this->denyAccessUnlessGranted(UserPermissionEnum::UPDATE->value, $user);

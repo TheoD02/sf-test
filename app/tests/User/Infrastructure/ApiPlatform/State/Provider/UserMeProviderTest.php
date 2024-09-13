@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Infrastructure\ApiPlatform\State\Provider;
 
 use App\Tests\AbstractApiTestCase;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
-class UserMeProviderTest extends AbstractApiTestCase
+/**
+ * @internal
+ */
+final class UserMeProviderTest extends AbstractApiTestCase
 {
-
     public function testProvide(): void
     {
         // Arrange
@@ -21,6 +25,7 @@ class UserMeProviderTest extends AbstractApiTestCase
         self::assertMatchesResourceItemJsonSchema(UserResource::class);
     }
 
+    #[\Override]
     public function url(array $parameters = []): string
     {
         return '/api/me';

@@ -8,7 +8,6 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Tests\Factory\UserFactory;
 use App\User\Domain\Model\User;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -62,6 +61,9 @@ abstract class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (
         }
     }
 
+    /**
+     * @param array<mixed> $parameters
+     */
     abstract public function url(array $parameters = []): string;
 
     /**
@@ -85,6 +87,7 @@ abstract class AbstractApiTestCase extends ApiTestCase // @phpstan-ignore-line (
 
     /**
      * @param list<string|\BackedEnum> $roles
+     * @param array<string, mixed>     $attributes
      */
     public function loginAsUser(array $roles = ['ROLE_USER'], array $attributes = [], bool $persist = false): User
     {

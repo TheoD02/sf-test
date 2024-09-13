@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Infrastructure\ApiPlatform\State\Provider;
 
 use App\Tests\AbstractApiTestCase;
 use App\Tests\Factory\UserFactory;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
-class UserCollectionProviderTest extends AbstractApiTestCase
+/**
+ * @internal
+ */
+final class UserCollectionProviderTest extends AbstractApiTestCase
 {
-
     public function testProvide(): void
     {
         // Arrange
@@ -24,6 +28,7 @@ class UserCollectionProviderTest extends AbstractApiTestCase
         self::assertCount(5, self::getResponse(true));
     }
 
+    #[\Override]
     public function url(array $parameters = []): string
     {
         return '/api/users';
