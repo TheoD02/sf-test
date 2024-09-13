@@ -27,6 +27,8 @@ trait GetterSetterTestHelperTrait
 
     /**
      * @param class-string $class
+     *
+     * @throws \ReflectionException
      */
     public function setupObject(string $class): void
     {
