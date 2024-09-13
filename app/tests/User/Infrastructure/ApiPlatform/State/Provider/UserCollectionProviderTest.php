@@ -6,6 +6,7 @@ namespace App\Tests\User\Infrastructure\ApiPlatform\State\Provider;
 
 use App\Tests\AbstractApiTestCase;
 use App\Tests\Factory\UserFactory;
+use App\User\Domain\Security\UserPermissionEnum;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
 /**
@@ -16,7 +17,7 @@ final class UserCollectionProviderTest extends AbstractApiTestCase
     public function testProvide(): void
     {
         // Arrange
-        $this->loginAsUser();
+        $this->loginAsUser([UserPermissionEnum::GET_COLLECTION]);
         UserFactory::new()->many(5)->create();
 
         // Act
