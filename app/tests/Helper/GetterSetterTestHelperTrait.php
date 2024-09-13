@@ -27,8 +27,6 @@ trait GetterSetterTestHelperTrait
 
     /**
      * @param class-string $class
-     *
-     * @throws \ReflectionException
      */
     public function setupObject(string $class): void
     {
@@ -38,7 +36,8 @@ trait GetterSetterTestHelperTrait
             ->getMockBuilder($class)
             ->disableOriginalConstructor()
             ->onlyMethods([])
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->testableMethods = [];
         foreach ($this->reflection->getProperties() as $reflectionProperty) {
@@ -56,7 +55,8 @@ trait GetterSetterTestHelperTrait
     public function populateObjectAndAssert(): void
     {
         if ($this->testableMethods === []) {
-            self::assertTrue(true); // @phpstan-ignore-line instanceof.alwaysTrue (false positive, we want to have 1 assert if nothing is set)
+            // @phpstan-ignore-next-line instanceof.alwaysTrue (false positive, we want to have 1 assert if nothing is set)
+            self::assertTrue(true);
 
             return;
         }
@@ -105,9 +105,7 @@ trait GetterSetterTestHelperTrait
         }
     }
 
-    private function getParamMock(
-        \ReflectionType $refType,
-    ): mixed
+    private function getParamMock(\ReflectionType $refType): mixed
     {
         Assert::isInstanceOf($refType, \ReflectionNamedType::class);
         $type = $refType->getName();
@@ -122,7 +120,8 @@ trait GetterSetterTestHelperTrait
             'integer' => random_int(1, 100),
             'string' => str_shuffle('abcdefghijklmnopqrstuvxyz0123456789'),
             'array' => [],
-            default => $this->getMockBuilder($type)->disableOriginalConstructor()->getMock(), // @phpstan-ignore-line (OK, for this case)
+            // @phpstan-ignore-next-line (OK, for this case)
+            default => $this->getMockBuilder($type)->disableOriginalConstructor()->getMock(),
         };
     }
 }

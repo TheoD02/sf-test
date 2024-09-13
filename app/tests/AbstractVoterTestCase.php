@@ -36,10 +36,9 @@ abstract class AbstractVoterTestCase extends KernelTestCase
      */
     public function testVoterSupportsAttribute(
         string $attribute,
-        mixed  $subject = null,
-        bool   $expectedSupports = true,
-    ): void
-    {
+        mixed $subject = null,
+        bool $expectedSupports = true,
+    ): void {
         // Act
         $permission = $this->getVoterInstance()->supportsAttribute($attribute);
 
@@ -71,7 +70,7 @@ abstract class AbstractVoterTestCase extends KernelTestCase
         $subject ??= $this->getDefaultSubject();
 
         // Act
-        $permission = $this->getVoterInstance()->supportsType(is_object($subject) ? $subject::class : get_debug_type($subject));
+        $permission = $this->getVoterInstance()->supportsType(get_debug_type($subject));
 
         // Assert
         if ($expectedSupports) {
@@ -94,9 +93,8 @@ abstract class AbstractVoterTestCase extends KernelTestCase
         array $roles,
         array $attributes,
         mixed $subject = null,
-        int   $expectedVote = VoterInterface::ACCESS_DENIED,
-    ): void
-    {
+        int $expectedVote = VoterInterface::ACCESS_DENIED,
+    ): void {
         // Act
         $vote = $this->voteOnAttributes($roles, $attributes, $subject);
 
@@ -145,7 +143,7 @@ abstract class AbstractVoterTestCase extends KernelTestCase
      */
     public function assertVote(int $actualVote, int $expectedVote): void
     {
-        // @phpstan-ignore-next-line shipmonk.unusedMatchResult (false positive, it used through callable)
+        /** @phpstan-ignore-next-line shipmonk.unusedMatchResult (false positive, it used through callable) */
         $friendlyName = static fn (int $vote): string => match ($vote) {
             VoterInterface::ACCESS_GRANTED => 'granted',
             VoterInterface::ACCESS_DENIED => 'denied',

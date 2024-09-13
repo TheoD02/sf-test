@@ -21,10 +21,9 @@ trait KernelTestCaseUserAuthenticatorTrait
      */
     public function loginUser(
         UserInterface $user,
-        string        $firewallContext = 'main',
-        array         $tokenAttributes = [],
-    ): static
-    {
+        string $firewallContext = 'main',
+        array $tokenAttributes = [],
+    ): static {
         if (! interface_exists(UserInterface::class)) {
             throw new \LogicException(\sprintf(
                 '"%s" requires symfony/security-core to be installed. Try running "composer require symfony/security-core".',
@@ -36,7 +35,6 @@ trait KernelTestCaseUserAuthenticatorTrait
         $token->setAttributes($tokenAttributes);
 
         $container = self::getContainer();
-
 
         if (! $container->has('security.untracked_token_storage')) {
             throw new \LogicException(\sprintf(

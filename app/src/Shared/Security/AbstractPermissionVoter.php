@@ -20,10 +20,10 @@ abstract class AbstractPermissionVoter extends Voter
     public function supportsType(string $subjectType): bool
     {
         return is_a($subjectType, $this->getSubjectClass(), true) || \in_array(
-                $subjectType,
-                $this->getAdditionalAuthorizedSubjects(),
-                true,
-            );
+            $subjectType,
+            $this->getAdditionalAuthorizedSubjects(),
+            true,
+        );
     }
 
     /**
@@ -51,10 +51,9 @@ abstract class AbstractPermissionVoter extends Voter
     protected function getPermissionValues(): array
     {
         $class = $this->getPermissionsEnum();
-        /** @var list<string> $values */
-        $values = $class::values();
 
-        return $values;
+        /** @var list<string> */
+        return $class::values();
     }
 
     /**
@@ -66,17 +65,17 @@ abstract class AbstractPermissionVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         // TODO: This should be only run in dev mode
-        foreach ($this->getPermissionsCases() as $permission) {
-            if (! method_exists($permission, 'getMethodName')) {
+        foreach ($this->getPermissionsCases() as $backedEnum) {
+            if (! method_exists($backedEnum, 'getMethodName')) {
                 throw new \LogicException(\sprintf(
                     'Please add use of "%s" trait to "%s"',
                     PermissionTrait::class,
-                    $permission::class,
+                    $backedEnum::class,
                 ));
             }
 
             /** @var string $methodName */
-            $methodName = $permission->getMethodName();
+            $methodName = $backedEnum->getMethodName();
             if (! method_exists(static::class, $methodName)) {
                 throw new \LogicException(\sprintf(
                     'Please implement the "%s" method in "%s"',
@@ -86,7 +85,7 @@ abstract class AbstractPermissionVoter extends Voter
             }
         }
 
-        // @phpstan-ignore-next-line method.nonObject (Already checked in foreach on top)
+        /** @phpstan-ignore-next-line method.nonObject (Already checked in foreach on top) */
         $methodName = $this->getPermissionsEnum()::from($attribute)->getMethodName();
 
         /** @var bool */
@@ -99,9 +98,8 @@ abstract class AbstractPermissionVoter extends Voter
     public function getPermissionsCases(): array
     {
         $class = $this->getPermissionsEnum();
-        /** @var list<\BackedEnum> $cases */
-        $cases = $class::cases();
 
-        return $cases;
+        /** @var list<\BackedEnum> */
+        return $class::cases();
     }
 }

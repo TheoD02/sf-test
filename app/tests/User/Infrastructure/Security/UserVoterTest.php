@@ -15,17 +15,20 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @extends AbstractVoterTestCase<value-of<UserPermissionEnum>, User>
+ *
+ * @internal
  */
 final class UserVoterTest extends AbstractVoterTestCase
 {
-    /**
-     * @{inheritdoc}
-     */
     #[\Override]
     public function providePermissions(): iterable
     {
-        foreach ($this->getPermissionsCases() as $permissionsCase) {
-            yield (string) $permissionsCase->value => ['attribute' => (string) $permissionsCase->value, 'subject' => new User(), 'expectedSupports' => true];
+        foreach ($this->getPermissionsCases() as $backedEnum) {
+            yield (string) $backedEnum->value => [
+                'attribute' => (string) $backedEnum->value,
+                'subject' => new User(),
+                'expectedSupports' => true,
+            ];
         }
 
         yield 'custom-get-one' => [
@@ -42,7 +45,7 @@ final class UserVoterTest extends AbstractVoterTestCase
     }
 
     #[\Override]
-    public function provideVoteOnAttributesCases(): \Generator
+    public function provideVoteOnAttributesCases(): iterable
     {
         yield 'user-get-one' => [
             'roles' => ['ROLE_USER'],
@@ -139,18 +142,12 @@ final class UserVoterTest extends AbstractVoterTestCase
         $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
     }
 
-    /**
-     * @{inheritdoc}
-     */
     #[\Override]
     public function getVoterFqcn(): string
     {
         return UserVoter::class;
     }
 
-    /**
-     * @{inheritdoc}
-     */
     #[\Override]
     public function getDefaultSubject(): object
     {

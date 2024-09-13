@@ -8,7 +8,6 @@ use App\Tests\Helper\GetterSetterTestHelperTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 
-use Webmozart\Assert\Assert;
 use function Symfony\Component\String\u;
 
 /**
@@ -21,14 +20,13 @@ final class DtoGetterTesterTest extends TestCase
     /**
      * @param class-string $class
      *
-     * @throws \ReflectionException
      * @dataProvider provideGetterSetterCases
      */
     public function testGetterSetter(string $class): void
     {
         $this->markTestSkipped('Needs to be fixed, not very stable yet');
         // Arrange
-        $this->setupObject($class);
+        $this->setupObject($class); // @phpstan-ignore-line
 
         // Act
         $this->populateObjectAndAssert();
@@ -40,22 +38,25 @@ final class DtoGetterTesterTest extends TestCase
     public function provideGetterSetterCases(): iterable
     {
         $files = (new Finder()) // @phpstan-ignore-line (false positive, ignore exception, for test is not really problematic)
-        ->files()
+            ->files()
             ->in([
                 \dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Payload',
                 \dirname(__DIR__) . '/src/*/Infrastructure/ApiPlatform/Resource',
                 \dirname(__DIR__) . '/src/*/Domain/Model',
             ])
-            ->name('*.php');
+            ->name('*.php')
+        ;
 
         foreach ($files as $file) {
             if ($file->getRealPath() === false) {
                 continue;
             }
+
             $content = file_get_contents($file->getRealPath());
             if ($content === false) {
                 continue;
             }
+
             preg_match('/namespace (.*);/', $content, $matches);
 
             if (empty($matches[1])) {

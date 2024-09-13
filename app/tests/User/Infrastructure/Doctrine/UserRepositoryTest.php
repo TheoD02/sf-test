@@ -26,7 +26,8 @@ final class UserRepositoryTest extends KernelTestCase
         $newPassword = '$2y$13$2tqYsgWC3r/xtFMipQCvt.m1aJ4uvfjk4ng8dYW50SlGdiLCWgtT2';
 
         // Act
-        UserFactory::repository()->upgradePassword($user->_real(), $newPassword); // @phpstan-ignore-line method.notFound (This one exists only in doctrine but is only the one declared for now)
+        // @phpstan-ignore-next-line method.notFound (This one exists only in doctrine but is only the one declared for now)
+        UserFactory::repository()->upgradePassword($user->_real(), $newPassword);
 
         // Assert
         self::assertSame($newPassword, $user->getPassword());

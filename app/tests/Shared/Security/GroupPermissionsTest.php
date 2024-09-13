@@ -20,8 +20,8 @@ final class GroupPermissionsTest extends TestCase
             /** @var array<\BackedEnum> $cases */
             $cases = $fqcn::cases();
 
-            foreach ($cases as $permission) {
-                self::assertContains($permission->value, $groupPermissions);
+            foreach ($cases as $case) {
+                self::assertContains($case->value, $groupPermissions);
             }
         }
     }
