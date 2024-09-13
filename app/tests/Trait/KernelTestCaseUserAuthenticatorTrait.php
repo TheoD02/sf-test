@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Trait;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Session\SessionFactory;
@@ -31,12 +32,12 @@ trait KernelTestCaseUserAuthenticatorTrait
             ));
         }
 
-        $token = new TestBrowserToken($user->getRoles(), $user, $firewallContext);
+        $token = new JWTPostAuthenticationToken($user, $firewallContext, $user->getRoles(), 'api_token');
         $token->setAttributes($tokenAttributes);
 
         $container = self::getContainer();
 
-        if (! $container->has('security.untracked_token_storage')) {
+        if (! $container->has('security.token_storage')) {
             throw new \LogicException(\sprintf(
                 '"%s" requires symfony/security-bundle to be installed. Try running "composer require symfony/security-bundle".',
                 __METHOD__,

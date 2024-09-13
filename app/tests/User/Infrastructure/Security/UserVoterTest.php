@@ -48,7 +48,7 @@ final class UserVoterTest extends AbstractVoterTestCase
     public function provideVoteOnAttributesCases(): iterable
     {
         yield 'user-get-one' => [
-            'roles' => ['ROLE_USER', UserPermissionEnum::GET_ONE],
+            'roles' => ['ROLE_USER', UserPermissionEnum::GET_ONE->value],
             'attributes' => [UserPermissionEnum::GET_ONE->value],
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
@@ -101,11 +101,11 @@ final class UserVoterTest extends AbstractVoterTestCase
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
-        yield 'user-update' => [
+        yield 'user-update' => [ // Case when user is not admin and attempt to update another user
             'roles' => ['ROLE_USER', UserPermissionEnum::UPDATE],
             'attributes' => [UserPermissionEnum::UPDATE->value],
             'subject' => null,
-            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
         ];
         yield 'user-update-deny' => [
             'roles' => ['ROLE_USER'],
@@ -119,11 +119,11 @@ final class UserVoterTest extends AbstractVoterTestCase
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
-        yield 'user-delete' => [
+        yield 'user-delete' => [ // Case when user is not admin and attempt to delete another user
             'roles' => ['ROLE_USER', UserPermissionEnum::DELETE],
             'attributes' => [UserPermissionEnum::DELETE->value],
             'subject' => null,
-            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
         ];
         yield 'user-delete-deny' => [
             'roles' => ['ROLE_USER'],
@@ -143,7 +143,7 @@ final class UserVoterTest extends AbstractVoterTestCase
     {
         // Arrange
         $user = UserFactory::new()->createOne([
-            'roles' => ['ROLE_USER'],
+            'roles' => ['ROLE_USER', UserPermissionEnum::UPDATE],
         ])->_real();
         $this->loginUser($user);
 
@@ -152,6 +152,21 @@ final class UserVoterTest extends AbstractVoterTestCase
 
         // Assert
         $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_GRANTED);
+    }
+
+    public function testVoteOnAttributesUpdateWithSelfUserButNoPermission(): void
+    {
+        // Arrange
+        $user = UserFactory::new()->createOne([
+            'roles' => ['ROLE_USER'],
+        ])->_real();
+        $this->loginUser($user);
+
+        // Act
+        $vote = $this->voteOnAttributes(attributes: [UserPermissionEnum::UPDATE->value], subject: $user);
+
+        // Assert
+        $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
     }
 
     public function testVoteOnAttributesUpdateWithOtherUser(): void

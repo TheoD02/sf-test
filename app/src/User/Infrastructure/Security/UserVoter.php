@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 class UserVoter extends AbstractPermissionVoter
 {
-    use SecurityTrait;
 
     #[\Override]
     public function getPermissionsEnum(): string
@@ -44,12 +43,20 @@ class UserVoter extends AbstractPermissionVoter
 
     protected function canUserGetOne(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted(UserPermissionEnum::GET_ONE->value);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return $this->hasPermission(UserPermissionEnum::GET_ONE);
     }
 
     protected function canUserGetCollection(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted(UserPermissionEnum::GET_COLLECTION->value);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return $this->hasPermission(UserPermissionEnum::GET_COLLECTION);
     }
 
     protected function canUserCreate(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -58,7 +65,7 @@ class UserVoter extends AbstractPermissionVoter
             return true;
         }
 
-        return $this->security->isGranted(UserPermissionEnum::CREATE->value);
+        return $this->hasPermission(UserPermissionEnum::CREATE);
     }
 
     protected function canUserUpdate(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -67,11 +74,9 @@ class UserVoter extends AbstractPermissionVoter
             return true;
         }
 
-        $user = $this->security->getUser();
+        $isSelfEdit = $this->isSelfUser($subject->getId());
 
-        $isSelfEdit = $subject instanceof User && $user instanceof User && $user->getId() === $subject->getId();
-
-        return $this->security->isGranted(UserPermissionEnum::UPDATE->value) && $isSelfEdit;
+        return $this->hasPermission(UserPermissionEnum::UPDATE) && $isSelfEdit;
     }
 
     protected function canUserDelete(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -80,10 +85,8 @@ class UserVoter extends AbstractPermissionVoter
             return true;
         }
 
-        $user = $this->security->getUser();
+        $isSelfDelete = $this->isSelfUser($subject->getId());
 
-        $isSelfDelete = $subject instanceof User && $user instanceof User && $user->getId() === $subject->getId();
-
-        return $this->security->isGranted(UserPermissionEnum::DELETE->value) && $isSelfDelete;
+        return $this->hasPermission(UserPermissionEnum::DELETE) && $isSelfDelete;
     }
 }

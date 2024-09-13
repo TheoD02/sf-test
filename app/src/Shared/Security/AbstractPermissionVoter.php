@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Shared\Security;
 
 use App\Shared\Trait\PermissionTrait;
+use App\Shared\Trait\SecurityTrait;
+use App\User\Domain\Model\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @template TAttribute of string
@@ -16,6 +19,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 abstract class AbstractPermissionVoter extends Voter
 {
+    use SecurityTrait;
+
     #[\Override]
     public function supportsType(string $subjectType): bool
     {
@@ -101,5 +106,27 @@ abstract class AbstractPermissionVoter extends Voter
 
         /** @var list<\BackedEnum> */
         return $class::cases();
+    }
+
+    public function hasPermission(string|\BackedEnum $permission): bool
+    {
+        $value = $permission instanceof \BackedEnum ? $permission->value : $permission;
+
+        return \in_array($value, $this->security->getUser()?->getRoles() ?? [], true);
+    }
+
+    /**
+     * @param list<string|\BackedEnum> $permissions
+     */
+    public function hasPermissions(array $permissions): bool
+    {
+        $values = array_map(static fn ($permission) => $permission instanceof \BackedEnum ? $permission->value : $permission, $permissions);
+
+        return \in_array($values, $this->security->getUser()?->getRoles() ?? [], true);
+    }
+
+    public function isSelfUser(int $userId): bool
+    {
+        return $userId === $this->security->getUser()?->getId();
     }
 }

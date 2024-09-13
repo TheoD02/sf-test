@@ -9,7 +9,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 trait SecurityTrait
 {
-    private Security $security;
+    protected Security $security;
 
     #[Required]
     public function setSecurity(Security $security): void
