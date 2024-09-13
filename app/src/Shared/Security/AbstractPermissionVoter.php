@@ -90,11 +90,20 @@ abstract class AbstractPermissionVoter extends Voter
             }
         }
 
+        if ($this->bypass($attribute, $subject, $token)) {
+            return true;
+        }
+
         /** @phpstan-ignore-next-line method.nonObject (Already checked in foreach on top) */
         $methodName = $this->getPermissionsEnum()::from($attribute)->getMethodName();
 
         /** @var bool */
         return $this->{$methodName}($attribute, $subject, $token);
+    }
+
+    public function bypass(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
+        return false;
     }
 
     /**
