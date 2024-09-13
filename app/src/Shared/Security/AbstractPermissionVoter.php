@@ -20,10 +20,10 @@ abstract class AbstractPermissionVoter extends Voter
     public function supportsType(string $subjectType): bool
     {
         return is_a($subjectType, $this->getSubjectClass(), true) || \in_array(
-            $subjectType,
-            $this->getAdditionalAuthorizedSubjects(),
-            true,
-        );
+                $subjectType,
+                $this->getAdditionalAuthorizedSubjects(),
+                true,
+            );
     }
 
     /**

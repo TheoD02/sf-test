@@ -36,8 +36,7 @@ trait GetterSetterTestHelperTrait
             ->getMockBuilder($class)
             ->disableOriginalConstructor()
             ->onlyMethods([])
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->testableMethods = [];
         foreach ($this->reflection->getProperties() as $reflectionProperty) {
@@ -94,9 +93,9 @@ trait GetterSetterTestHelperTrait
                     $message = \sprintf(
                         'Expected %s() value to equal "%s" (set using %s), got "%s"',
                         $getterName,
-                        print_r($expectedValue, true), // @phpstan-ignore-line (OK, for this case)
+                        print_r($expectedValue, true), // @phpstan-ignore-line ekinoBannedCode.function (OK, for this case)
                         $setterName,
-                        print_r($actualValue, true), // @phpstan-ignore-line (OK, for this case)
+                        print_r($actualValue, true), // @phpstan-ignore-line ekinoBannedCode.function (OK, for this case)
                     );
 
                     $this->assertEquals($expectedValue, $actualValue, $message);

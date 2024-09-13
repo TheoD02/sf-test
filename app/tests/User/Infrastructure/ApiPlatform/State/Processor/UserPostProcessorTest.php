@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\User\Infrastructure\ApiPlatform\State\Processor;
 
 use App\Tests\AbstractApiTestCase;
+use App\User\Domain\Security\UserPermissionEnum;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 
 /**
@@ -15,7 +16,7 @@ final class UserPostProcessorTest extends AbstractApiTestCase
     public function testProcess(): void
     {
         // Arrange
-        $this->loginAsUser(['ROLE_ADMIN']);
+        $this->loginAsUser(['ROLE_USER', UserPermissionEnum::CREATE]);
 
         // Act
         $this->request('POST', $this->url(), [

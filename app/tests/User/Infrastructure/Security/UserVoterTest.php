@@ -48,10 +48,16 @@ final class UserVoterTest extends AbstractVoterTestCase
     public function provideVoteOnAttributesCases(): iterable
     {
         yield 'user-get-one' => [
-            'roles' => ['ROLE_USER'],
+            'roles' => ['ROLE_USER', UserPermissionEnum::GET_ONE],
             'attributes' => [UserPermissionEnum::GET_ONE->value],
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-get-one-deny' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::GET_ONE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
         ];
         yield 'admin-get-one' => [
             'roles' => ['ROLE_ADMIN'],
@@ -60,10 +66,16 @@ final class UserVoterTest extends AbstractVoterTestCase
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
         yield 'user-get-collection' => [
-            'roles' => ['ROLE_USER'],
+            'roles' => ['ROLE_USER', UserPermissionEnum::GET_COLLECTION],
             'attributes' => [UserPermissionEnum::GET_COLLECTION->value],
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-get-collection-deny' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::GET_COLLECTION->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_DENIED,
         ];
         yield 'admin-get-collection' => [
             'roles' => ['ROLE_ADMIN'],
@@ -72,6 +84,12 @@ final class UserVoterTest extends AbstractVoterTestCase
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
         yield 'user-create' => [
+            'roles' => ['ROLE_USER', UserPermissionEnum::CREATE],
+            'attributes' => [UserPermissionEnum::CREATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-create-deny' => [
             'roles' => ['ROLE_USER'],
             'attributes' => [UserPermissionEnum::CREATE->value],
             'subject' => null,
@@ -84,6 +102,12 @@ final class UserVoterTest extends AbstractVoterTestCase
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
         yield 'user-update' => [
+            'roles' => ['ROLE_USER', UserPermissionEnum::UPDATE],
+            'attributes' => [UserPermissionEnum::UPDATE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-update-deny' => [
             'roles' => ['ROLE_USER'],
             'attributes' => [UserPermissionEnum::UPDATE->value],
             'subject' => null,
@@ -96,8 +120,14 @@ final class UserVoterTest extends AbstractVoterTestCase
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
         yield 'user-delete' => [
-            'roles' => ['ROLE_USER'],
+            'roles' => ['ROLE_USER', UserPermissionEnum::DELETE],
             'attributes' => [UserPermissionEnum::DELETE->value],
+            'subject' => null,
+            'expectedVote' => VoterInterface::ACCESS_GRANTED,
+        ];
+        yield 'user-delete-deny' => [
+            'roles' => ['ROLE_USER'],
+            'attributes' => [UserPermissionEnum::GET_ONE->value],
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_DENIED,
         ];
@@ -141,6 +171,7 @@ final class UserVoterTest extends AbstractVoterTestCase
         // Assert
         $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
     }
+
 
     #[\Override]
     public function getVoterFqcn(): string

@@ -44,17 +44,21 @@ class UserVoter extends AbstractPermissionVoter
 
     protected function canUserGetOne(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted('ROLE_USER');
+        return $this->security->isGranted(UserPermissionEnum::GET_ONE->value);
     }
 
     protected function canUserGetCollection(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted('ROLE_USER');
+        return $this->security->isGranted(UserPermissionEnum::GET_COLLECTION->value);
     }
 
     protected function canUserCreate(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN');
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return $this->security->isGranted(UserPermissionEnum::CREATE->value);
     }
 
     protected function canUserUpdate(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -65,11 +69,21 @@ class UserVoter extends AbstractPermissionVoter
 
         $user = $this->security->getUser();
 
-        return $subject instanceof User && $user instanceof User && $user->getId() === $subject->getId();
+        $isSelfEdit = $subject instanceof User && $user instanceof User && $user->getId() === $subject->getId();
+
+        return $this->security->isGranted(UserPermissionEnum::UPDATE->value) && $isSelfEdit;
     }
 
     protected function canUserDelete(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN');
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        $user = $this->security->getUser();
+
+        $isSelfDelete = $subject instanceof User && $user instanceof User && $user->getId() === $subject->getId();
+
+        return $this->security->isGranted(UserPermissionEnum::DELETE->value) && $isSelfDelete;
     }
 }
