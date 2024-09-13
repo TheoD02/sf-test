@@ -50,7 +50,7 @@ function start(bool $force = false): void
                     '--profile',
                     'app',
                     'build',
-                    //                    '--no-cache'
+                    '--no-cache'
                 )
                 ->run(),
             id: 'docker',

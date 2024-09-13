@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @template TAttribute of string
@@ -19,6 +20,7 @@ use Zenstruck\Foundry\Test\Factories;
 abstract class AbstractVoterTestCase extends KernelTestCase
 {
     use Factories;
+    use ResetDatabase;
     use KernelTestCaseUserAuthenticatorTrait;
 
     /**
