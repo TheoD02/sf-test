@@ -22,7 +22,6 @@ function Login() {
   const navigate = useNavigate();
   const { login, isLoading, isAuthenticated, shouldWaitForAuthentification } = useAuth();
 
-
   const form = useForm({
     initialValues: {
       // TODO: Should not be set but for dev is good enough for now
@@ -66,7 +65,7 @@ function Login() {
             {...form.getInputProps("password")}
           />
           <Group justify="space-between" mt="lg">
-            <Checkbox label="Remember me"/>
+            <Checkbox label="Remember me" onClick={(e) => localStorage.setItem("rememberMe", e.target.checked)} />
             <Anchor component="button" size="sm">
               Forgot password?
             </Anchor>
