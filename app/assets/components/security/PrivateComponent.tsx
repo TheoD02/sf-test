@@ -1,19 +1,20 @@
-import {useAuth} from "@hooks/useAuth";
+import { useAuth } from "@hooks/useAuth";
 import Roles from "@security/roles";
 
 type Props = {
   roles: Roles[];
+  children: React.ReactNode;
 };
 
 export default function PrivateComponent({
-                                           roles,
-                                         }: Props) {
-  const {user} = useAuth();
-  console.log(user);
+  roles,
+  children,
+}: Props) {
+  const { isGranted } = useAuth();
 
-  if (roles.includes(Roles.ROLE_USER)) {
-    return <div>User Component</div>;
+  if (isGranted(roles, false) === false) {
+    return <></>;
   }
 
-  return <div>Private Component</div>;
+  return <>{children}</>;
 }

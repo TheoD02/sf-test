@@ -16,8 +16,8 @@ export const Route = createFileRoute('/users/$id/edit')({
 })
 
 const schema = z.object({
-  title: z.string().min(3).max(255),
-  content: z.string().min(10).max(10000),
+  email: z.string().min(3).max(255),
+  roles: z.array(z.string()),
 });
 
 function EditArticleLoader() {

@@ -8,10 +8,14 @@ import {
 } from "mantine-react-table";
 import { useMemo, useState } from "react";
 import { components } from "@api/schema";
-import { ActionIcon, Box, Center, Container, Group, Menu } from "@mantine/core";
+import { ActionIcon, Box, Button, Center, Container, Group, Menu, Text } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import Roles from "@security/roles";
 import { useAuth } from "@hooks/useAuth";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
+import { useQueryClient } from "@tanstack/react-query";
+import PrivateComponent from "@components/security/PrivateComponent";
 
 export const Route = createFileRoute("/users/")({
   component: Users,
@@ -27,6 +31,7 @@ function removeEmptyValues(object: any): any {
 
 function Users() {
   const { isGranted } = useAuth();
+  const queryClient = useQueryClient();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 30,
@@ -66,7 +71,27 @@ function Users() {
     []
   );
   const navigate = useNavigate();
-  const { mutate: deleteUser } = $api.useMutation("delete", "/api/users/{id}");
+  const { mutate: deleteUser } = $api.useMutation("delete", "/api/users/{id}", {
+    onSuccess: () => {
+      notifications.show({
+        title: "User deleted",
+        message: "The user has been deleted",
+        color: "green",
+      });
+      queryClient.invalidateQueries({ queryKey: ["get", "/api/users"] });
+    },
+    onError: (data) => {
+      if (data.status === 403) {
+        notifications.show({
+          title: "Forbidden",
+          message: "You are not allowed to delete the user. Only admins can do that",
+          color: "red",
+          autoClose: false,
+          disallowClose: true,
+        });
+      }
+    }
+  });
 
   const table = useMantineReactTable({
     columns,
@@ -77,10 +102,28 @@ function Users() {
     renderRowActions: ({ row }) => (
       <Center>
         <Group>
-          <ActionIcon onClick={() => navigate({ to: `/users/$id/edit`, params:  {id: row.original.id?.toString() ?? ""} })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_UPDATE], false)}>
+          <ActionIcon color="yellow" onClick={() => navigate({ to: `/users/$id/edit`, params: { id: row.original.id?.toString() ?? "" } })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_UPDATE], false)}>
             <IconEdit />
           </ActionIcon>
-          <ActionIcon onClick={() => confirm("Are you sure ?") && deleteUser({ params: { path: { id: row.original.id?.toString() ?? "" } } })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_DELETE], false)}>
+          <ActionIcon
+            color="red"
+            onClick={() => {
+              modals.openConfirmModal({
+                title: "Delete user",
+                children: (
+                  <Text>
+                    Are you sure you want to delete the user {" "}
+                    {row.original.email}?
+                  </Text>
+                ),
+                onConfirm: () => {
+                  deleteUser({ params: { path: { id: row.original.id?.toString() ?? "" } } })
+                },
+                labels: { confirm: "Delete", cancel: "Cancel" },
+              })
+            }}
+            disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_DELETE], false)}
+          >
             <IconTrash />
           </ActionIcon>
         </Group>
@@ -95,6 +138,9 @@ function Users() {
 
   return (
     <Container fluid>
+      <PrivateComponent roles={[Roles.ROLE_ADMIN, Roles.USER_CREATE]}>
+        <Button onClick={() => navigate({ to: "/users/create" })}>Create user</Button>
+      </PrivateComponent>
       <MantineReactTable table={table} />
     </Container>
   );

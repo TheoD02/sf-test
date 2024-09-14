@@ -34,15 +34,15 @@ class UserVoter extends AbstractPermissionVoter
     }
 
     #[\Override]
-    protected function supports(string $attribute, mixed $subject): bool
-    {
-        return true;
-    }
-
-    #[\Override]
     public function bypass(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         return $this->security->isGranted('ROLE_ADMIN');
+    }
+
+    #[\Override]
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        return true;
     }
 
     protected function canUserGetOne(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -71,6 +71,6 @@ class UserVoter extends AbstractPermissionVoter
     {
         $isSelfDelete = $this->isSelfUser($subject->getId());
 
-        return $this->hasPermission(UserPermissionEnum::DELETE) && $isSelfDelete;
+        return $this->hasPermission(UserPermissionEnum::DELETE) || $isSelfDelete;
     }
 }
