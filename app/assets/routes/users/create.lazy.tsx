@@ -6,7 +6,7 @@ import $api from "@api/api";
 import {notifications} from "@mantine/notifications";
 import {queryClient} from "@/app.tsx";
 
-export const Route = createLazyFileRoute("/articles/create")({
+export const Route = createLazyFileRoute("/users/create")({
   component: CreateArticle,
 });
 

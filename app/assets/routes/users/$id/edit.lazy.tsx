@@ -7,7 +7,7 @@ import {notifications} from '@mantine/notifications';
 import {createLazyFileRoute, useNavigate} from '@tanstack/react-router'
 import {z} from 'zod';
 
-export const Route = createLazyFileRoute('/articles/$id/edit')({
+export const Route = createLazyFileRoute('/users/$id/edit')({
   component: EditArticleLoader,
 })
 

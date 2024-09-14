@@ -1,15 +1,12 @@
 import Shell from '@components/shell/Shell'
-import { AuthProvider } from '@hooks/useAuth'
-import {createRootRoute} from '@tanstack/react-router'
+import { AuthContext } from '@hooks/useAuth'
+import { createRootRouteWithContext } from '@tanstack/react-router'
 
-export const Route = createRootRoute({
-  component: Root,
-})
-
-export default function Root() {
-  return (
-    <AuthProvider>
-      <Shell />
-    </AuthProvider>
-  );
+interface MyRouterContext {
+  // The ReturnType of your useAuth hook or the value of your AuthContext
+  auth: AuthContext
 }
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  component: Shell,
+})

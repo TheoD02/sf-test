@@ -39,11 +39,11 @@ export function Header() {
             </UnstyledButton>
             <UnstyledButton
               component={Link}
-              to="/articles"
+              to="/users"
               className={classes.link}
               px={12}
             >
-              Articles
+              Users
             </UnstyledButton>
             <UnstyledButton
               component={Link}
@@ -59,7 +59,7 @@ export function Header() {
             {user !== null ? (
               <Menu trigger="hover" openDelay={100} closeDelay={400}>
                 <Menu.Target>
-                  <Button color="indigo">{user?.id}</Button>
+                  <Button color="indigo">{user?.email}</Button>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Actions</Menu.Label>

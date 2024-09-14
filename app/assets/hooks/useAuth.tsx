@@ -4,19 +4,34 @@ import { useLocalStorage } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, redirect } from '@tanstack/react-router';
+import {jwtDecode, JwtPayload } from 'jwt-decode';
+import Roles from "@security/roles";
+import { boolean } from "zod";
 
 type User = components["schemas"]["User.jsonld"];
-const AuthContext = createContext({
+type Context = {
+  user: User | null;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+  isLoading: boolean;
+  isError: boolean;
+  isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => boolean;
+  isAuthenticated: boolean;
+};
+export type AuthContext = Context;
+
+const AuthContext = createContext<Context>({
   user: null,
   login: (email: string, password: string) => {},
   logout: () => {},
   isLoading: false,
   isError: false,
+  isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => false,
+  isAuthenticated: false,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
   const [token, setToken] = useLocalStorage({
     key: "token",
     defaultValue: null,
@@ -33,20 +48,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         message: "You have been successfully logged in",
         color: "green",
       });
-      navigate({ to: "/" });
-    },
-    onError: (error) => {
-      console.error('Erreur lors de la connexion:', error);
     },
   });
 
   const { data: userData, isLoading, isError } = $api.useQuery("get", "/api/me", {
     onError: (error: any) => {
-      console.error('Erreur lors de la récupération des données utilisateur:', error);
-      setToken(null);
+      setToken(null); // TODO: Maybe hard to set token to null here, should check the reason of the error
     },
   }, {
     enabled: !!token,
+    refetchInterval: 15 * 60 * 1000, // 15 minutes keep user fresh
   });
 
   const login = (email: string, password: string) => loginMutation({ body: { email, password } });
@@ -58,11 +69,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       message: "You have been successfully logged out",
       color: "green",
     });
-    navigate({ to: "/" });
   }
 
+  const isGranted = (roles: Roles | Roles[], redirectToLogin = true) => {
+    if (!userData) {
+      if (redirectToLogin) {
+        throw redirect({ to: "/auth/login" });
+      }
+      return false;
+    }
+
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+
+    const isGranted = userData?.roles.some((role) => roles.includes(role));
+
+    if (!isGranted && redirectToLogin) {
+      throw redirect({ to: "/error/403" });
+    }
+
+    return isGranted;
+  }
+
+  const isAuthenticated = userData !== undefined && userData !== null;
+
   return (
-    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError }}>
+    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError, isGranted, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
@@ -70,4 +103,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   return useContext(AuthContext);
+}
+
+export function useMe() {
+  const { user } = useAuth();
+  return user;
 }

@@ -18,7 +18,7 @@ function docker(): Context
 {
     return new Context(
         data: [
-            'registry' => 'docker-registry.theo-corp.fr/theocorp',
+            'registry' => 'docker-registry.theo-corp.fr/theod02',
             'image' => 'sf-deploy-test',
         ],
     );
@@ -101,7 +101,8 @@ function buildAndPush(string $tag = 'latest'): void
 function deploy(
     #[AsOption(name: 'override', description: 'Keep the current version, and rebuild the image')]
     bool $override = false,
-): void {
+): void
+{
     if (! file_exists('VERSION')) {
         file_put_contents('VERSION', 'v0.0.0-dev');
 

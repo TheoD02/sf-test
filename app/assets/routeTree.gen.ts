@@ -15,13 +15,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as UsersIndexImport } from './routes/users/index'
+import { Route as Error403Import } from './routes/error/403'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
 // Create Virtual Routes
 
-const ArticlesIndexLazyImport = createFileRoute('/articles/')()
-const ArticlesCreateLazyImport = createFileRoute('/articles/create')()
-const ArticlesIdEditLazyImport = createFileRoute('/articles/$id/edit')()
+const UsersCreateLazyImport = createFileRoute('/users/create')()
+const UsersIdEditLazyImport = createFileRoute('/users/$id/edit')()
 
 // Create/Update Routes
 
@@ -35,30 +36,31 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ArticlesIndexLazyRoute = ArticlesIndexLazyImport.update({
-  path: '/articles/',
+const UsersIndexRoute = UsersIndexImport.update({
+  path: '/users/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/articles/index.lazy').then((d) => d.Route),
-)
+} as any)
 
-const ArticlesCreateLazyRoute = ArticlesCreateLazyImport.update({
-  path: '/articles/create',
+const UsersCreateLazyRoute = UsersCreateLazyImport.update({
+  path: '/users/create',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/articles/create.lazy').then((d) => d.Route),
-)
+} as any).lazy(() => import('./routes/users/create.lazy').then((d) => d.Route))
+
+const Error403Route = Error403Import.update({
+  path: '/error/403',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthLoginRoute = AuthLoginImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ArticlesIdEditLazyRoute = ArticlesIdEditLazyImport.update({
-  path: '/articles/$id/edit',
+const UsersIdEditLazyRoute = UsersIdEditLazyImport.update({
+  path: '/users/$id/edit',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/articles/$id/edit.lazy').then((d) => d.Route),
+  import('./routes/users/$id/edit.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -86,25 +88,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof rootRoute
     }
-    '/articles/create': {
-      id: '/articles/create'
-      path: '/articles/create'
-      fullPath: '/articles/create'
-      preLoaderRoute: typeof ArticlesCreateLazyImport
+    '/error/403': {
+      id: '/error/403'
+      path: '/error/403'
+      fullPath: '/error/403'
+      preLoaderRoute: typeof Error403Import
       parentRoute: typeof rootRoute
     }
-    '/articles/': {
-      id: '/articles/'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof ArticlesIndexLazyImport
+    '/users/create': {
+      id: '/users/create'
+      path: '/users/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof UsersCreateLazyImport
       parentRoute: typeof rootRoute
     }
-    '/articles/$id/edit': {
-      id: '/articles/$id/edit'
-      path: '/articles/$id/edit'
-      fullPath: '/articles/$id/edit'
-      preLoaderRoute: typeof ArticlesIdEditLazyImport
+    '/users/': {
+      id: '/users/'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/users/$id/edit': {
+      id: '/users/$id/edit'
+      path: '/users/$id/edit'
+      fullPath: '/users/$id/edit'
+      preLoaderRoute: typeof UsersIdEditLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -116,18 +125,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth/login': typeof AuthLoginRoute
-  '/articles/create': typeof ArticlesCreateLazyRoute
-  '/articles': typeof ArticlesIndexLazyRoute
-  '/articles/$id/edit': typeof ArticlesIdEditLazyRoute
+  '/error/403': typeof Error403Route
+  '/users/create': typeof UsersCreateLazyRoute
+  '/users': typeof UsersIndexRoute
+  '/users/$id/edit': typeof UsersIdEditLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth/login': typeof AuthLoginRoute
-  '/articles/create': typeof ArticlesCreateLazyRoute
-  '/articles': typeof ArticlesIndexLazyRoute
-  '/articles/$id/edit': typeof ArticlesIdEditLazyRoute
+  '/error/403': typeof Error403Route
+  '/users/create': typeof UsersCreateLazyRoute
+  '/users': typeof UsersIndexRoute
+  '/users/$id/edit': typeof UsersIdEditLazyRoute
 }
 
 export interface FileRoutesById {
@@ -135,9 +146,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth/login': typeof AuthLoginRoute
-  '/articles/create': typeof ArticlesCreateLazyRoute
-  '/articles/': typeof ArticlesIndexLazyRoute
-  '/articles/$id/edit': typeof ArticlesIdEditLazyRoute
+  '/error/403': typeof Error403Route
+  '/users/create': typeof UsersCreateLazyRoute
+  '/users/': typeof UsersIndexRoute
+  '/users/$id/edit': typeof UsersIdEditLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -146,25 +158,28 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth/login'
-    | '/articles/create'
-    | '/articles'
-    | '/articles/$id/edit'
+    | '/error/403'
+    | '/users/create'
+    | '/users'
+    | '/users/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/auth/login'
-    | '/articles/create'
-    | '/articles'
-    | '/articles/$id/edit'
+    | '/error/403'
+    | '/users/create'
+    | '/users'
+    | '/users/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/auth/login'
-    | '/articles/create'
-    | '/articles/'
-    | '/articles/$id/edit'
+    | '/error/403'
+    | '/users/create'
+    | '/users/'
+    | '/users/$id/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -172,18 +187,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  ArticlesCreateLazyRoute: typeof ArticlesCreateLazyRoute
-  ArticlesIndexLazyRoute: typeof ArticlesIndexLazyRoute
-  ArticlesIdEditLazyRoute: typeof ArticlesIdEditLazyRoute
+  Error403Route: typeof Error403Route
+  UsersCreateLazyRoute: typeof UsersCreateLazyRoute
+  UsersIndexRoute: typeof UsersIndexRoute
+  UsersIdEditLazyRoute: typeof UsersIdEditLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthLoginRoute: AuthLoginRoute,
-  ArticlesCreateLazyRoute: ArticlesCreateLazyRoute,
-  ArticlesIndexLazyRoute: ArticlesIndexLazyRoute,
-  ArticlesIdEditLazyRoute: ArticlesIdEditLazyRoute,
+  Error403Route: Error403Route,
+  UsersCreateLazyRoute: UsersCreateLazyRoute,
+  UsersIndexRoute: UsersIndexRoute,
+  UsersIdEditLazyRoute: UsersIdEditLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -201,9 +218,10 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/auth/login",
-        "/articles/create",
-        "/articles/",
-        "/articles/$id/edit"
+        "/error/403",
+        "/users/create",
+        "/users/",
+        "/users/$id/edit"
       ]
     },
     "/": {
@@ -215,14 +233,17 @@ export const routeTree = rootRoute
     "/auth/login": {
       "filePath": "auth/login.tsx"
     },
-    "/articles/create": {
-      "filePath": "articles/create.lazy.tsx"
+    "/error/403": {
+      "filePath": "error/403.tsx"
     },
-    "/articles/": {
-      "filePath": "articles/index.lazy.tsx"
+    "/users/create": {
+      "filePath": "users/create.lazy.tsx"
     },
-    "/articles/$id/edit": {
-      "filePath": "articles/$id/edit.lazy.tsx"
+    "/users/": {
+      "filePath": "users/index.tsx"
+    },
+    "/users/$id/edit": {
+      "filePath": "users/$id/edit.lazy.tsx"
     }
   }
 }

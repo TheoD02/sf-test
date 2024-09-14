@@ -11,9 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
-import $api from '@api/api';
 import { useAuth } from "@hooks/useAuth";
 
 export const Route = createFileRoute("/auth/login")({
@@ -22,7 +20,9 @@ export const Route = createFileRoute("/auth/login")({
 
 function Login() {
   const navigate = useNavigate();
-  const {login, isLoading} = useAuth();
+  const { login, isLoading, isAuthenticated } = useAuth();
+
+
   const form = useForm({
     initialValues: {
       // TODO: Should not be set but for dev is good enough for now
@@ -30,6 +30,15 @@ function Login() {
       password: "admin",
     },
   });
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isAuthenticated) {
+    navigate({ to: "/" });
+    return;
+  }
 
   return (
     <Container size={420} my={40}>

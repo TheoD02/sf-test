@@ -131,7 +131,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
 
-ARG SERVER_NAME=localhost
+ARG SERVER_NAME=":80"
 ENV SERVER_NAME=${SERVER_NAME}
 
 ENV APP_ENV=prod
