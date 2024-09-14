@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Controller;
 
 use App\Shared\Security\GroupPermissions;
+use App\User\Infrastructure\ApiPlatform\State\Provider\UserRolesCollectionProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\HttpFoundation\Response;

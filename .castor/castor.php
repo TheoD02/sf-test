@@ -131,17 +131,17 @@ function sync(): void
 #[AsTask]
 function shell(
     #[AsOption(name: 'no-check', description: 'Don\'t check the dependencies')]
-    bool $noCheck = false, // Not used here, but used in listeners.php,
+    bool    $noCheck = false, // Not used here, but used in listeners.php,
     #[AsArgument(name: 'cmd', description: 'Command to run')]
     ?string $command = null,
-): void {
+): void
+{
     docker(context()->withTty())
         ->compose('exec')
         ->add('--user', 'www-data')
         ->add(ContainerDefinitionBag::php()->composeName, 'fish')
         ->addIf($command !== null, '-c', "\"{$command}\"")
-        ->run()
-    ;
+        ->run();
 }
 
 /** @noinspection t */
@@ -229,8 +229,7 @@ function import_sql(): void
         ->name('*.sql')
         ->name('*.sql.gz')
         ->sortByName()
-        ->getIterator()
-    ;
+        ->getIterator();
 
     $selectedDump = io()->choice('Select the SQL file to import', iterator_to_array($sqlFiles), $sqlFilename);
 
@@ -260,8 +259,7 @@ function ui_format(): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'npx', '@biomejs/biome', 'format', '--write', './src')
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:lint')]
@@ -272,8 +270,7 @@ function ui_lint(): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'npx', '@biomejs/biome', 'lint', './src')
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:ts')]
@@ -285,8 +282,7 @@ function ui_ts(bool $fix = false): void
         ->add('--user', 'www-data')
         ->add('--workdir', '/app/assets')
         ->add('app', 'pnpm', 'run', $run)
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'ui:http:schema')]
@@ -304,8 +300,7 @@ function ui_http_schema(): void
             '-o',
             './src/api/schema.d.ts',
         )
-        ->run()
-    ;
+        ->run();
 }
 
 #[AsTask(name: 'db:reset')]
@@ -323,6 +318,6 @@ function db_reset(): void
 
     symfony()->console('doctrine:database:drop', '--force', '--if-exists')->run();
     symfony()->console('doctrine:database:create')->run();
-    symfony()->console('doctrine:migrations:migrate')->run();
+    symfony()->console('doctrine:migrations:migrate', '--allow-no-migration', '--no-interaction')->run();
     symfony()->console('doctrine:fixtures:load', '--no-interaction', '--append')->run();
 }

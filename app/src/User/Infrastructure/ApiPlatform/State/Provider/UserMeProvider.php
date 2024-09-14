@@ -17,7 +17,8 @@ class UserMeProvider extends AbstractProvider
 {
     public function __construct(
         private readonly Security $security,
-    ) {
+    )
+    {
     }
 
     #[\Override]

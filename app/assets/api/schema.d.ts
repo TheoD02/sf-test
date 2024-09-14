@@ -48,6 +48,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/users/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the collection of User resources.
+         * @description Retrieves the collection of User resources.
+         */
+        get: operations["api_usersroles_get_collection"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users/{id}": {
         parameters: {
             query?: never;
@@ -253,6 +273,64 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    api_usersroles_get_collection: {
+        parameters: {
+            query?: {
+                /** @description The collection page identifier */
+                page?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": {
+                        "hydra:member": components["schemas"]["User.jsonld"][];
+                        "hydra:totalItems"?: number;
+                        /** @example {
+                         *       "@id": "string",
+                         *       "type": "string",
+                         *       "hydra:first": "string",
+                         *       "hydra:last": "string",
+                         *       "hydra:previous": "string",
+                         *       "hydra:next": "string"
+                         *     } */
+                        "hydra:view"?: {
+                            /** Format: iri-reference */
+                            "@id"?: string;
+                            "@type"?: string;
+                            /** Format: iri-reference */
+                            "hydra:first"?: string;
+                            /** Format: iri-reference */
+                            "hydra:last"?: string;
+                            /** Format: iri-reference */
+                            "hydra:previous"?: string;
+                            /** Format: iri-reference */
+                            "hydra:next"?: string;
+                        };
+                        "hydra:search"?: {
+                            "@type"?: string;
+                            "hydra:template"?: string;
+                            "hydra:variableRepresentation"?: string;
+                            "hydra:mapping"?: {
+                                "@type"?: string;
+                                variable?: string;
+                                property?: string | null;
+                                required?: boolean;
+                            }[];
+                        };
+                    };
+                };
             };
         };
     };

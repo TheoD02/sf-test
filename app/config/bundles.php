@@ -21,4 +21,5 @@ return [
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true],
     Pentatrion\ViteBundle\PentatrionViteBundle::class => ['all' => true],
     Module\ApiPlatformEasyFilter\ApiPlatformEasyFilterBundle::class => ['all' => true],
+    Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle::class => ['all' => true],
 ];

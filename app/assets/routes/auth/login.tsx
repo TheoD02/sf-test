@@ -20,7 +20,7 @@ export const Route = createFileRoute("/auth/login")({
 
 function Login() {
   const navigate = useNavigate();
-  const { login, isLoading, isAuthenticated } = useAuth();
+  const { login, isLoading, isAuthenticated, shouldWaitForAuthentification } = useAuth();
 
 
   const form = useForm({
@@ -31,7 +31,7 @@ function Login() {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || shouldWaitForAuthentification) {
     return <Text>Loading...</Text>;
   }
 

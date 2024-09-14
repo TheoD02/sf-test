@@ -11,11 +11,12 @@ import { components } from "@api/schema";
 import { ActionIcon, Box, Center, Container, Group, Menu } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import Roles from "@security/roles";
+import { useAuth } from "@hooks/useAuth";
 
 export const Route = createFileRoute("/users/")({
   component: Users,
   beforeLoad: ({ context }) => {
-    context.auth.isGranted([Roles.ROLE_ADMIN], true);
+    context.auth.isGranted([Roles.ROLE_ADMIN, Roles.USER_GET_COLLECTION], true);
   },
 });
 
@@ -25,6 +26,7 @@ function removeEmptyValues(object: any): any {
 }
 
 function Users() {
+  const { isGranted } = useAuth();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 30,
@@ -75,10 +77,10 @@ function Users() {
     renderRowActions: ({ row }) => (
       <Center>
         <Group>
-          <ActionIcon onClick={() => navigate({ to: `/users/$id/edit`, params:  {id: row.original.id?.toString() ?? ""} })}>
+          <ActionIcon onClick={() => navigate({ to: `/users/$id/edit`, params:  {id: row.original.id?.toString() ?? ""} })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_UPDATE], false)}>
             <IconEdit />
           </ActionIcon>
-          <ActionIcon onClick={() => confirm("Are you sure ?") && deleteUser({ params: { path: { id: row.original.id?.toString() ?? "" } } })}>
+          <ActionIcon onClick={() => confirm("Are you sure ?") && deleteUser({ params: { path: { id: row.original.id?.toString() ?? "" } } })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_DELETE], false)}>
             <IconTrash />
           </ActionIcon>
         </Group>

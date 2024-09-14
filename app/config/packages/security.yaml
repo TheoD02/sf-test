@@ -16,8 +16,11 @@ security:
         api:
             pattern: ^/api/
             stateless: true
+            entry_point: jwt
             provider: app_user_provider
             jwt: ~
+            refresh_jwt:
+                check_path: /api/auth/refresh
         main:
             json_login:
                 check_path: auth_login # The name in routes.yaml is enough for mapping
@@ -29,7 +32,7 @@ security:
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
-        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/(login|refresh), roles: PUBLIC_ACCESS } # Allows accessing the login and refresh API
         - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
 

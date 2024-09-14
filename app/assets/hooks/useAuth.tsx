@@ -3,11 +3,10 @@ import { components } from "@api/schema";
 import { useLocalStorage } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
-import { useNavigate, redirect } from '@tanstack/react-router';
-import {jwtDecode, JwtPayload } from 'jwt-decode';
+import { createContext, useContext, useEffect, useState } from "react";
+import { invariant, redirect } from '@tanstack/react-router';
 import Roles from "@security/roles";
-import { boolean } from "zod";
+import { useLoading } from "./useLoading";
 
 type User = components["schemas"]["User.jsonld"];
 type Context = {
@@ -18,6 +17,7 @@ type Context = {
   isError: boolean;
   isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => boolean;
   isAuthenticated: boolean;
+  shouldWaitForAuthentification: boolean;
 };
 export type AuthContext = Context;
 
@@ -29,14 +29,23 @@ const AuthContext = createContext<Context>({
   isError: false,
   isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => false,
   isAuthenticated: false,
+  shouldWaitForAuthentification: false,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const {setIsLoading, setReason} = useLoading();
   const [token, setToken] = useLocalStorage({
     key: "token",
     defaultValue: null,
   });
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (token !== null && token !== 'null') {
+      setIsLoading(true);
+      setReason('Sorry for the wait, we are checking your access...');
+    }
+  }, [token]);
 
   // Mutation pour le login
   const { mutate: loginMutation } = $api.useMutation("post", "/auth/login", {
@@ -51,14 +60,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const { data: userData, isLoading, isError } = $api.useQuery("get", "/api/me", {
-    onError: (error: any) => {
-      setToken(null); // TODO: Maybe hard to set token to null here, should check the reason of the error
-    },
-  }, {
+  const { data: userData, isLoading, isError } = $api.useQuery("get", "/api/me", {}, {
     enabled: !!token,
     refetchInterval: 15 * 60 * 1000, // 15 minutes keep user fresh
   });
+
+  useEffect(() => {
+    if (userData !== undefined) {
+      setIsLoading(false);
+    }
+  }, [userData]);
 
   const login = (email: string, password: string) => loginMutation({ body: { email, password } });
   const logout = () => {
@@ -70,20 +81,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       color: "green",
     });
   }
+  const isAuthenticated = userData !== undefined && userData !== null && token !== null;
+  const shouldWaitForAuthentification = localStorage.getItem("token") !== 'null' && (userData === undefined || userData === null);
 
   const isGranted = (roles: Roles | Roles[], redirectToLogin = true) => {
-    if (!userData) {
-      if (redirectToLogin) {
-        throw redirect({ to: "/auth/login" });
-      }
-      return false;
+    if (shouldWaitForAuthentification === false && !isAuthenticated) {
+      throw redirect({ to: "/auth/login" });
     }
 
     if (!Array.isArray(roles)) {
       roles = [roles];
     }
 
-    const isGranted = userData?.roles.some((role) => roles.includes(role));
+    const isGranted = userData !== undefined ? (userData?.roles || []).some((role) => roles.includes(role)) : false;
 
     if (!isGranted && redirectToLogin) {
       throw redirect({ to: "/error/403" });
@@ -92,10 +102,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return isGranted;
   }
 
-  const isAuthenticated = userData !== undefined && userData !== null;
 
   return (
-    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError, isGranted, isAuthenticated }}>
+    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError, isGranted, isAuthenticated, shouldWaitForAuthentification }}>
       {children}
     </AuthContext.Provider>
   );

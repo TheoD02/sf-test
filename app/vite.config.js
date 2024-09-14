@@ -15,7 +15,7 @@ export default defineConfig({
     }),
     // Add watch on src directory and run command npx openapi-typescript http://mantine-starter-kit.web.localhost/api/docs.json -o ./src/api/schema.d.ts
     watch({
-      pattern: ["config/routes.yaml", "src/*/Infrastructure/ApiPlatform/**.php"],
+      pattern: ["config/routes.yaml", "src/**.php"],
       command: "npx openapi-typescript http://sf-test.web.localhost/api/docs.json -o ./assets/api/schema.d.ts",
       silent: true,
     }),
@@ -34,12 +34,12 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: "@", replacement: path.resolve(__dirname, "./assets") },
-      { find: "@api", replacement: path.resolve(__dirname, "./assets/api") },
-      { find: "@components", replacement: path.resolve(__dirname, "./assets/components") },
-      { find: "@hooks", replacement: path.resolve(__dirname, "./assets/hooks") },
-      { find: "@routes", replacement: path.resolve(__dirname, "./assets/routes") },
-      { find: "@security", replacement: path.resolve(__dirname, "./assets/security") },
+      {find: "@", replacement: path.resolve(__dirname, "./assets")},
+      {find: "@api", replacement: path.resolve(__dirname, "./assets/api")},
+      {find: "@components", replacement: path.resolve(__dirname, "./assets/components")},
+      {find: "@hooks", replacement: path.resolve(__dirname, "./assets/hooks")},
+      {find: "@routes", replacement: path.resolve(__dirname, "./assets/routes")},
+      {find: "@security", replacement: path.resolve(__dirname, "./assets/security")},
     ]
   },
   server: {
