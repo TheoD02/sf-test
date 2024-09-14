@@ -148,8 +148,13 @@ COPY --link ./app/composer.* ./app/symfony.* ./
 RUN set -eux; \
 	composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
+COPY --link ./app/pnpm-* ./app/package.json ./app/tsconfig.* ./app/vite.config.js ./app/postcss.config.cjs ./
+RUN set -eux; \
+    pnpm install --no-frozen-lockfile --production;
+
 # copy sources
 COPY --link ./app ./
+
 RUN rm -Rf .docker/frankenphp/
 
 RUN set -eux; \
@@ -159,6 +164,4 @@ RUN set -eux; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync;
 
-RUN set -eux; \
-    pnpm install --no-frozen-lockfile --production; \
-    pnpm run build;
+RUN set -eux; pnpm run build;
