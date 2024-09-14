@@ -20,8 +20,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 abstract class AbstractVoterTestCase extends KernelTestCase
 {
     use Factories;
-    use ResetDatabase;
     use KernelTestCaseUserAuthenticatorTrait;
+    use ResetDatabase;
 
     /**
      * @var array{attributes: array<string>, subject: mixed}|array{}

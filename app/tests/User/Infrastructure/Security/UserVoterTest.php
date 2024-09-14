@@ -101,7 +101,8 @@ final class UserVoterTest extends AbstractVoterTestCase
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
-        yield 'user-update' => [ // Case when user is not admin and attempt to update another user
+        // Case when user is not admin and attempt to update another user
+        yield 'user-update' => [
             'roles' => ['ROLE_USER', UserPermissionEnum::UPDATE],
             'attributes' => [UserPermissionEnum::UPDATE->value],
             'subject' => null,
@@ -119,7 +120,8 @@ final class UserVoterTest extends AbstractVoterTestCase
             'subject' => null,
             'expectedVote' => VoterInterface::ACCESS_GRANTED,
         ];
-        yield 'user-delete' => [ // Case when user is not admin and attempt to delete another user
+        // Case when user is not admin and attempt to delete another user
+        yield 'user-delete' => [
             'roles' => ['ROLE_USER', UserPermissionEnum::DELETE],
             'attributes' => [UserPermissionEnum::DELETE->value],
             'subject' => null,
@@ -186,7 +188,6 @@ final class UserVoterTest extends AbstractVoterTestCase
         // Assert
         $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
     }
-
 
     #[\Override]
     public function getVoterFqcn(): string

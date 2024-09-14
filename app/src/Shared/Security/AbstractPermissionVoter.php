@@ -6,10 +6,8 @@ namespace App\Shared\Security;
 
 use App\Shared\Trait\PermissionTrait;
 use App\Shared\Trait\SecurityTrait;
-use App\User\Domain\Model\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @template TAttribute of string
@@ -25,10 +23,10 @@ abstract class AbstractPermissionVoter extends Voter
     public function supportsType(string $subjectType): bool
     {
         return is_a($subjectType, $this->getSubjectClass(), true) || \in_array(
-                $subjectType,
-                $this->getAdditionalAuthorizedSubjects(),
-                true,
-            );
+            $subjectType,
+            $this->getAdditionalAuthorizedSubjects(),
+            true,
+        );
     }
 
     /**
@@ -129,7 +127,10 @@ abstract class AbstractPermissionVoter extends Voter
      */
     public function hasPermissions(array $permissions): bool
     {
-        $values = array_map(static fn ($permission) => $permission instanceof \BackedEnum ? $permission->value : $permission, $permissions);
+        $values = array_map(
+            static fn ($permission): int|string => $permission instanceof \BackedEnum ? $permission->value : $permission,
+            $permissions
+        );
 
         return \in_array($values, $this->security->getUser()?->getRoles() ?? [], true);
     }

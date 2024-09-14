@@ -13,8 +13,11 @@ class PingController extends AbstractController
 {
     public function __invoke(): JsonResponse
     {
+        $deployTime = getenv('BUILD_TIME');
+
         return $this->json([
             'status' => 'ok',
+            'deploy_time' => $deployTime,
         ]);
     }
 }

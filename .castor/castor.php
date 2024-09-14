@@ -42,16 +42,7 @@ function start(bool $force = false): void
     if (
         ! fingerprint(
             callback: static fn () => docker()
-                ->compose(
-                    '-f',
-                    'compose.yaml',
-                    '-f',
-                    'compose.override.yaml',
-                    '--profile',
-                    'app',
-                    'build',
-                    '--no-cache'
-                )
+                ->compose('-f', 'compose.yaml', '-f', 'compose.override.yaml', 'build')
                 ->run(),
             id: 'docker',
             fingerprint: fgp()->php_docker(),
@@ -61,17 +52,7 @@ function start(bool $force = false): void
         io()->note('Docker images are already built.');
     }
 
-    docker()->compose(
-        '-f',
-        'compose.yaml',
-        '-f',
-        'compose.override.yaml',
-        '--profile',
-        'app',
-        'up',
-        '-d',
-        '--wait',
-    )->run();
+    docker()->compose('-f', 'compose.yaml', '-f', 'compose.override.yaml', 'up', '-d', '--wait')->run();
 }
 
 #[AsTask]

@@ -43,7 +43,11 @@ function login(): void
 function build(): void
 {
     with(static function () {
-        $command = sprintf('docker build -t %s .', variable('image'));
+        $command = sprintf(
+            'docker build --build-arg BUILD_TIME="%s" -t %s .',
+            (new DateTime(timezone: new DateTimeZone('Europe/Paris')))->format('Y-m-d\TH:i:s'),
+            variable('image')
+        );
 
         io()->writeln('Building Docker image...');
         run($command);
@@ -101,8 +105,7 @@ function buildAndPush(string $tag = 'latest'): void
 function deploy(
     #[AsOption(name: 'override', description: 'Keep the current version, and rebuild the image')]
     bool $override = false,
-): void
-{
+): void {
     if (! file_exists('VERSION')) {
         file_put_contents('VERSION', 'v0.0.0-dev');
 

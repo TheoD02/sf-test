@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Trait;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
-use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Session\SessionFactory;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;

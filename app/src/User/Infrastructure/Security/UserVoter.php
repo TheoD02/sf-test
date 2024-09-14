@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\User\Infrastructure\Security;
 
 use App\Shared\Security\AbstractPermissionVoter;
-use App\Shared\Trait\SecurityTrait;
 use App\User\Domain\Model\User;
 use App\User\Domain\Security\UserPermissionEnum;
 use App\User\Infrastructure\Doctrine\UserRepository;
@@ -16,7 +15,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 class UserVoter extends AbstractPermissionVoter
 {
-
     #[\Override]
     public function getPermissionsEnum(): string
     {
@@ -41,13 +39,10 @@ class UserVoter extends AbstractPermissionVoter
         return true;
     }
 
+    #[\Override]
     public function bypass(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
-        return false;
+        return $this->security->isGranted('ROLE_ADMIN');
     }
 
     protected function canUserGetOne(string $attribute, mixed $subject, TokenInterface $token): bool

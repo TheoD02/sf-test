@@ -8,10 +8,8 @@ use Castor\Context;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\ContainerDefinition;
 
-use function Castor\app;
 use function Castor\io;
 use function TheoD\MusicAutoTagger\app_context;
-use function TheoD\MusicAutoTagger\root_context;
 
 class Pnpm extends Runner
 {

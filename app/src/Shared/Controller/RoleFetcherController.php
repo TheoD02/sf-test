@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Controller;
 
 use App\Shared\Security\GroupPermissions;
@@ -14,14 +16,10 @@ class RoleFetcherController extends AbstractController
 {
     public function __invoke(): Response
     {
-        $roles = [
-            'ROLE_USER',
-            'ROLE_ADMIN',
-            'ROLE_SUPER_ADMIN',
-        ];
+        $roles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
 
-        foreach (GroupPermissions::cases() as $case) {
-            foreach ($case->getPermissions() as $permission) {
+        foreach (GroupPermissions::cases() as $groupPermission) {
+            foreach ($groupPermission->getPermissions() as $permission) {
                 $roles[] = $permission;
             }
         }

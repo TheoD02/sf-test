@@ -102,11 +102,8 @@ RUN set -eux; \
 COPY --link .docker/frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 # Install fish shell
-ARG XDG_CONFIG_HOME=/home/www-data/.config
-ENV XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
-
-ARG XDG_DATA_HOME=/home/www-data/.local/share
-ENV XDG_DATA_HOME=${XDG_DATA_HOME}
+ENV XDG_CONFIG_HOME="/home/www-data/.config"
+ENV XDG_DATA_HOME="/home/www-data/.local/share"
 
 RUN mkdir -p ${XDG_CONFIG_HOME}/fish
 RUN mkdir -p ${XDG_DATA_HOME}
@@ -133,6 +130,8 @@ FROM frankenphp_base AS frankenphp_prod
 
 ARG SERVER_NAME=":80"
 ENV SERVER_NAME=${SERVER_NAME}
+ARG BUILD_TIME
+ENV BUILD_TIME=$BUILD_TIME
 
 ENV APP_ENV=prod
 ENV FRANKENPHP_CONFIG="worker ./public/index.php"
