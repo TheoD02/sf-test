@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
             'roles' => ['ROLE_USER', ...UserPermissionEnum::cases()],
         ]);
 
-        UserFactory::new()->createMany(100);
+        UserFactory::new()->createMany(5);
 
         $manager->flush();
     }

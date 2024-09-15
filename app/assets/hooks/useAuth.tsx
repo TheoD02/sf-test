@@ -2,11 +2,10 @@ import $api from "@api/api";
 import { components } from "@api/schema";
 import { useLocalStorage } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
-import { invariant, redirect } from '@tanstack/react-router';
 import Roles from "@security/roles";
-import { useLoading } from "./useLoading";
+import { useQueryClient } from "@tanstack/react-query";
+import { redirect, useNavigate, useRouteContext, useRouter } from "@tanstack/react-router";
+import { createContext, useContext, useEffect } from "react";
 
 type User = components["schemas"]["User.jsonld"];
 type Context = {
@@ -15,46 +14,36 @@ type Context = {
   logout: () => void;
   isLoading: boolean;
   isError: boolean;
-  isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => boolean;
-  isAuthenticated: boolean;
-  shouldWaitForAuthentification: boolean;
+  isGranted: (roles: Roles | Roles[], autoRedirect?: boolean) => boolean;
 };
 export type AuthContext = Context;
 
 const AuthContext = createContext<Context>({
   user: null,
-  login: (email: string, password: string, rememberMe: boolean) => {},
+  login: (email: string, password: string) => {},
   logout: () => {},
   isLoading: false,
   isError: false,
-  isGranted: (roles: Roles[] | Roles, redirectToLogin: boolean) => false,
-  isAuthenticated: false,
-  shouldWaitForAuthentification: false,
+  isGranted: () => false,
 });
 
 type Credentials = {
   token: string | null;
   refreshToken: string | null;
+  state: "loggedOut" | "loggedIn";
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const {setIsLoading, setReason} = useLoading();
   const [credentials, setCredentials] = useLocalStorage<Credentials>({
     key: "credentials",
-    defaultValue: { token: null, refreshToken: null },
+    defaultValue: { token: null, refreshToken: null, state: "loggedOut" },
   });
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  useEffect(() => {
-    if (credentials.token !== null) {
-      setIsLoading(true);
-      setReason('Sorry for the wait, we are checking your access...');
-    }
-  }, [credentials.token]);
-
-  const { mutate: loginMutation } = $api.useMutation("post", "/auth/login", {
+  const { mutate: loginMutation, isPending: isLoginLoading } = $api.useMutation("post", "/auth/login", {
     onSuccess: async (data) => {
-      setCredentials({ token: data.token, refreshToken: data.refresh_token });
+      setCredentials({ token: data.token, refreshToken: data.refresh_token, state: "loggedIn" });
       queryClient.invalidateQueries({ queryKey: ["get", "/api/me"] });
       notifications.show({
         title: "Logged in",
@@ -64,20 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const { data: userData, isLoading, isError } = $api.useQuery("get", "/api/me", {}, {
+  const { data: userData, isFetching: isMeLoading, isError } = $api.useQuery("get", "/api/me", {}, {
     enabled: !!credentials.token,
     refetchInterval: 15 * 60 * 1000, // 15 minutes keep user fresh
   });
 
-  useEffect(() => {
-    if (userData !== undefined) {
-      setIsLoading(false);
-    }
-  }, [userData]);
-
-  const login = (email: string, password: string) => loginMutation({ body: { email, password } });
   const logout = () => {
-    setCredentials({ token: null, refreshToken: null });
+    setCredentials({ token: null, refreshToken: null, state: "loggedOut" });
     queryClient.clear();
     notifications.show({
       title: "Logged out",
@@ -85,31 +67,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       color: "green",
     });
   }
-  const isAuthenticated = userData !== undefined && userData !== null && credentials.token !== null;
-  const shouldWaitForAuthentification = credentials.token !== null && (userData === undefined || userData === null);
 
-  const isGranted = (roles: Roles | Roles[], redirectToLogin = true) => {
-    if (shouldWaitForAuthentification === false && !isAuthenticated) {
-      throw redirect({ to: "/auth/login" });
+  const isGranted = (roles: Roles | Roles[], autoRedirect = true) => {
+    if (userData === undefined) {
+      return false;
     }
 
     if (!Array.isArray(roles)) {
       roles = [roles];
     }
 
-    const isGranted = userData !== undefined ? (userData?.roles || []).some((role) => roles.includes(role)) : false;
+    const isGranted = roles.some((role) => userData.roles.includes(role));
 
-    if (!isGranted && redirectToLogin) {
+    if (!isGranted && autoRedirect) {
       throw redirect({ to: "/error/403" });
     }
 
     return isGranted;
   }
 
+  const context = { user: userData === undefined ? null : userData, login: loginMutation, logout, isLoading: isLoginLoading || isMeLoading, isError, isGranted };
+  useEffect(() => {
+    router.options.context.auth = context;
+  }, [context]);
 
-  console.log({ user: userData === undefined ? null : userData, login, logout, isLoading, isError, isGranted, isAuthenticated, shouldWaitForAuthentification })
   return (
-    <AuthContext.Provider value={{ user: userData === undefined ? null : userData, login, logout, isLoading, isError, isGranted, isAuthenticated, shouldWaitForAuthentification }}>
+    <AuthContext.Provider value={context}>
       {children}
     </AuthContext.Provider>
   );

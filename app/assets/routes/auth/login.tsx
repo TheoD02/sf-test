@@ -10,18 +10,27 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import {useForm} from "@mantine/form";
-import {createFileRoute, useNavigate} from "@tanstack/react-router";
+import { useForm } from "@mantine/form";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@hooks/useAuth";
+import { notifications } from "@mantine/notifications";
+import { useState } from "react";
+import { set } from "zod";
 
 export const Route = createFileRoute("/auth/login")({
   component: Login,
+  beforeLoad: ({ context }) => {
+    console.log(context.auth);
+    if (context.auth?.user !== null) {
+      throw redirect({ to: "/" });
+    }
+  }
 });
 
 function Login() {
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
-  const { login, isLoading, isAuthenticated, shouldWaitForAuthentification } = useAuth();
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const form = useForm({
     initialValues: {
       // TODO: Should not be set but for dev is good enough for now
@@ -30,13 +39,20 @@ function Login() {
     },
   });
 
-  if (isLoading || shouldWaitForAuthentification) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (isAuthenticated) {
-    navigate({ to: "/" });
-    return;
+  const handleLogin = ({ email, password }: { email: string, password: string }) => {
+    login(
+      { body: { email, password } },
+      {
+        onSuccess: () => navigate({ to: "/" }),
+        onError: () => {
+          notifications.show({
+            title: "Login failed",
+            message: "Please check your credentials",
+            color: "red",
+          });
+          setErrorMessage("Invalid credentials");
+        }
+      });
   }
 
   return (
@@ -49,8 +65,13 @@ function Login() {
         </Anchor>
       </Text>
 
-      <form onSubmit={form.onSubmit((values) => login(values.email, values.password))}>
+      <form onSubmit={form.onSubmit((values) => handleLogin(values))}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          {errorMessage && (
+            <Text c="red" ta="center" size="sm" mt={-10} mb={10}>
+              {errorMessage}
+            </Text>
+          )}
           <TextInput
             label="Email"
             placeholder="you@mantine.dev"

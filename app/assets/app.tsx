@@ -1,4 +1,4 @@
-import { Center, Loader, MantineProvider, Transition } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { notifications, Notifications } from "@mantine/notifications";
@@ -6,8 +6,7 @@ import { ModalsProvider } from "@mantine/modals";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
-import { LoadingProvider, useLoading } from "@hooks/useLoading";
+import { LoadingProvider } from "@hooks/useLoading";
 import { useEffect } from "react";
 import { useNetwork } from "@mantine/hooks";
 
@@ -24,7 +23,6 @@ declare module "@tanstack/react-router" {
 export const queryClient = new QueryClient();
 
 function InnerApp() {
-  const auth = useAuth();
   const network = useNetwork();
 
   useEffect(() => {
@@ -37,7 +35,16 @@ function InnerApp() {
     }
   }, [network.online]);
 
-  return <RouterProvider router={router} context={{ auth }} />;
+  return <RouterProvider router={router} context={{
+    auth: {
+      user: null,
+      login: () => { },
+      logout: () => { },
+      isLoading: false,
+      isError: false,
+      isGranted: () => false,
+    }
+  }} />;
 }
 
 export default function App() {
@@ -45,12 +52,10 @@ export default function App() {
     <MantineProvider defaultColorScheme="dark">
       <LoadingProvider>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <ModalsProvider>
-              <Notifications position="top-right" />
-              <InnerApp />
-            </ModalsProvider>
-          </AuthProvider>
+          <ModalsProvider>
+            <Notifications position="top-left" />
+            <InnerApp />
+          </ModalsProvider>
         </QueryClientProvider>
       </LoadingProvider>
     </MantineProvider>

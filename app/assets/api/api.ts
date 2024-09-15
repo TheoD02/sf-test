@@ -5,6 +5,7 @@ import { paths } from "./schema";
 const fetchClient = createFetchClient<paths>({
   baseUrl: window.location.origin,
 });
+
 const contentTypeBasedOnHttpMethod: Middleware = {
   async onRequest({ request }) {
     if (request.method === "PATCH") {
@@ -18,53 +19,77 @@ const contentTypeBasedOnHttpMethod: Middleware = {
 const injectApiToken: Middleware = {
   async onRequest({ request }) {
     const credentials = localStorage.getItem("credentials");
-
     if (credentials) {
       const { token } = JSON.parse(credentials);
       request.headers.set("Authorization", `Bearer ${token}`);
+    } else {
+      if (window.location.pathname !== "/auth/login") {
+        window.location.href = "/auth/login";
+        return;
+      }
     }
-  }
-}
+  },
+};
 
-const refreshCredentials: Middleware = {
-  async onResponse({ response }) {
+const refreshTokenMiddleware: Middleware = {
+  async onResponse({ response, request }) {
     if (response.status === 401) {
-      const rememberMe = localStorage.getItem("rememberMe");
+      const credentials = localStorage.getItem("credentials");
+      if (request.url.includes("/auth/login")) {
+        return response; // Do nothing user just failed to login :)
+      }
 
-      response.clone().json().then((data) => {
-        if (data.message.includes("JWT Token") && rememberMe === "true") {
-          const credentials = localStorage.getItem("credentials");
+      const rememberMe = localStorage.getItem("rememberMe") === 'true';
 
-          if (credentials) {
-            const { refreshToken } = JSON.parse(credentials);
-            fetch("/api/auth/refresh", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ refresh_token: refreshToken }),
-            }).then((res) => res.json()).then((data) => {
-              if (data.token) {
-                localStorage.setItem("credentials", JSON.stringify({ token: data.token, refreshToken: data.refresh_token }));
-              }
-            }).catch((error) => {
-              console.error(error);
-            });
-          }
+      if (!rememberMe) {
+        localStorage.removeItem("credentials");
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login";
+        }
+        return response
+      }
+
+      if (credentials) {
+        const { refreshToken } = JSON.parse(credentials);
+
+        const refreshResponse = await fetch("/api/auth/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        });
+
+        if (refreshResponse.ok) {
+          const newTokens = await refreshResponse.json();
+          console.log("New tokens", newTokens);
+          localStorage.setItem(
+            "credentials",
+            JSON.stringify({
+              token: newTokens.token,
+              refreshToken: newTokens.refresh_token,
+            })
+          );
+
+          // Retry the original request with the new token
+          request.headers.set("Authorization", `Bearer ${newTokens.token}`);
         } else {
-          localStorage.setItem("credentials", JSON.stringify({ token: null, refreshToken: null }));
+          // If refresh fails, redirect to login
+          localStorage.removeItem("credentials");
           if (window.location.pathname !== "/auth/login") {
             window.location.href = "/auth/login";
           }
         }
-      });
+      }
     }
-  }
-}
+    return response;
+  },
+};
 
 fetchClient.use(contentTypeBasedOnHttpMethod);
-fetchClient.use(refreshCredentials);
 fetchClient.use(injectApiToken);
+fetchClient.use(refreshTokenMiddleware);
+
 const $api = createClient(fetchClient);
 
 export default $api;

@@ -11,16 +11,16 @@ import { components } from "@api/schema";
 import { ActionIcon, Box, Button, Center, Container, Group, Menu, Text } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import Roles from "@security/roles";
-import { useAuth } from "@hooks/useAuth";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { useQueryClient } from "@tanstack/react-query";
 import PrivateComponent from "@components/security/PrivateComponent";
+import { useAuth } from "@hooks/useAuth";
 
 export const Route = createFileRoute("/users/")({
   component: Users,
   beforeLoad: ({ context }) => {
-    context.auth.isGranted([Roles.ROLE_ADMIN, Roles.USER_GET_COLLECTION], true);
+    context.auth.isGranted(Roles.USER_GET_COLLECTION);
   },
 });
 
@@ -30,7 +30,9 @@ function removeEmptyValues(object: any): any {
 }
 
 function Users() {
+  const navigate = useNavigate();
   const { isGranted } = useAuth();
+
   const queryClient = useQueryClient();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -70,7 +72,6 @@ function Users() {
     ],
     []
   );
-  const navigate = useNavigate();
   const { mutate: deleteUser } = $api.useMutation("delete", "/api/users/{id}", {
     onSuccess: () => {
       notifications.show({
@@ -102,7 +103,7 @@ function Users() {
     renderRowActions: ({ row }) => (
       <Center>
         <Group>
-          <ActionIcon color="yellow" onClick={() => navigate({ to: `/users/$id/edit`, params: { id: row.original.id?.toString() ?? "" } })} disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_UPDATE], false)}>
+          <ActionIcon color="yellow" onClick={() => navigate({ to: `/users/$id/edit`, params: { id: row.original.id?.toString() ?? "" } })} disabled={!isGranted(Roles.USER_UPDATE, false)}>
             <IconEdit />
           </ActionIcon>
           <ActionIcon
@@ -122,7 +123,7 @@ function Users() {
                 labels: { confirm: "Delete", cancel: "Cancel" },
               })
             }}
-            disabled={!isGranted([Roles.ROLE_ADMIN, Roles.USER_DELETE], false)}
+            disabled={!isGranted(Roles.USER_DELETE, false)}
           >
             <IconTrash />
           </ActionIcon>

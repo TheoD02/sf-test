@@ -12,8 +12,8 @@ export default function PrivateComponent({
 }: Props) {
   const { isGranted } = useAuth();
 
-  if (isGranted(roles, false) === false) {
-    return <></>;
+  if (!isGranted(roles, false)) {
+    return null;
   }
 
   return <>{children}</>;

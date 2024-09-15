@@ -1,13 +1,17 @@
 import { Button, Group, Textarea, TextInput } from "@mantine/core";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 import $api from "@api/api";
 import { notifications } from "@mantine/notifications";
 import { queryClient } from "@/app.tsx";
+import Roles from "@security/roles";
 
-export const Route = createLazyFileRoute("/users/create")({
+export const Route = createFileRoute("/users/create")({
   component: CreateArticle,
+  beforeLoad: ({ context }) => {
+    context.auth.isGranted(Roles.USER_CREATE);
+  }
 });
 
 const schema = z.object({

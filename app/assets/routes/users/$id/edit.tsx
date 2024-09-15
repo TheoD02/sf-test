@@ -11,8 +11,8 @@ import Roles from '@security/roles';
 export const Route = createFileRoute('/users/$id/edit')({
   component: EditArticleLoader,
   beforeLoad: ({ context }) => {
-    context.auth.isGranted([Roles.ROLE_ADMIN, Roles.USER_UPDATE], true);
-  },
+    context.auth.isGranted(Roles.USER_UPDATE);
+  }
 })
 
 const schema = z.object({
@@ -74,7 +74,7 @@ function EditUser({ userId, user }: { userId: string, user: components["schemas"
   });
 
   return (
-    <form onSubmit={form.onSubmit((values) => mutate({ path: { id: userId }, body: values }))}>
+    <form onSubmit={form.onSubmit((values) => mutate({ params: { path: { id: userId } }, body: values }))}>
       <TextInput
         withAsterisk
         label="Email"

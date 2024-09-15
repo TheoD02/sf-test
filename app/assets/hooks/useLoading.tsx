@@ -10,10 +10,8 @@ interface LoadingContextType {
   setReason: (reason: string) => void;
 }
 
-// Create the context with default values
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-// Custom hook to use the loading context
 export const useLoading = (): LoadingContextType => {
   const context = useContext(LoadingContext);
   if (context === undefined) {
@@ -22,7 +20,6 @@ export const useLoading = (): LoadingContextType => {
   return context;
 };
 
-// LoadingProvider component to wrap your app
 export const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useDebouncedState<boolean>(false, 1000);
   const [isVisible, setIsVisible] = useState<boolean>(false);
