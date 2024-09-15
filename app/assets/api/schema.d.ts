@@ -127,6 +127,7 @@ export interface components {
         "User.PatchUserInput": {
             email?: string;
             password?: string;
+            roles?: string[];
         };
         "User.jsonld": {
             readonly "@context"?: string | ({

@@ -9,4 +9,9 @@ class PatchUserInput
     public string $email;
 
     public string $password;
+
+    /**
+     * @var non-empty-list<string>
+     */
+    public array $roles;
 }
