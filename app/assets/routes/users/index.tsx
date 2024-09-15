@@ -38,17 +38,15 @@ function Users() {
     pageIndex: 0,
     pageSize: 30,
   });
-  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
   const { data: articles, isFetching } = $api.useQuery("get", "/api/users", {
     params: {
       query: removeEmptyValues({
         // Maybe we can do that directly in querySerializer of client ?
         page: pagination.pageIndex + 1,
         id: columnFilters.find((f) => f.id === "id")?.value ?? "",
-        level: columnFilters.find((f) => f.id === "level")?.value ?? "",
-        reason: columnFilters.find((f) => f.id === "reason")?.value ?? "",
+        'email[contains]': columnFilters.find((f) => f.id === "email")?.value ?? "",
+        roles: columnFilters.find((f) => f.id === "roles")?.value ?? "",
       }),
     },
   });

@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\User\Infrastructure\ApiPlatform\Filter\UserCollectionFilter;
 use App\User\Infrastructure\ApiPlatform\Payload\CreateUserInput;
 use App\User\Infrastructure\ApiPlatform\Payload\PatchUserInput;
 use App\User\Infrastructure\ApiPlatform\State\Controller\UserRolesCollectionController;
@@ -23,7 +24,7 @@ use App\User\Infrastructure\ApiPlatform\State\Provider\UserProvider;
 #[ApiResource(
     shortName: 'User',
     operations: [
-        new GetCollection(provider: UserCollectionProvider::class),
+        new GetCollection(filters: [UserCollectionFilter::class], provider: UserCollectionProvider::class),
         new GetCollection(uriTemplate: '/users/roles', controller: UserRolesCollectionController::class, read: false),
         new Get(provider: UserProvider::class),
         new Get(uriTemplate: '/me', provider: UserMeProvider::class),

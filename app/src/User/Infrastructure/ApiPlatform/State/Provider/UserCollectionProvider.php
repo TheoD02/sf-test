@@ -21,7 +21,8 @@ class UserCollectionProvider extends AbstractProvider
 
     public function __construct(
         private readonly UserRepository $userRepository,
-    ) {
+    )
+    {
     }
 
     /**
@@ -30,9 +31,10 @@ class UserCollectionProvider extends AbstractProvider
     #[\Override]
     public function provide(
         Operation $operation,
-        array $uriVariables = [],
-        array $context = [],
-    ): MappingPaginatorDecorator {
+        array     $uriVariables = [],
+        array     $context = [],
+    ): MappingPaginatorDecorator
+    {
         $qb = $this->userRepository->createQueryBuilder('e');
 
         $this->denyAccessUnlessGranted(UserPermissionEnum::GET_COLLECTION->value, $this->userRepository);

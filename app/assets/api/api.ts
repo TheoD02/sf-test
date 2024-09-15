@@ -62,7 +62,6 @@ const refreshTokenMiddleware: Middleware = {
 
         if (refreshResponse.ok) {
           const newTokens = await refreshResponse.json();
-          console.log("New tokens", newTokens);
           localStorage.setItem(
             "credentials",
             JSON.stringify({

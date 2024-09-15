@@ -184,6 +184,24 @@ export interface operations {
             query?: {
                 /** @description The collection page identifier */
                 page?: string;
+                /** @description Filter email by partial string match */
+                "email[contains]"?: string;
+                /** @description Filter email by partial string match at the end */
+                "email[endswith]"?: string;
+                /** @description Filter email by partial string match at the beginning */
+                "email[startswith]"?: string;
+                /** @description Filter email by equal to a value */
+                "email[eq]"?: string;
+                /** @description Filter email by not equal to a value */
+                "email[neq]"?: string;
+                /** @description Filter email by in a list of values */
+                "email[in]"?: string;
+                /** @description Filter email by not in a list of values */
+                "email[nin]"?: string;
+                /** @description Filter email by is null value */
+                "email[isnull]"?: string;
+                /** @description Filter email by is not null value */
+                "email[isnotnull]"?: string;
             };
             header?: never;
             path?: never;
