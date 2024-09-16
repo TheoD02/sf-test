@@ -23,4 +23,5 @@ return [
     Module\ApiPlatformEasyFilter\ApiPlatformEasyFilterBundle::class => ['all' => true],
     Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle::class => ['all' => true],
     AutoMapper\Symfony\Bundle\AutoMapperBundle::class => ['all' => true],
+    Rekalogika\DomainEvent\RekalogikaDomainEventBundle::class => ['all' => true],
 ];

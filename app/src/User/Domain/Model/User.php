@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Model;
 
+use App\User\Domain\Event\UserTransitToAdminEvent;
 use App\User\Infrastructure\Doctrine\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Rekalogika\Contracts\DomainEvent\DomainEventEmitterInterface;
+use Rekalogika\Contracts\DomainEvent\DomainEventEmitterTrait;
+use Rekalogika\Mapper\Attribute\AllowDelete;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,8 +17,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, DomainEventEmitterInterface
 {
+    use DomainEventEmitterTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column]
@@ -29,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var non-empty-list<string> The user roles
      */
     #[ORM\Column]
+    #[AllowDelete]
     private array $roles = ['ROLE_USER'];
 
     #[ORM\Column]
@@ -86,7 +93,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
+        $currentRoles = $this->roles;
         $this->roles = $roles;
+
+        if (! in_array('ROLE_ADMIN', $currentRoles, true) && in_array('ROLE_ADMIN', $this->roles, true)) {
+            $this->recordEvent(new UserTransitToAdminEvent($this->id));
+        }
 
         return $this;
     }

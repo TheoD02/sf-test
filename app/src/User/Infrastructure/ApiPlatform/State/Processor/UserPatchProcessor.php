@@ -14,6 +14,7 @@ use AutoMapper\AutoMapperInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Rekalogika\ApiLite\Exception\NotFoundException;
 use Rekalogika\ApiLite\State\AbstractProcessor;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 /**
@@ -24,7 +25,6 @@ class UserPatchProcessor extends AbstractProcessor
     public function __construct(
         private readonly UserRepository         $userRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly AutoMapperInterface    $autoMapper,
     )
     {
     }
@@ -36,7 +36,14 @@ class UserPatchProcessor extends AbstractProcessor
 
         $this->denyAccessUnlessGranted(UserPermissionEnum::UPDATE->value, $user);
 
-        $this->autoMapper->map($data, $user, ['skip_null_values' => true]);
+        try {
+            $this->map($data, $user);
+        } catch (\Throwable $e) { // TODO: Manage this in event exception listener (can be thrown many times)
+            $previous = $e->getPrevious();
+            if ($previous instanceof HttpException) {
+                throw $previous;
+            }
+        }
 
         $this->entityManager->flush();
 

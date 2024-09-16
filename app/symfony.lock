@@ -116,6 +116,9 @@
     "rekalogika/api-lite": {
         "version": "v0.7.5"
     },
+    "rekalogika/domain-event": {
+        "version": "2.5.0"
+    },
     "rekalogika/mapper": {
         "version": "v1.5.3"
     },

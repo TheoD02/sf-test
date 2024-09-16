@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c86781de386bfe7b4fa8813fc2b41f2",
+    "content-hash": "e8bb03bfdd895dd9b31c8957b1d4dc14",
     "packages": [
         {
             "name": "api-platform/core",
@@ -3251,6 +3251,139 @@
                 }
             ],
             "time": "2024-09-01T09:35:44+00:00"
+        },
+        {
+            "name": "rekalogika/domain-event",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rekalogika/domain-event.git",
+                "reference": "1ee0aeed026fc1f5a16873c47b4487c908507ac9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rekalogika/domain-event/zipball/1ee0aeed026fc1f5a16873c47b4487c908507ac9",
+                "reference": "1ee0aeed026fc1f5a16873c47b4487c908507ac9",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "^2.11.3 || ^2.12",
+                "doctrine/orm": "^2.16 || ^3.0",
+                "doctrine/persistence": "^3.2",
+                "psr/event-dispatcher": "^1.0",
+                "rekalogika/domain-event-contracts": "^2.5",
+                "symfony/config": "^6.4 || ^7.0",
+                "symfony/dependency-injection": "^6.4 || ^7.0",
+                "symfony/event-dispatcher": "^6.4 || ^7.0",
+                "symfony/http-kernel": "^6.4 || ^7.0",
+                "symfony/service-contracts": "^3.0",
+                "symfony/var-exporter": "^6.4 || ^7.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rekalogika\\DomainEvent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Priyadi Iman Nurcahyo",
+                    "email": "priyadi@rekalogika.com"
+                }
+            ],
+            "description": "Domain Event Implementation for Symfony and Doctrine",
+            "homepage": "https://rekalogika.dev/domain-event",
+            "keywords": [
+                "doctrine",
+                "domain",
+                "domain-event",
+                "event",
+                "event-dispatcher",
+                "event-listener",
+                "symfony"
+            ],
+            "support": {
+                "source": "https://github.com/rekalogika/domain-event/tree/2.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/priyadi",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-16T15:46:27+00:00"
+        },
+        {
+            "name": "rekalogika/domain-event-contracts",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rekalogika/domain-event-contracts.git",
+                "reference": "1ea975b43d65f2f2d91be7d9270371403e0f7f97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rekalogika/domain-event-contracts/zipball/1ea975b43d65f2f2d91be7d9270371403e0f7f97",
+                "reference": "1ea975b43d65f2f2d91be7d9270371403e0f7f97",
+                "shasum": ""
+            },
+            "require": {
+                "psr/event-dispatcher": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rekalogika\\Contracts\\DomainEvent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Priyadi Iman Nurcahyo",
+                    "email": "priyadi@rekalogika.com"
+                }
+            ],
+            "description": "Interfaces, Traits and Nominal Classes used by Domain Entities Implementing Domain Events",
+            "homepage": "https://rekalogika.dev/domain-event",
+            "keywords": [
+                "cqrs",
+                "ddd",
+                "doctrine",
+                "domain",
+                "domain-driven-design",
+                "domain-event",
+                "event",
+                "event-dispatcher",
+                "event-listener",
+                "symfony"
+            ],
+            "support": {
+                "source": "https://github.com/rekalogika/domain-event-contracts/tree/2.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/priyadi",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-16T15:46:27+00:00"
         },
         {
             "name": "rekalogika/mapper",

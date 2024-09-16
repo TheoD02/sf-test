@@ -27,6 +27,7 @@
         "phpdocumentor/reflection-docblock": "^5.4",
         "phpstan/phpdoc-parser": "^1.30",
         "rekalogika/api-lite": "^0.7.5",
+        "rekalogika/domain-event": "^2.5",
         "runtime/frankenphp-symfony": "*",
         "symfony/asset": "7.2.*",
         "symfony/console": "7.2.*",

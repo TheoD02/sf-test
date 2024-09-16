@@ -24,7 +24,7 @@ class UserRolesCollectionController extends AbstractController
 
     public function getGroupedRoles(): array
     {
-        $defaultRoles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
+        $defaultRoles = ['ROLE_USER', 'ROLE_ADMIN'];
         $groupedPermissions = array_reduce(GroupPermissions::cases(), static function (array $roles, GroupPermissions $groupPermission): array {
             foreach ($groupPermission->getPermissions() as $permission) {
                 $roles[$groupPermission->value][] = $permission;

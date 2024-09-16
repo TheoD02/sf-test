@@ -5,7 +5,7 @@ meta {
 }
 
 patch {
-  url: {{url}}/api/users/1
+  url: {{url}}/api/users/2
   body: json
   auth: inherit
 }
@@ -16,14 +16,13 @@ headers {
 
 body:json {
   {
-    "email": "test-patched@gmail.com",
-    "roels": [
+    "roles": [
       "ROLE_USER",
       "USER_GET_ONE",
       "USER_GET_COLLECTION",
       "USER_CREATE",
       "USER_UPDATE",
-      "USER_DELETE"
+      "ROLE_ADMIN"
     ]
   }
 }
