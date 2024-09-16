@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\ApiPlatform\State\Controller;
 
 use App\Shared\Security\GroupPermissions;
@@ -13,11 +15,12 @@ class UserRolesCollectionController extends AbstractController
     public function __invoke(): JsonResponse
     {
         $roles = $this->getGroupedRoles();
+
         return $this->json([
-            "@context" => "/api/contexts/UserRolesCollection",
-            "@id" => "/api/users/roles",
-            "@type" => "hydra:Collection",
-            "hydra:totalItems" => count($roles),
+            '@context' => '/api/contexts/UserRolesCollection',
+            '@id' => '/api/users/roles',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => \count($roles),
             'hydra:member' => $this->getGroupedRoles(),
         ]);
     }
@@ -25,15 +28,21 @@ class UserRolesCollectionController extends AbstractController
     public function getGroupedRoles(): array
     {
         $defaultRoles = ['ROLE_USER', 'ROLE_ADMIN'];
-        $groupedPermissions = array_reduce(GroupPermissions::cases(), static function (array $roles, GroupPermissions $groupPermission): array {
-            foreach ($groupPermission->getPermissions() as $permission) {
-                $roles[$groupPermission->value][] = $permission;
-            }
+        $groupedPermissions = array_reduce(
+            GroupPermissions::cases(),
+            static function (array $roles, GroupPermissions $groupPermission): array {
+                foreach ($groupPermission->getPermissions() as $permission) {
+                    $roles[$groupPermission->value][] = $permission;
+                }
 
-            return $roles;
-        }, []);
+                return $roles;
+            },
+            []
+        );
 
-        return array_merge(['role' => $defaultRoles], $groupedPermissions);
+        return array_merge([
+            'role' => $defaultRoles,
+        ], $groupedPermissions);
     }
 
     public function getRoles(): array

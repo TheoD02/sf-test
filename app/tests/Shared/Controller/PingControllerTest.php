@@ -19,6 +19,7 @@ final class PingControllerTest extends AbstractApiTestCase
         // Assert
         self::assertResponseContent([
             'status' => 'ok',
+            'deploy_time' => false,
         ]);
     }
 

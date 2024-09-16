@@ -63,14 +63,20 @@ class UserVoter extends AbstractPermissionVoter
     protected function canUserUpdate(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $isSelfEdit = $this->isSelfUser($subject->getId());
+        if ($this->hasPermission(UserPermissionEnum::UPDATE)) {
+            return true;
+        }
 
-        return $this->hasPermission(UserPermissionEnum::UPDATE) || $isSelfEdit;
+        return $isSelfEdit;
     }
 
     protected function canUserDelete(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $isSelfDelete = $this->isSelfUser($subject->getId());
+        if ($this->hasPermission(UserPermissionEnum::DELETE)) {
+            return true;
+        }
 
-        return $this->hasPermission(UserPermissionEnum::DELETE) || $isSelfDelete;
+        return $isSelfDelete;
     }
 }

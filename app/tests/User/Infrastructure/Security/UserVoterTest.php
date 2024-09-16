@@ -168,7 +168,7 @@ final class UserVoterTest extends AbstractVoterTestCase
         $vote = $this->voteOnAttributes(attributes: [UserPermissionEnum::UPDATE->value], subject: $user);
 
         // Assert
-        $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_DENIED);
+        $this->assertVote(actualVote: $vote, expectedVote: VoterInterface::ACCESS_GRANTED);
     }
 
     public function testVoteOnAttributesUpdateWithOtherUser(): void

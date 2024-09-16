@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Domain\Model;
 
+use App\Shared\Trait\EntityUuid;
 use App\User\Domain\Event\UserTransitToAdminEvent;
 use App\User\Infrastructure\Doctrine\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, DomainEventEmitterInterface
 {
     use DomainEventEmitterTrait;
+    use EntityUuid;
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -96,8 +98,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, DomainE
         $currentRoles = $this->roles;
         $this->roles = $roles;
 
-        if (! in_array('ROLE_ADMIN', $currentRoles, true) && in_array('ROLE_ADMIN', $this->roles, true)) {
-            $this->recordEvent(new UserTransitToAdminEvent($this->id));
+        if (! \in_array('ROLE_ADMIN', $currentRoles, true) && \in_array('ROLE_ADMIN', $this->roles, true)) {
+            $this->recordEvent(new UserTransitToAdminEvent($this->uuid));
         }
 
         return $this;

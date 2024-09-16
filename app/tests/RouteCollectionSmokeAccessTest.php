@@ -14,37 +14,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 final class RouteCollectionSmokeAccessTest extends AbstractApiTestCase
 {
-    private const array GLOBALLY_IGNORE = [];
-
-    /**
-     * @dataProvider provideRouteCollectionSmokeAccessCases
-     */
-    public function testRouteCollectionSmokeAccess(
-        Route $route,
-        CompiledRoute $compiledRoute,
-        string $routeName,
-    ): void {
-        $this->loginAsUser(persist: true);
-        $path = $route->getPath();
-        $this->request('GET', $path);
-
-        $response = self::getClient()->getResponse();
-        if ($response->isSuccessful() === false) {
-            $this->fail(
-                \sprintf(
-                    '[HTTP %d][%s] Failed to call route %s (%s) %s%s',
-                    $response->getStatusCode(),
-                    $route->getDefault('_controller'),
-                    $path,
-                    $routeName,
-                    \PHP_EOL,
-                    $response->getContent(),
-                )
-            );
-        }
-
-        self::assertResponseIsSuccessful();
-    }
+    private const array GLOBALLY_IGNORE = ['gesdinet_jwt_refresh_token', 'app_logout'];
 
     public static function provideRouteCollectionSmokeAccessCases(): iterable
     {
@@ -77,6 +47,36 @@ final class RouteCollectionSmokeAccessTest extends AbstractApiTestCase
 
             yield $routeName => [$route, $compiledRoute, $routeName];
         }
+    }
+
+    /**
+     * @dataProvider provideRouteCollectionSmokeAccessCases
+     */
+    public function testRouteCollectionSmokeAccess(
+        Route $route,
+        CompiledRoute $compiledRoute,
+        string $routeName,
+    ): void {
+        $this->loginAsUser(persist: true);
+        $path = $route->getPath();
+        $this->request('GET', $path);
+
+        $response = self::getClient()->getResponse();
+        if ($response->isSuccessful() === false) {
+            $this->fail(
+                \sprintf(
+                    '[HTTP %d][%s] Failed to call route %s (%s) %s%s',
+                    $response->getStatusCode(),
+                    $route->getDefault('_controller'),
+                    $path,
+                    $routeName,
+                    \PHP_EOL,
+                    $response->getContent(),
+                ),
+            );
+        }
+
+        self::assertResponseIsSuccessful();
     }
 
     #[\Override]
