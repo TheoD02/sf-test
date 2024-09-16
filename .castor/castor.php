@@ -75,7 +75,7 @@ function install(bool $force = false): void
 
     io()->title('Installing dependencies');
     io()->section('Composer');
-    $forceVendor = $force || ! is_dir(context()->workingDirectory . '/vendor');
+    $forceVendor = $force || ! is_dir(app_context()->workingDirectory . '/vendor');
     if (! fingerprint(
         callback: static fn () => composer()->install()->run(),
         id: 'composer',
@@ -99,7 +99,7 @@ function install(bool $force = false): void
 
     if (pnpm()->hasPackageJson()) {
         io()->section('NPM');
-        $forceNodeModules = $force || ! is_dir(context()->workingDirectory . '/node_modules');
+        $forceNodeModules = $force || ! is_dir(app_context()->workingDirectory . '/node_modules');
         if (! fingerprint(
             callback: static fn () => pnpm()->install()->run(),
             id: 'npm',

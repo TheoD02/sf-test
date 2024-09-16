@@ -22,9 +22,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		fi
 	fi
 
-	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then
-		composer install --prefer-dist --no-progress --no-interaction
-	fi
+	composer install --prefer-dist --no-progress --no-interaction || true # Always install because in dev some packages are not installed in branch switching
 
 	if grep -q ^DATABASE_URL= .env; then
 		echo "Waiting for database to be ready..."
