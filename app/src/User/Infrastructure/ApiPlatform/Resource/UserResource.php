@@ -20,6 +20,7 @@ use App\User\Infrastructure\ApiPlatform\State\Processor\UserPostProcessor;
 use App\User\Infrastructure\ApiPlatform\State\Provider\UserCollectionProvider;
 use App\User\Infrastructure\ApiPlatform\State\Provider\UserMeProvider;
 use App\User\Infrastructure\ApiPlatform\State\Provider\UserProvider;
+use Symfony\Component\Uid\Uuid;
 
 #[ApiResource(
     shortName: 'User',
@@ -37,6 +38,8 @@ class UserResource
 {
     private ?int $id = null;
 
+    private Uuid $uuid;
+
     private ?string $email = null;
 
     /**
@@ -52,6 +55,18 @@ class UserResource
     public function setId(?int $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): self
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
