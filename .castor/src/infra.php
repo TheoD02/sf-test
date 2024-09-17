@@ -18,8 +18,8 @@ function docker(): Context
 {
     return new Context(
         data: [
-            'registry' => 'docker-registry.theo-corp.fr/theod02',
-            'image' => 'sf-deploy-test',
+            'registry' => '<docker-registry-placeholder>/<docker-namespace-placeholder>',
+            'image' => '<docker-image-placeholder>',
         ],
     );
 }
@@ -46,7 +46,7 @@ function build(): void
         $command = sprintf(
             'docker build --build-arg BUILD_TIME="%s" -t %s .',
             (new DateTime(timezone: new DateTimeZone('Europe/Paris')))->format('Y-m-d\TH:i:s'),
-            variable('image')
+            variable('image'),
         );
 
         io()->writeln('Building Docker image...');
@@ -105,7 +105,8 @@ function buildAndPush(string $tag = 'latest'): void
 function deploy(
     #[AsOption(name: 'override', description: 'Keep the current version, and rebuild the image')]
     bool $override = false,
-): void {
+): void
+{
     if (! file_exists('VERSION')) {
         file_put_contents('VERSION', 'v0.0.0-dev');
 
