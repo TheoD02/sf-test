@@ -64,13 +64,13 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
 
     if ($event instanceof BeforeExecuteTaskEvent && \in_array(
             $event->task->getName(),
-            ['start', 'stop', 'restart', 'install'],
+            ['start', 'setup', 'stop', 'restart', 'install'],
             true,
         )) {
         return;
     }
 
-    if (\in_array($event->task->getName(), ['shell', 'install', 'prod:up', 'prod:build', 'tools:install'], true)) {
+    if (\in_array($event->task->getName(), ['shell', 'setup', 'install', 'prod:up', 'prod:build', 'tools:install'], true)) {
         return;
     }
 

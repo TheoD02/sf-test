@@ -44,10 +44,8 @@ function setup(): void
 
     $cleanSymfony = io()->confirm('Do you want a clean symfony installation?');
     if ($cleanSymfony) {
-        $files = finder()->in(app_context()->workingDirectory)->ignoreDotFiles(false)->files();
-        foreach ($files as $file) {
-            fs()->remove($file);
-        }
+        fs()->remove(app_context()->workingDirectory);
+        fs()->mkdir(app_context()->workingDirectory);
         symfony_installation();
     }
 
