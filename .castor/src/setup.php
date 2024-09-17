@@ -39,7 +39,7 @@ function setup(): void
         root_context()->workingDirectory . '/compose.override.yaml',
     ];
 
-    io()->section("Setting up project with name {$appName}");
+    io()->section("Replacing placeholders in project files");
     foreach ($files as $file) {
         if (fs()->exists($file) === false) {
             continue;
@@ -48,11 +48,43 @@ function setup(): void
         $contents = str_replace('<app-name-placeholder>', $appName, $contents);
         file_put_contents($file, $contents);
     }
+    io()->success('Done!');
+
+    $isDeployWithDockerImage = io()->confirm('Do you want to deploy with a Docker image?');
+    if ($isDeployWithDockerImage) {
+        io()->newLine();
+        do {
+            $registryDomain = io()->ask('What is the registry domain?', $registryDomain ?? 'docker.io');
+            $registryNamespace = io()->ask('What is the registry namespace?', $registryNamespace ?? 'theod');
+            $dockerImage = io()->ask('What is the Docker image?', $dockerImage ?? $appName);
+        } while (io()->confirm("Is this correct? {$registryDomain}/{$registryNamespace}/{$dockerImage}", false) === false);
+
+        $replace = [
+            '<docker-registry-placeholder>',
+            '<docker-namespace-placeholder>',
+            '<docker-image-placeholder>',
+        ];
+        $replaceWith = [
+            $registryDomain,
+            $registryNamespace,
+            $dockerImage,
+        ];
+
+        io()->note('Replacing placeholders in infra.php');
+        $contents = file_get_contents(root_context()->workingDirectory . '/.castor/src/infra.php');
+        foreach ($replace as $index => $value) {
+            $contents = str_replace($value, $replaceWith[$index], $contents);
+        }
+        file_put_contents(root_context()->workingDirectory . '/.castor/src/infra.php', $contents);
+        io()->success('Done!');
+    } else {
+        fs()->remove(root_context()->workingDirectory . '/.castor/src/infra.php');
+    }
 
     start();
     io()->newLine();
 
-    $cleanSymfony = io()->confirm('Do you want a clean symfony installation?');
+    $cleanSymfony = io()->confirm('Do you want a clean symfony installation?', false);
     if ($cleanSymfony) {
         foreach (finder()->in(app_context()->workingDirectory)->directories()->depth(0) as $directory) {
             fs()->remove($directory);
@@ -65,9 +97,12 @@ function setup(): void
 
     io()->success('Project setup complete');
     io()->info([
-        'You can now run `castor start` to start the project',
-        '`castor install` is available to install dependencies (auto starts the project, installs dependencies and resets the database)',
-        '',
+        'Main commands:',
+        '  castor start - Start the project',
+        '  castor install - Install dependencies (auto starts the project, installs dependencies and resets the database)',
+        '  castor shell - Open a shell in the project',
+        '  castor db:reset - Reset the database',
+        $isDeployWithDockerImage ? '  castor deploy - Deploy the project' : '',
         "You can access the app at https://{$appName}.web.localhost after running `castor start`",
     ]);
 
