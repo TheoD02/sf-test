@@ -79,7 +79,7 @@ COPY --link .docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
-HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics && curl -f http://localhost/api/ping || exit 1
+HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 # Dev FrankenPHP image
