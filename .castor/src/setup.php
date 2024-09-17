@@ -37,6 +37,9 @@ function setup(): void
 
     io()->section("Setting up project with name {$appName}");
     foreach ($files as $file) {
+        if (fs()->exists($file) === false) {
+            continue;
+        }
         $contents = file_get_contents($file);
         $contents = str_replace('<app-name-placeholder>', $appName, $contents);
         file_put_contents($file, $contents);
@@ -125,13 +128,6 @@ function symfony_installation(): void
 
         ksort($versions);
 
-        io()->newLine();
-        io()->warning('Symfony seems not to be installed.');
-
-        if (io()->confirm('Do you want to install it now?') === false) {
-            return;
-        }
-
         $version = io()->choice('Choose Symfony version', $versions, 'Latest Stable');
         $version = $mapping[$version];
         composer()->add('create-project', "symfony/skeleton:{$version} sf-temp")->run();
@@ -143,5 +139,13 @@ function symfony_installation(): void
 
         io()->note('Removing temporary directory.');
         fs()->remove($tempDestination);
+
+        composer()->add('require', 'php:>=8.3', 'runtime/frankenphp-symfony')->run();
+        composer()->add('config', '--json', 'extra.symfony.docker', 'true')->run();
+    } else {
+        io()->newLine();
+        io()->warning('Symfony seems not to be installed.');
+
+        exit(1);
     }
 }
