@@ -6,6 +6,7 @@ use Castor\Event\AfterExecuteTaskEvent;
 use Castor\Event\BeforeExecuteTaskEvent;
 use Symfony\Component\Process\ExecutableFinder;
 use function Castor\capture;
+use function Castor\context;
 use function Castor\finder;
 use function Castor\fs;
 use function Castor\http_request;
@@ -33,6 +34,9 @@ function setup(): void
         // app
         root_context()->workingDirectory . '/app/.env',
         root_context()->workingDirectory . '/app/vite.config.js',
+        // docker compose
+        root_context()->workingDirectory . '/compose.yaml',
+        root_context()->workingDirectory . '/compose.override.yaml',
     ];
 
     io()->section("Setting up project with name {$appName}");
@@ -45,16 +49,24 @@ function setup(): void
         file_put_contents($file, $contents);
     }
 
+    start();
+    io()->newLine();
+
     $cleanSymfony = io()->confirm('Do you want a clean symfony installation?');
     if ($cleanSymfony) {
-        fs()->remove(app_context()->workingDirectory);
-        fs()->mkdir(app_context()->workingDirectory);
+        foreach (finder()->in(app_context()->workingDirectory)->directories()->depth(0) as $directory) {
+            fs()->remove($directory);
+        }
+        foreach (finder()->in(app_context()->workingDirectory)->ignoreDotFiles(false)->files()->depth(0) as $file) {
+            fs()->remove($file);
+        }
         symfony_installation();
     }
 
     io()->success('Project setup complete');
     io()->info([
         'You can now run `castor start` to start the project',
+        '`castor install` is available to install dependencies (auto starts the project, installs dependencies and resets the database)',
         '',
         "You can access the app at https://{$appName}.web.localhost after running `castor start`",
     ]);
@@ -130,21 +142,24 @@ function symfony_installation(): void
 
         $version = io()->choice('Choose Symfony version', $versions, 'Latest Stable');
         $version = $mapping[$version];
-        composer()->add('create-project', "symfony/skeleton:{$version} sf-temp")->run();
+        io()->note('Creating project with symfony/skeleton in temp directory');
+        composer()->add('create-project', "symfony/skeleton:{$version} sf-temp")->run(context()->withQuiet());
 
         $tempDestination = "{$destination}/sf-temp";
-        io()->newLine();
         io()->note('Copying files to the destination directory.');
         fs()->mirror($tempDestination, $destination);
 
         io()->note('Removing temporary directory.');
         fs()->remove($tempDestination);
 
-        composer()->add('require', 'php:>=8.3', 'runtime/frankenphp-symfony')->run();
-        composer()->add('config', '--json', 'extra.symfony.docker', 'true')->run();
+        io()->note('Adding frankenphp-symfony to composer.json and setting minimum php version to 8.3');
+        composer()->add('require', '\"php:>=8.3\"', 'runtime/frankenphp-symfony')->run(context()->withQuiet());
+
+        io()->note('Adding symfony.docker to composer.json for docker support');
+        composer()->add('config', '--json', 'extra.symfony.docker', 'true')->run(context()->withQuiet());
     } else {
         io()->newLine();
-        io()->warning('Symfony seems not to be installed.');
+        io()->warning('A composer.json file was found. This should not happen. Please retry.');
 
         exit(1);
     }
