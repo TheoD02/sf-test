@@ -16,7 +16,7 @@ export default defineConfig({
     // Add watch on src directory and run command npx openapi-typescript http://mantine-starter-kit.web.localhost/api/docs.json -o ./src/api/schema.d.ts
     watch({
       pattern: ["config/routes.yaml", "src/**.php"],
-      command: "npx openapi-typescript http://sf-test.web.localhost/api/docs.json -o ./assets/api/schema.d.ts",
+      command: "npx openapi-typescript http://<app-name-placeholder>.web.localhost/api/docs.json -o ./assets/api/schema.d.ts",
       silent: true,
     }),
     watch({

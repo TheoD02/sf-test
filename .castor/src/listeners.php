@@ -34,15 +34,15 @@ function check_tool_deps(BeforeExecuteTaskEvent $event): void
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 900)]
 function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 {
-    if (\in_array($event->task->getName(), ['start', 'install', 'stop', 'restart', 'prod:up', 'prod:build'], true)) {
+    if (\in_array($event->task->getName(), ['start', 'setup', 'install', 'stop', 'restart', 'prod:up', 'prod:build'], true)) {
         return;
     }
 
     $context = context()->withQuiet();
     if (str_contains(
-        docker($context)->compose('ps')->run()->getOutput(),
-        ContainerDefinitionBag::php()->name,
-    ) === false) {
+            docker($context)->compose('ps')->run()->getOutput(),
+            ContainerDefinitionBag::php()->name,
+        ) === false) {
         io()->note('Docker containers are not running. Starting them.');
         start();
     } else {
@@ -59,10 +59,10 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
 {
     if ($event instanceof BeforeExecuteTaskEvent && \in_array(
-        $event->task->getName(),
-        ['start', 'prod:up', 'prod:build'],
-        true,
-    )) {
+            $event->task->getName(),
+            ['start', 'prod:up', 'prod:build'],
+            true,
+        )) {
         return;
     }
 
@@ -76,20 +76,20 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
         ];
         $mapping = [
             substr($response['symfony_versions']['stable'], 0, 3) => substr(
-                $response['symfony_versions']['stable'],
-                0,
-                3,
-            ) . '.*',
+                    $response['symfony_versions']['stable'],
+                    0,
+                    3,
+                ) . '.*',
             substr($response['symfony_versions']['lts'], 0, 3) => substr(
-                $response['symfony_versions']['lts'],
-                0,
-                3,
-            ) . '.*',
+                    $response['symfony_versions']['lts'],
+                    0,
+                    3,
+                ) . '.*',
             substr($response['symfony_versions']['next'], 0, 3) => substr(
-                $response['symfony_versions']['next'],
-                0,
-                3,
-            ) . '.*-dev',
+                    $response['symfony_versions']['next'],
+                    0,
+                    3,
+                ) . '.*-dev',
         ];
 
         $diff = array_diff($response['maintained_versions'], array_keys($versions));
@@ -131,10 +131,10 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
     }
 
     if ($event instanceof BeforeExecuteTaskEvent && \in_array(
-        $event->task->getName(),
-        ['start', 'stop', 'restart', 'install'],
-        true,
-    )) {
+            $event->task->getName(),
+            ['start', 'stop', 'restart', 'install'],
+            true,
+        )) {
         return;
     }
 
