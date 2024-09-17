@@ -106,7 +106,7 @@ function setup(): void
         "You can access the app at https://{$appName}.web.localhost after running `castor start`",
     ]);
 
-    //unlink(__FILE__);
+    unlink(__FILE__);
 }
 
 #[AsListener(BeforeExecuteTaskEvent::class, priority: PHP_INT_MAX)]
