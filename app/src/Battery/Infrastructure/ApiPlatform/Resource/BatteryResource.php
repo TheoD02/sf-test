@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Post;
 use App\Battery\Infrastructure\ApiPlatform\Payload\CreateBatteryInput;
 use App\Battery\Infrastructure\ApiPlatform\State\Processor\BatteryPostProcessor;
 use App\Battery\Infrastructure\ApiPlatform\State\Provider\BatteryCollectionProvider;
+use Doctrine\DBAL\Types\Types;
 
 #[ApiResource(
     shortName: 'Battery',
@@ -21,6 +22,11 @@ class BatteryResource
     private ?int $id = null;
 
     private ?int $level = null;
+
+    /**
+     * @var array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}>
+     */
+    private array $data = [];
 
     private ?string $reason = null;
 
@@ -67,6 +73,24 @@ class BatteryResource
     public function setRecordedAt(?\DateTimeImmutable $recordedAt): BatteryResource
     {
         $this->recordedAt = $recordedAt;
+        return $this;
+    }
+
+    /**
+     * @return array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}>
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}> $data
+     * @return $this
+     */
+    public function setData(array $data): BatteryResource
+    {
+        $this->data = $data;
         return $this;
     }
 }

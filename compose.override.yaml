@@ -1,6 +1,7 @@
 # Development environment override
 services:
   php:
+    container_name: php-battery-stats
     build:
       context: .
       target: frankenphp_dev
@@ -28,9 +29,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.network=traefik"
-      - "traefik.http.routers.php-sf-test.rule=Host(`sf-test.web.localhost`)"
-      - "traefik.http.routers.php-sf-test.tls=true"
-      - "traefik.http.services.php-sf-test.loadbalancer.server.port=80"
+      - "traefik.http.routers.php-battery-stats.rule=Host(`battery-stats.web.localhost`)"
+      - "traefik.http.routers.php-battery-stats.tls=true"
+      - "traefik.http.services.php-battery-stats.loadbalancer.server.port=80"
     networks:
       - traefik
 
@@ -39,6 +40,7 @@ services:
 
   ###> doctrine/doctrine-bundle ###
   database:
+    container_name: database-battery-stats
     ports:
       - "5433:5432"
 ###< doctrine/doctrine-bundle ###

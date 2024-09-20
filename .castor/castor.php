@@ -50,7 +50,7 @@ function start(bool $force = false): void
                     '--profile',
                     'app',
                     'build',
-                    //                    '--no-cache'
+//                                        '--no-cache'
                 )
                 ->run(),
             id: 'docker',
@@ -344,4 +344,10 @@ function db_reset(): void
     symfony()->console('doctrine:database:create')->run();
     symfony()->console('doctrine:schema:update', '--force')->run();
     symfony()->console('doctrine:fixtures:load', '--no-interaction')->run();
+}
+
+#[AsTask]
+function logs(bool $follow = false): void
+{
+    docker()->compose('logs')->add('--follow')->run();
 }

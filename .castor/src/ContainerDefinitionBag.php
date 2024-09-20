@@ -12,7 +12,7 @@ class ContainerDefinitionBag
     {
         return new ContainerDefinition(
             composeName: 'php',
-            name: 'sf-test-php-1',
+            name: 'php-battery-stats',
             workingDirectory: '/app',
             user: 'www-data'
         );
@@ -31,7 +31,7 @@ class ContainerDefinitionBag
     {
         return new ContainerDefinition(
             composeName: 'php',
-            name: 'sf-test-php-1',
+            name: 'php-battery-stats',
             workingDirectory: '/app',
             user: 'www-data'
         );

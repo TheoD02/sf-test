@@ -3,6 +3,7 @@
 namespace App\Battery\Domain\Model;
 
 use App\Battery\Domain\Repository\BatteryRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Clock\Clock;
 
@@ -20,6 +21,12 @@ class Battery
 
     #[ORM\Column()]
     private string $reason = '';
+
+    /**
+     * @var array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}>
+     */
+    #[ORM\Column(type: Types::JSON)]
+    private array $data = [];
 
     #[ORM\Column]
     private \DateTimeImmutable $recordedAt;
@@ -66,6 +73,25 @@ class Battery
     public function setRecordedAt(\DateTimeImmutable $recordedAt): static
     {
         $this->recordedAt = $recordedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}>
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array<int, array{type: 'cellular', operator: string, radio: string, level: int}|array{type: 'wifi', ssid: string, level: int}> $data
+     * @return $this
+     */
+    public function setData(array $data): static
+    {
+        $this->data = $data;
 
         return $this;
     }
