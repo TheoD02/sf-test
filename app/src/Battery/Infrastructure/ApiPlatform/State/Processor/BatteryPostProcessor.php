@@ -26,6 +26,32 @@ class BatteryPostProcessor extends AbstractProcessor
     {
         $battery = $this->map($data, Battery::class);
 
+        $dataList = $battery->getData();
+        foreach ($dataList as $key => $row) {
+            if ($row['type'] === 'cellular') {
+                $isDoubleSim = str_contains($row['level'], "\n");
+                if ($isDoubleSim) {
+                    [$levelOperator1, $levelOperator2] = explode("\n", $row['level']);
+                    [$operator1, $operator2] = explode("\n", $row['operator']);
+                    [$radio1, $radio2] = explode("\n", $row['radio']);
+                    unset($dataList[$key]);
+                    $dataList[] = [
+                        'type' => 'cellular',
+                        'operator' => $operator1,
+                        'radio' => $radio1,
+                        'level' => (int)$levelOperator1,
+                    ];
+                    $dataList[] = [
+                        'type' => 'cellular',
+                        'operator' => $operator2,
+                        'radio' => $radio2,
+                        'level' => (int) $levelOperator2,
+                    ];
+                }
+            }
+        }
+        $battery->setData($dataList);
+
         $this->em->persist($battery);
         $this->em->flush();
 
