@@ -342,8 +342,8 @@ function db_reset(): void
 
     symfony()->console('doctrine:database:drop', '--force', '--if-exists')->run();
     symfony()->console('doctrine:database:create')->run();
-    symfony()->console('doctrine:schema:update', '--force')->run();
-    symfony()->console('doctrine:fixtures:load', '--no-interaction')->run();
+    symfony()->console('doctrine:migrations:migrate', '--no-interaction')->run();
+    symfony()->console('doctrine:fixtures:load', '--no-interaction', '--append')->run();
 }
 
 #[AsTask]
