@@ -20,7 +20,7 @@ final class Version20240920113504 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE battery ADD data JSON NOT NULL');
+        $this->addSql('ALTER TABLE battery ADD data JSON NOT NULL DEFAULT \'[]\'');
     }
 
     public function down(Schema $schema): void
