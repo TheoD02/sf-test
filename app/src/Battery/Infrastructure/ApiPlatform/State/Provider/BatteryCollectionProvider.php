@@ -25,8 +25,11 @@ class BatteryCollectionProvider extends AbstractProvider
     #[\Override]
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object
     {
+        $qb = $this->batteryRepository->createQueryBuilder('b')
+            ->orderBy('b.recordedAt', 'DESC');
+
         return $this->mapCollection(
-            collection: $this->batteryRepository,
+            collection: $qb,
             target: BatteryResource::class,
             operation: $operation,
             context: $context,
