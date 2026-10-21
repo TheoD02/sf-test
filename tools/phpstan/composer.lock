@@ -4,42 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb4dec55160e228a4245e936e377819c",
+    "content-hash": "3cd8d10ed50aabfc43985668c5c49815",
     "packages": [
         {
             "name": "ergebnis/phpstan-rules",
-            "version": "2.2.0",
+            "version": "2.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/phpstan-rules.git",
-                "reference": "2e9946491d39ea1eb043738309895e08f025a7a0"
+                "reference": "a8d8695a4197b79f74e1ed1353ef52c41578c0ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/2e9946491d39ea1eb043738309895e08f025a7a0",
-                "reference": "2e9946491d39ea1eb043738309895e08f025a7a0",
+                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/a8d8695a4197b79f74e1ed1353ef52c41578c0ab",
+                "reference": "a8d8695a4197b79f74e1ed1353ef52c41578c0ab",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "nikic/php-parser": "^4.2.3 || ^5.0.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "phpstan/phpstan": "^1.10.21"
+                "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
+                "phpstan/phpstan": "^2.1.35"
             },
             "require-dev": {
-                "doctrine/orm": "^3.0.0",
-                "ergebnis/composer-normalize": "^2.42.0",
-                "ergebnis/license": "^2.4.0",
-                "ergebnis/php-cs-fixer-config": "^6.22.0",
-                "ergebnis/phpunit-slow-test-detector": "^2.10.0",
-                "nette/di": "^3.2.0",
-                "phpstan/phpstan-deprecation-rules": "^1.1.4",
-                "phpstan/phpstan-strict-rules": "^1.5.2",
-                "phpunit/phpunit": "^10.5.10",
-                "psalm/plugin-phpunit": "~0.18.4",
+                "codeception/codeception": "^4.0.0 || ^5.0.0",
+                "doctrine/orm": "^2.20.0 || ^3.3.0",
+                "ergebnis/composer-normalize": "^2.54.0",
+                "ergebnis/license": "^2.8.0",
+                "ergebnis/php-cs-fixer-config": "^6.64.1",
+                "ergebnis/phpunit-slow-test-detector": "^2.26.0",
+                "ergebnis/rector-rules": "^1.18.5",
+                "fakerphp/faker": "^1.24.1",
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan-deprecation-rules": "^2.0.5",
+                "phpstan/phpstan-phpunit": "^2.0.21",
+                "phpstan/phpstan-strict-rules": "^2.1.0",
+                "phpunit/phpunit": "^9.6.33",
                 "psr/container": "^2.0.2",
-                "rector/rector": "^1.0.0",
-                "vimeo/psalm": "^5.21.1"
+                "rector/rector": "^2.3.8",
+                "symfony/finder": "^5.4.45",
+                "symfony/process": "^5.4.51"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -47,6 +50,9 @@
                     "includes": [
                         "rules.neon"
                     ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.14-dev"
                 }
             },
             "autoload": {
@@ -76,82 +82,19 @@
                 "security": "https://github.com/ergebnis/phpstan-rules/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/phpstan-rules"
             },
-            "time": "2024-02-07T17:49:28+00:00"
-        },
-        {
-            "name": "nikic/php-parser",
-            "version": "v5.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/683130c2ff8c2739f4822ff7ac5c873ec529abd1",
-                "reference": "683130c2ff8c2739f4822ff7ac5c873ec529abd1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-json": "*",
-                "ext-tokenizer": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "ircmaxell/php-yacc": "^0.0.7",
-                "phpunit/phpunit": "^9.0"
-            },
-            "bin": [
-                "bin/php-parse"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PhpParser\\": "lib/PhpParser"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nikita Popov"
-                }
-            ],
-            "description": "A PHP parser written in PHP",
-            "keywords": [
-                "parser",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.1.0"
-            },
-            "time": "2024-07-01T20:03:41+00:00"
+            "time": "2026-10-16T14:36:23+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d"
-            },
+            "version": "2.3.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/52d2bbfdcae7f895915629e4694e9497d0f8e28d",
-                "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6155239b488e95d26d1ebd95c6b4bb294d7f09db",
+                "reference": "6155239b488e95d26d1ebd95c6b4bb294d7f09db",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -169,6 +112,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -192,22 +146,22 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-06T11:17:41+00:00"
+            "time": "2026-10-08T21:09:11+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "beberlei/assert",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "cb70015c04be1baee6f5f5c953703347c0ac1655"
+                "reference": "f193f4613c7d7fbcee2c05e4daff4061d49c040e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/cb70015c04be1baee6f5f5c953703347c0ac1655",
-                "reference": "cb70015c04be1baee6f5f5c953703347c0ac1655",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/f193f4613c7d7fbcee2c05e4daff4061d49c040e",
+                "reference": "f193f4613c7d7fbcee2c05e4daff4061d49c040e",
                 "shasum": ""
             },
             "require": {
@@ -215,7 +169,7 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-simplexml": "*",
-                "php": "^7.0 || ^8.0"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "*",
@@ -259,30 +213,30 @@
             ],
             "support": {
                 "issues": "https://github.com/beberlei/assert/issues",
-                "source": "https://github.com/beberlei/assert/tree/v3.3.2"
+                "source": "https://github.com/beberlei/assert/tree/v3.3.4"
             },
-            "time": "2021-12-16T21:41:27+00:00"
+            "time": "2026-06-10T19:47:05+00:00"
         },
         {
             "name": "composer/semver",
-            "version": "3.4.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32"
+                "reference": "528948210cc46f967a4b98e83b19e76f2b504993"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/35e8d0af4486141bc745f23a29cc2091eb624a32",
-                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32",
+                "url": "https://api.github.com/repos/composer/semver/zipball/528948210cc46f967a4b98e83b19e76f2b504993",
+                "reference": "528948210cc46f967a4b98e83b19e76f2b504993",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.4",
-                "symfony/phpunit-bridge": "^4.2 || ^5"
+                "phpstan/phpstan": "^1.11",
+                "symfony/phpunit-bridge": "^3 || ^7"
             },
             "type": "library",
             "extra": {
@@ -316,7 +270,7 @@
                     "homepage": "http://robbast.nl"
                 }
             ],
-            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "description": "Version comparison library that offers utilities, version constraint parsing and validation.",
             "keywords": [
                 "semantic",
                 "semver",
@@ -326,7 +280,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.4.0"
+                "source": "https://github.com/composer/semver/tree/3.5.1"
             },
             "funding": [
                 {
@@ -336,49 +290,45 @@
                 {
                     "url": "https://github.com/composer",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2023-08-31T09:50:34+00:00"
+            "time": "2026-10-05T13:12:12+00:00"
         },
         {
             "name": "ekino/phpstan-banned-code",
-            "version": "v1.0.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekino/phpstan-banned-code.git",
-                "reference": "4f0d7c8a0c9f5d222ffc24234aa6c5b3b71bf4c3"
+                "reference": "3356fb9dae03c8759a61fee39dab4728dcc16d74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekino/phpstan-banned-code/zipball/4f0d7c8a0c9f5d222ffc24234aa6c5b3b71bf4c3",
-                "reference": "4f0d7c8a0c9f5d222ffc24234aa6c5b3b71bf4c3",
+                "url": "https://api.github.com/repos/ekino/phpstan-banned-code/zipball/3356fb9dae03c8759a61fee39dab4728dcc16d74",
+                "reference": "3356fb9dae03c8759a61fee39dab4728dcc16d74",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8.0",
-                "phpstan/phpstan": "^1.0"
+                "php": "^8.2",
+                "phpstan/phpstan": "^2.0"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.6",
                 "friendsofphp/php-cs-fixer": "^3.0",
-                "nikic/php-parser": "^4.3",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^9.5",
-                "symfony/var-dumper": "^5.0"
+                "nikic/php-parser": "^5.4",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^10.5",
+                "symfony/var-dumper": "^6.4"
             },
             "type": "phpstan-extension",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
                 "phpstan": {
                     "includes": [
                         "extension.neon"
                     ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -401,112 +351,78 @@
             "homepage": "https://github.com/ekino/phpstan-banned-code",
             "keywords": [
                 "PHPStan",
-                "code quality"
+                "code quality",
+                "static analysis"
             ],
             "support": {
                 "issues": "https://github.com/ekino/phpstan-banned-code/issues",
-                "source": "https://github.com/ekino/phpstan-banned-code/tree/v1.0.0"
+                "source": "https://github.com/ekino/phpstan-banned-code/tree/v3.2.0"
             },
-            "time": "2021-11-02T08:37:34+00:00"
+            "time": "2026-03-13T12:47:55+00:00"
         },
         {
-            "name": "nette/utils",
-            "version": "v4.0.4",
+            "name": "entropy/entropy",
+            "version": "0.4.31",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nette/utils.git",
-                "reference": "d3ad0aa3b9f934602cb3e3902ebccf10be34d218"
+                "url": "https://github.com/TomasVotruba/entropy.git",
+                "reference": "e31f93b8e987982e8d579c7c7f0cfa8aa7ae7e18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/d3ad0aa3b9f934602cb3e3902ebccf10be34d218",
-                "reference": "d3ad0aa3b9f934602cb3e3902ebccf10be34d218",
+                "url": "https://api.github.com/repos/TomasVotruba/entropy/zipball/e31f93b8e987982e8d579c7c7f0cfa8aa7ae7e18",
+                "reference": "e31f93b8e987982e8d579c7c7f0cfa8aa7ae7e18",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0 <8.4"
-            },
-            "conflict": {
-                "nette/finder": "<3",
-                "nette/schema": "<1.2.2"
+                "ext-tokenizer": "*",
+                "php": ">=7.4",
+                "symfony/polyfill-php80": "^1.31"
             },
             "require-dev": {
-                "jetbrains/phpstorm-attributes": "dev-master",
-                "nette/tester": "^2.5",
-                "phpstan/phpstan": "^1.0",
-                "tracy/tracy": "^2.9"
-            },
-            "suggest": {
-                "ext-gd": "to use Image",
-                "ext-iconv": "to use Strings::webalize(), toAscii(), chr() and reverse()",
-                "ext-intl": "to use Strings::webalize(), toAscii(), normalize() and compare()",
-                "ext-json": "to use Nette\\Utils\\Json",
-                "ext-mbstring": "to use Strings::lower() etc...",
-                "ext-tokenizer": "to use Nette\\Utils\\Reflection::getUseStatements()"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9.6",
+                "rector/jack": "^1.0",
+                "rector/rector": "^2.4",
+                "rector/swiss-knife": "^2.4",
+                "shipmonk/composer-dependency-analyser": "^1.8",
+                "shipmonk/dead-code-detector": "^1.4",
+                "symplify/easy-coding-standard": "^13.1",
+                "symplify/phpstan-rules": "^14.10",
+                "tomasvotruba/type-coverage": "^2.2",
+                "tracy/tracy": "^2.12"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.0-dev"
-                }
-            },
             "autoload": {
-                "classmap": [
-                    "src/"
-                ]
+                "psr-4": {
+                    "Entropy\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause",
-                "GPL-2.0-only",
-                "GPL-3.0-only"
+                "proprietary"
             ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "homepage": "https://davidgrudl.com"
-                },
-                {
-                    "name": "Nette Community",
-                    "homepage": "https://nette.org/contributors"
-                }
-            ],
-            "description": "🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
-            "homepage": "https://nette.org",
-            "keywords": [
-                "array",
-                "core",
-                "datetime",
-                "images",
-                "json",
-                "nette",
-                "paginator",
-                "password",
-                "slugify",
-                "string",
-                "unicode",
-                "utf-8",
-                "utility",
-                "validation"
-            ],
+            "description": "Entropy framework",
             "support": {
-                "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.4"
+                "issues": "https://github.com/TomasVotruba/entropy/issues",
+                "source": "https://github.com/TomasVotruba/entropy/tree/0.4.31"
             },
-            "time": "2024-01-17T16:50:36+00:00"
+            "time": "2026-10-13T12:04:57+00:00"
         },
         {
             "name": "nikolaposa/version",
-            "version": "4.2.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikolaposa/version.git",
-                "reference": "003fefa14f47cd44917546285e39d196af062a95"
+                "reference": "2b9ee2f0b09333b6ce00bd6b63132cdf1d7a1428"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikolaposa/version/zipball/003fefa14f47cd44917546285e39d196af062a95",
-                "reference": "003fefa14f47cd44917546285e39d196af062a95",
+                "url": "https://api.github.com/repos/nikolaposa/version/zipball/2b9ee2f0b09333b6ce00bd6b63132cdf1d7a1428",
+                "reference": "2b9ee2f0b09333b6ce00bd6b63132cdf1d7a1428",
                 "shasum": ""
             },
             "require": {
@@ -552,28 +468,79 @@
             ],
             "support": {
                 "issues": "https://github.com/nikolaposa/version/issues",
-                "source": "https://github.com/nikolaposa/version/tree/4.2.0"
+                "source": "https://github.com/nikolaposa/version/tree/4.2.1"
             },
-            "time": "2023-12-29T22:07:54+00:00"
+            "time": "2025-03-24T19:12:02+00:00"
         },
         {
-            "name": "phpstan/extension-installer",
-            "version": "1.4.1",
+            "name": "phar-io/version",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpstan/extension-installer.git",
-                "reference": "f6b87faf9fc7978eab2f7919a8760bc9f58f9203"
+                "url": "https://github.com/phar-io/version.git",
+                "reference": "4f7fd7836c6f332bb2933569e566a0d6c4cbed74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/f6b87faf9fc7978eab2f7919a8760bc9f58f9203",
-                "reference": "f6b87faf9fc7978eab2f7919a8760bc9f58f9203",
+                "url": "https://api.github.com/repos/phar-io/version/zipball/4f7fd7836c6f332bb2933569e566a0d6c4cbed74",
+                "reference": "4f7fd7836c6f332bb2933569e566a0d6c4cbed74",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Arne Blankerts",
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian Heuer",
+                    "email": "sebastian@phpeople.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Library for handling version information and constraints",
+            "support": {
+                "issues": "https://github.com/phar-io/version/issues",
+                "source": "https://github.com/phar-io/version/tree/3.2.1"
+            },
+            "time": "2022-02-21T01:04:05+00:00"
+        },
+        {
+            "name": "phpstan/extension-installer",
+            "version": "1.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/extension-installer.git",
+                "reference": "85e90b3942d06b2326fba0403ec24fe912372936"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/85e90b3942d06b2326fba0403ec24fe912372936",
+                "reference": "85e90b3942d06b2326fba0403ec24fe912372936",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.9.0"
+                "phpstan/phpstan": "^1.9.0 || ^2.0"
             },
             "require-dev": {
                 "composer/composer": "^2.0",
@@ -594,29 +561,33 @@
                 "MIT"
             ],
             "description": "Composer plugin for automatic installation of PHPStan extensions",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/extension-installer/issues",
-                "source": "https://github.com/phpstan/extension-installer/tree/1.4.1"
+                "source": "https://github.com/phpstan/extension-installer/tree/1.4.3"
             },
-            "time": "2024-06-10T08:20:49+00:00"
+            "time": "2024-09-04T20:21:43+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "1.4.5",
+            "version": "2.0.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "c87ee295de7573d9c015c492693e7af7f8cd85dc"
+                "reference": "b4623954d5ffee6311e4ddbaef65c074ae0f781a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/c87ee295de7573d9c015c492693e7af7f8cd85dc",
-                "reference": "c87ee295de7573d9c015c492693e7af7f8cd85dc",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/b4623954d5ffee6311e4ddbaef65c074ae0f781a",
+                "reference": "b4623954d5ffee6311e4ddbaef65c074ae0f781a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.11"
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.2.2"
             },
             "conflict": {
                 "doctrine/collections": "<1.0",
@@ -629,23 +600,25 @@
                 "cache/array-adapter": "^1.1",
                 "composer/semver": "^3.3.2",
                 "cweagans/composer-patches": "^1.7.3",
-                "doctrine/annotations": "^1.11 || ^2.0",
+                "doctrine/annotations": "^2.0",
                 "doctrine/collections": "^1.6 || ^2.1",
                 "doctrine/common": "^2.7 || ^3.0",
-                "doctrine/dbal": "^2.13.8 || ^3.3.3",
+                "doctrine/dbal": "^3.3.8",
                 "doctrine/lexer": "^2.0 || ^3.0",
-                "doctrine/mongodb-odm": "^1.3 || ^2.4.3",
+                "doctrine/mongodb-odm": "^2.4.3",
                 "doctrine/orm": "^2.16.0",
-                "doctrine/persistence": "^2.2.1 || ^3.2",
+                "doctrine/persistence": "^2.2.1 || ^3.4.3",
                 "gedmo/doctrine-extensions": "^3.8",
                 "nesbot/carbon": "^2.49",
-                "nikic/php-parser": "^4.13.2",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-phpunit": "^1.3.13",
-                "phpstan/phpstan-strict-rules": "^1.5.1",
-                "phpunit/phpunit": "^9.6.16",
+                "phpstan/phpstan-deprecation-rules": "^2.0.2",
+                "phpstan/phpstan-phpunit": "^2.0.8",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6.20",
                 "ramsey/uuid": "^4.2",
-                "symfony/cache": "^5.4"
+                "shipmonk/name-collision-detector": "^2.1",
+                "symfony/cache": "^5.4",
+                "symfony/uid": "^5.4 || ^6.4 || ^7.3"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -666,38 +639,44 @@
                 "MIT"
             ],
             "description": "Doctrine extensions for PHPStan",
+            "keywords": [
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-doctrine/issues",
-                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.4.5"
+                "source": "https://github.com/phpstan/phpstan-doctrine/tree/2.0.28"
             },
-            "time": "2024-07-02T17:02:12+00:00"
+            "time": "2026-07-13T08:43:43+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "1.4.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "f3ea021866f4263f07ca3636bf22c64be9610c11"
+                "reference": "8d16b8478e523a47f8c02e83bce8981b5b5a3b03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/f3ea021866f4263f07ca3636bf22c64be9610c11",
-                "reference": "f3ea021866f4263f07ca3636bf22c64be9610c11",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/8d16b8478e523a47f8c02e83bce8981b5b5a3b03",
+                "reference": "8d16b8478e523a47f8c02e83bce8981b5b5a3b03",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.11"
+                "phar-io/version": "^3.2",
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.3.0"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.0"
             },
             "require-dev": {
-                "nikic/php-parser": "^4.13.0",
+                "nikic/php-parser": "^5",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-strict-rules": "^1.5.1",
-                "phpunit/phpunit": "^9.5"
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "shipmonk/name-collision-detector": "^2.1"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -718,41 +697,43 @@
                 "MIT"
             ],
             "description": "PHPUnit extensions and rules for PHPStan",
+            "keywords": [
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/1.4.0"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.1.1"
             },
-            "time": "2024-04-20T06:39:00+00:00"
+            "time": "2026-10-06T18:12:32+00:00"
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "1.4.5",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "1bd7c339f622dfb5a1a97dcaf1a862734eabfa1d"
+                "reference": "1981b94f0dd3a5bb42268f6a7a0e8954ac76dc2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/1bd7c339f622dfb5a1a97dcaf1a862734eabfa1d",
-                "reference": "1bd7c339f622dfb5a1a97dcaf1a862734eabfa1d",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/1981b94f0dd3a5bb42268f6a7a0e8954ac76dc2e",
+                "reference": "1981b94f0dd3a5bb42268f6a7a0e8954ac76dc2e",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.11"
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.3"
             },
             "conflict": {
                 "symfony/framework-bundle": "<3.0"
             },
             "require-dev": {
-                "nikic/php-parser": "^4.13.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-phpunit": "^1.3.11",
-                "phpstan/phpstan-strict-rules": "^1.5.1",
-                "phpunit/phpunit": "^8.5.29 || ^9.5",
-                "psr/container": "1.0 || 1.1.1",
+                "phpstan/phpstan-phpunit": "^2.0.13",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "psr/container": "1.1.2",
                 "symfony/config": "^5.4 || ^6.1",
                 "symfony/console": "^5.4 || ^6.1",
                 "symfony/dependency-injection": "^5.4 || ^6.1",
@@ -790,37 +771,40 @@
                 }
             ],
             "description": "Symfony Framework extensions and rules for PHPStan",
+            "keywords": [
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.4.5"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.1.0"
             },
-            "time": "2024-06-26T12:19:42+00:00"
+            "time": "2026-10-03T15:54:38+00:00"
         },
         {
             "name": "phpstan/phpstan-webmozart-assert",
-            "version": "1.2.7",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-webmozart-assert.git",
-                "reference": "923bd58cc1c8d2bf8e78a8fbca4b224805237dc2"
+                "reference": "0c641817d2a8f05c7157f92d91986e74d3c8ab0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/923bd58cc1c8d2bf8e78a8fbca4b224805237dc2",
-                "reference": "923bd58cc1c8d2bf8e78a8fbca4b224805237dc2",
+                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/0c641817d2a8f05c7157f92d91986e74d3c8ab0c",
+                "reference": "0c641817d2a8f05c7157f92d91986e74d3c8ab0c",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.10"
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.0"
             },
             "require-dev": {
-                "nikic/php-parser": "^4.13.0",
+                "nikic/php-parser": "^5.1",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-deprecation-rules": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpstan/phpstan-strict-rules": "^1.0",
-                "phpunit/phpunit": "^9.5",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
                 "webmozart/assert": "^1.11.0"
             },
             "type": "phpstan-extension",
@@ -843,91 +827,41 @@
             "description": "PHPStan webmozart/assert extension",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-webmozart-assert/issues",
-                "source": "https://github.com/phpstan/phpstan-webmozart-assert/tree/1.2.7"
+                "source": "https://github.com/phpstan/phpstan-webmozart-assert/tree/2.0.0"
             },
-            "time": "2024-07-05T08:05:21+00:00"
-        },
-        {
-            "name": "rector/type-perfect",
-            "version": "0.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rectorphp/type-perfect.git",
-                "reference": "00c585702e1d03be48f69f08ff872aa67875d7fa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/type-perfect/zipball/00c585702e1d03be48f69f08ff872aa67875d7fa",
-                "reference": "00c585702e1d03be48f69f08ff872aa67875d7fa",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.11",
-                "webmozart/assert": "^1.11"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "config/extension.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Rector\\TypePerfect\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Next level type declaration checks",
-            "support": {
-                "issues": "https://github.com/rectorphp/type-perfect/issues",
-                "source": "https://github.com/rectorphp/type-perfect/tree/0.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/rectorphp",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-07-07T20:42:03+00:00"
+            "time": "2024-10-14T03:45:26+00:00"
         },
         {
             "name": "shipmonk/phpstan-rules",
-            "version": "2.12.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shipmonk-rnd/phpstan-rules.git",
-                "reference": "db342d88dc4e28aa0a50af658b682025f19ee03c"
+                "reference": "67e54e4338910502d56ca079f1037708d34658a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shipmonk-rnd/phpstan-rules/zipball/db342d88dc4e28aa0a50af658b682025f19ee03c",
-                "reference": "db342d88dc4e28aa0a50af658b682025f19ee03c",
+                "url": "https://api.github.com/repos/shipmonk-rnd/phpstan-rules/zipball/67e54e4338910502d56ca079f1037708d34658a7",
+                "reference": "67e54e4338910502d56ca079f1037708d34658a7",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^1.10.51"
+                "php": "^8.1",
+                "phpstan/phpstan": "^2.1.33"
             },
             "require-dev": {
                 "editorconfig-checker/editorconfig-checker": "^10.6.0",
-                "ergebnis/composer-normalize": "^2.28",
-                "nette/neon": "^3.3.1",
-                "phpstan/phpstan-phpunit": "^1.1.1",
-                "phpstan/phpstan-strict-rules": "^1.2.3",
-                "phpunit/phpunit": "^9.5.20",
-                "shipmonk/composer-dependency-analyser": "^1.3.0",
-                "shipmonk/name-collision-detector": "^2.0.0",
-                "slevomat/coding-standard": "^8.0.1"
+                "ergebnis/composer-normalize": "^2.45.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0.1",
+                "phpstan/phpstan-phpunit": "^2.0.4",
+                "phpstan/phpstan-strict-rules": "^2.0.3",
+                "phpunit/phpunit": "^10.5.46",
+                "shipmonk/coding-standard": "^0.3.0",
+                "shipmonk/composer-dependency-analyser": "^1.8.1",
+                "shipmonk/coverage-guard": "^1.1.0",
+                "shipmonk/dead-code-detector": "^1.0",
+                "shipmonk/name-collision-detector": "^2.1.1",
+                "shipmonk/phpstan-dev": "^0.1.5"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -953,35 +887,35 @@
             ],
             "support": {
                 "issues": "https://github.com/shipmonk-rnd/phpstan-rules/issues",
-                "source": "https://github.com/shipmonk-rnd/phpstan-rules/tree/2.12.0"
+                "source": "https://github.com/shipmonk-rnd/phpstan-rules/tree/4.4.1"
             },
-            "time": "2024-04-02T13:12:14+00:00"
+            "time": "2026-10-01T13:39:05+00:00"
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.4.0",
+            "version": "v6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0"
+                "reference": "98424c7f2828169918d2d85e702d986a3422f16d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/98424c7f2828169918d2d85e702d986a3422f16d",
+                "reference": "98424c7f2828169918d2d85e702d986a3422f16d",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.19.1 || ^5.0.2",
-                "php": "~8.2.0 || ~8.3.0",
-                "phpstan/phpstan": "^1.11.4"
+                "php": "~8.4.0 || ~8.5.0",
+                "phpstan/phpstan": "^2.1.55"
             },
             "require-dev": {
-                "nette/di": "^3.2.2",
-                "nette/neon": "^3.4.1",
-                "phpstan/phpstan-phpunit": "^1.4.0",
-                "phpunit/phpunit": "^11.2.1",
-                "slam/php-cs-fixer-extensions": "^3.10.0"
+                "nette/di": "^3.2.6",
+                "nette/neon": "^3.4.8",
+                "nikic/php-parser": "^4.19.2 || ^5.7.0",
+                "phpstan/phpstan-phpunit": "^2.0.16",
+                "phpunit/phpunit": "^13.1.10",
+                "slam/php-cs-fixer-extensions": "^3.15.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -1010,7 +944,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.4.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.9.0"
             },
             "funding": [
                 {
@@ -1022,33 +956,34 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-11T10:06:12+00:00"
+            "time": "2026-05-19T03:26:23+00:00"
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v3.4.0",
+            "version": "v4.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "f7f1dc8d5ceeb2d0532dc9df66d13964b4baa5f4"
+                "reference": "388075908225e22c46b9622177d1629203d41c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/f7f1dc8d5ceeb2d0532dc9df66d13964b4baa5f4",
-                "reference": "f7f1dc8d5ceeb2d0532dc9df66d13964b4baa5f4",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/388075908225e22c46b9622177d1629203d41c1f",
+                "reference": "388075908225e22c46b9622177d1629203d41c1f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.10.52"
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^1.12.6 || ^2.0"
             },
             "require-dev": {
-                "nette/neon": "^3.2",
-                "nikic/php-parser": "^4.13 || ^5.0",
+                "nette/neon": "^3.3.1",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpunit/phpunit": "^8.5 || ^10.1 || ^11.0",
-                "spaze/coding-standard": "^1.7"
+                "phpstan/phpstan-deprecation-rules": "^1.2 || ^2.0",
+                "phpunit/phpunit": "^9.6 || ^10.1 || ^11.0 || ^12.0 || ^13.0",
+                "shipmonk/dead-code-detector": "^1.1",
+                "spaze/coding-standard": "^1.8"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -1074,13 +1009,13 @@
                     "homepage": "https://www.michalspacek.cz"
                 }
             ],
-            "description": "PHPStan rules to detect disallowed method & function calls, constant, namespace & superglobal usages",
+            "description": "PHPStan rules to detect disallowed method & function calls, constant, namespace, attribute, property & superglobal usages, with powerful rules to re-allow a call or a usage in places where it should be allowed.",
             "keywords": [
                 "static analysis"
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v3.4.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v4.15.0"
             },
             "funding": [
                 {
@@ -1088,20 +1023,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-14T16:23:53+00:00"
+            "time": "2026-10-13T00:31:30+00:00"
         },
         {
             "name": "staabm/phpstan-todo-by",
-            "version": "0.1.27",
+            "version": "0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/staabm/phpstan-todo-by.git",
-                "reference": "aef25bd71ce63de28acb1c82289cb5bff172fcff"
+                "reference": "53f2b5c2c60a89fb93534052a2e2b62dbcd52175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/staabm/phpstan-todo-by/zipball/aef25bd71ce63de28acb1c82289cb5bff172fcff",
-                "reference": "aef25bd71ce63de28acb1c82289cb5bff172fcff",
+                "url": "https://api.github.com/repos/staabm/phpstan-todo-by/zipball/53f2b5c2c60a89fb93534052a2e2b62dbcd52175",
+                "reference": "53f2b5c2c60a89fb93534052a2e2b62dbcd52175",
                 "shasum": ""
             },
             "require": {
@@ -1111,11 +1046,13 @@
                 "ext-json": "*",
                 "nikolaposa/version": "^4.1",
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^1.10"
+                "phpstan/phpstan": "^2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.41",
-                "nikic/php-parser": "^4.0",
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "nikic/php-parser": "^5.7",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^2",
                 "phpunit/phpunit": "^9 || ^10.5",
                 "redaxo/php-cs-fixer-config": "^1.0"
             },
@@ -1146,7 +1083,7 @@
             ],
             "support": {
                 "issues": "https://github.com/staabm/phpstan-todo-by/issues",
-                "source": "https://github.com/staabm/phpstan-todo-by/tree/0.1.27"
+                "source": "https://github.com/staabm/phpstan-todo-by/tree/0.3.5"
             },
             "funding": [
                 {
@@ -1154,39 +1091,121 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-24T17:49:10+00:00"
+            "time": "2026-08-06T08:40:56+00:00"
         },
         {
-            "name": "thecodingmachine/phpstan-strict-rules",
-            "version": "v1.0.0",
+            "name": "symfony/polyfill-php80",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thecodingmachine/phpstan-strict-rules.git",
-                "reference": "2ba8fa8b328c45f3b149c05def5bf96793c594b6"
+                "url": "https://github.com/symfony/polyfill-php80.git",
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/phpstan-strict-rules/zipball/2ba8fa8b328c45f3b149c05def5bf96793c594b6",
-                "reference": "2ba8fa8b328c45f3b149c05def5bf96793c594b6",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1|^8.0",
-                "phpstan/phpstan": "^1.0"
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ion Bazan",
+                    "email": "ion.bazan@gmail.com"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.43.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-09-25T15:50:05+00:00"
+        },
+        {
+            "name": "thecodingmachine/phpstan-strict-rules",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thecodingmachine/phpstan-strict-rules.git",
+                "reference": "4565f2557b70547a5ef5b28d6d2c81f2c750f167"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thecodingmachine/phpstan-strict-rules/zipball/4565f2557b70547a5ef5b28d6d2c81f2c750f167",
+                "reference": "4565f2557b70547a5ef5b28d6d2c81f2c750f167",
+                "shasum": ""
+            },
+            "require": {
+                "phpstan/phpstan": "^2.0"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^7.1"
+                "phpunit/phpunit": "^11.5"
             },
             "type": "phpstan-extension",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
                 "phpstan": {
                     "includes": [
                         "phpstan-strict-rules.neon"
                     ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -1207,28 +1226,41 @@
             "description": "A set of additional rules for PHPStan based on best practices followed at TheCodingMachine",
             "support": {
                 "issues": "https://github.com/thecodingmachine/phpstan-strict-rules/issues",
-                "source": "https://github.com/thecodingmachine/phpstan-strict-rules/tree/v1.0.0"
+                "source": "https://github.com/thecodingmachine/phpstan-strict-rules/tree/v2.0.0"
             },
-            "time": "2021-11-08T09:10:49+00:00"
+            "time": "2026-06-27T22:19:22+00:00"
         },
         {
             "name": "tomasvotruba/type-coverage",
-            "version": "0.2.8",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TomasVotruba/type-coverage.git",
-                "reference": "ab4f0506f8df8c6418ec877e356c0efd2c50ed6b"
+                "reference": "2d8e722c1776a17f506f6a66cd325e50fbaa12ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TomasVotruba/type-coverage/zipball/ab4f0506f8df8c6418ec877e356c0efd2c50ed6b",
-                "reference": "ab4f0506f8df8c6418ec877e356c0efd2c50ed6b",
+                "url": "https://api.github.com/repos/TomasVotruba/type-coverage/zipball/2d8e722c1776a17f506f6a66cd325e50fbaa12ee",
+                "reference": "2d8e722c1776a17f506f6a66cd325e50fbaa12ee",
                 "shasum": ""
             },
             "require": {
-                "nette/utils": "^3.2 || ^4.0",
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.9.3"
+                "entropy/entropy": "^0.4.23",
+                "php": ">=7.4",
+                "phpstan/phpstan": "^2.2"
+            },
+            "require-dev": {
+                "doctrine/collections": "^2.3",
+                "phpstan/extension-installer": "^1.4",
+                "phpunit/phpunit": "^13.2",
+                "rector/jack": "^1.1",
+                "rector/rector": "^2.5",
+                "shipmonk/composer-dependency-analyser": "^1.8",
+                "shipmonk/dead-code-detector": "^1.4",
+                "symfony/dom-crawler": "^8.1",
+                "symfony/form": "^8.1",
+                "symplify/easy-coding-standard": "^13.2",
+                "tracy/tracy": "^2.12"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -1240,6 +1272,7 @@
             },
             "autoload": {
                 "psr-4": {
+                    "Rector\\TypePerfect\\": "packages/type-perfect/src",
                     "TomasVotruba\\TypeCoverage\\": "src"
                 }
             },
@@ -1254,7 +1287,7 @@
             ],
             "support": {
                 "issues": "https://github.com/TomasVotruba/type-coverage/issues",
-                "source": "https://github.com/TomasVotruba/type-coverage/tree/0.2.8"
+                "source": "https://github.com/TomasVotruba/type-coverage/tree/2.5.1"
             },
             "funding": [
                 {
@@ -1266,28 +1299,28 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-26T13:56:40+00:00"
+            "time": "2026-10-09T19:09:05+00:00"
         },
         {
             "name": "voku/phpstan-rules",
-            "version": "3.2.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/phpstan-rules.git",
-                "reference": "9da053090131436b77418da207daf5578a272e7d"
+                "reference": "462da73c7abfe3cdfac451feb98abdf9ce073d86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/phpstan-rules/zipball/9da053090131436b77418da207daf5578a272e7d",
-                "reference": "9da053090131436b77418da207daf5578a272e7d",
+                "url": "https://api.github.com/repos/voku/phpstan-rules/zipball/462da73c7abfe3cdfac451feb98abdf9ce073d86",
+                "reference": "462da73c7abfe3cdfac451feb98abdf9ce073d86",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.9.0"
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "~2.0"
             },
             "require-dev": {
-                "phpstan/phpstan-phpunit": "^1.1.0",
+                "phpstan/phpstan-phpunit": "~2.0",
                 "phpunit/phpunit": "~7.0 || ~9.0"
             },
             "type": "phpstan-extension",
@@ -1342,73 +1375,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-09T14:59:29+00:00"
-        },
-        {
-            "name": "webmozart/assert",
-            "version": "1.11.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/11cb2199493b2f8a3b53e7f19068fc6aac760991",
-                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "conflict": {
-                "phpstan/phpstan": "<0.12.20",
-                "vimeo/psalm": "<4.6.1 || 4.6.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5.13"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.10-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmozart\\Assert\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
-            "keywords": [
-                "assert",
-                "check",
-                "validate"
-            ],
-            "support": {
-                "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.11.0"
-            },
-            "time": "2022-06-03T18:03:27+00:00"
+            "time": "2026-04-28T11:27:34+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

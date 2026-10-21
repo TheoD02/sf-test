@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TheoD\MusicAutoTagger;
 
 use Castor\Context;
-
 use function Castor\context;
 
 /**

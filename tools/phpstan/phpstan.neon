@@ -5,26 +5,18 @@ includes:
     - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
     - %rootDir%/../../slam/phpstan-extensions/conf/not-now-rules.neon
     - %rootDir%/../../slam/phpstan-extensions/conf/symfony-rules.neon
-    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - %rootDir%/conf/bleedingEdge.neon
 
 parameters:
     level: max
     paths:
         - %currentWorkingDirectory%/src
-    excludePaths:
-        - %currentWorkingDirectory%/src/Shared/ApiPlatform/Api/FilterHandlerResourceMetadataFactory.php
-        - %currentWorkingDirectory%/src/Shared/ApiPlatform/Transformer/RequestToDTOTransformer.php
-        - %currentWorkingDirectory%/src/Shared/Infrastructure/Symfony/Kernel.php
 #    symfony:
 #        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
-    checkAlwaysTrueCheckTypeFunctionCall: true
-    checkAlwaysTrueInstanceof: true
-    checkAlwaysTrueStrictComparison: true
     checkBenevolentUnionTypes: true
     checkDynamicProperties: true
     checkExplicitMixedMissingReturn: true
     checkFunctionNameCase: true
-    checkGenericClassInNonGenericObjectType: true
     checkImplicitMixed: true
     checkInternalClassCaseSensitivity: true
     checkMaybeUndefinedVariables: true
@@ -69,12 +61,9 @@ parameters:
         - "#^Parameters should have .*string\\|false.* types as the only types passed to this method$#" # Until type_perfect is fixed
         - "#^Method .*Factory::defaults\\(\\) return type has no value type specified in iterable type array.$#"
         - "#^Return type \\(array\\) of method .*Factory::defaults\\(\\).*$#"
-    type_perfect:
-        no_mixed: true
-        null_over_false: true
-        narrow_param: false
-        narrow_return: true
     ergebnis:
+        testCaseWithSuffix:
+            enabled: false
         final:
             enabled: false
         noExtends:
@@ -97,8 +86,6 @@ parameters:
     shipmonkRules:
         allowComparingOnlyComparableTypes:
             enabled: true
-        allowNamedArgumentOnlyInAttributes:
-            enabled: false
         backedEnumGenerics:
             enabled: false
         enforceClosureParamNativeTypehint:
@@ -117,37 +104,11 @@ parameters:
         forbidArithmeticOperationOnNonNumber:
             enabled: true
             allowNumericString: false
-        forbidAssignmentNotMatchingVarDoc:
-            enabled: true
-            allowNarrowing: true
         forbidCast:
             enabled: true
             blacklist: ['(array)', '(object)', '(unset)']
         forbidCheckedExceptionInCallable:
             enabled: false
-            immediatelyCalledCallables:
-                array_reduce: 1
-                array_intersect_ukey: 2
-                array_uintersect: 2
-                array_uintersect_assoc: 2
-                array_intersect_uassoc: 2
-                array_uintersect_uassoc: [2, 3]
-                array_diff_ukey: 2
-                array_udiff: 2
-                array_udiff_assoc: 2
-                array_diff_uassoc: 2
-                array_udiff_uassoc: [2, 3]
-                array_filter: 1
-                array_map: 0
-                array_walk_recursive: 1
-                array_walk: 1
-                call_user_func: 0
-                call_user_func_array: 0
-                forward_static_call: 0
-                forward_static_call_array: 0
-                uasort: 1
-                uksort: 1
-                usort: 1
             allowedCheckedExceptionCallables: []
         forbidCheckedExceptionInYieldingMethod:
             enabled: true
@@ -202,8 +163,6 @@ parameters:
             enabled: true
             reportEvenIfExceptionIsNotAcceptableByRethrownOne: true
         uselessPrivatePropertyDefaultValue:
-            enabled: true
-        uselessPrivatePropertyNullability:
             enabled: true
     voku:
         checkForAssignments: true

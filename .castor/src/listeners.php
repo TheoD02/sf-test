@@ -8,7 +8,6 @@ use Castor\Attribute\AsListener;
 use Castor\Event\AfterExecuteTaskEvent;
 use Castor\Event\BeforeExecuteTaskEvent;
 use Symfony\Component\Process\ExecutableFinder;
-
 use function Castor\context;
 use function Castor\fingerprint_exists;
 use function Castor\fs;
