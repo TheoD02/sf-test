@@ -7,7 +7,6 @@ namespace TheoD\MusicAutoTagger\Runner;
 use Castor\Context;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\ContainerDefinition;
-
 use function Castor\io;
 use function TheoD\MusicAutoTagger\root_context;
 

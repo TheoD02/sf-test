@@ -11,13 +11,13 @@ use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\ContainerDefinition;
 use TheoD02\Castor\Classes\AsTaskClass;
 use TheoD02\Castor\Classes\AsTaskMethod;
-
 use function Castor\io;
 
 #[AsTaskClass]
 class Qa extends Runner
 {
     private static bool $runOnce = false;
+
     private static bool $runInstall = true;
 
     public function __construct(

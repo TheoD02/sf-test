@@ -8,18 +8,23 @@ use Castor\Context;
 use Symfony\Component\Process\Process;
 use TheoD\MusicAutoTagger\Docker\ContainerDefinition;
 use TheoD\MusicAutoTagger\Docker\DockerUtils;
-
 use function Castor\context;
 use function Castor\run;
 
 class Runner
 {
     protected array $commands = [];
+
     protected array $envs = [];
+
     protected array $dockerEnvs = [];
+
     protected bool $dockerInteractive = true;
+
     protected bool $dockerTty = true;
+
     protected string $dockerShell = 'bash';
+
     protected Context $context;
 
     public function __construct(

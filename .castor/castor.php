@@ -7,7 +7,6 @@ use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
 use TheoD\MusicAutoTagger\ContainerDefinitionBag;
 use TheoD\MusicAutoTagger\Docker\DockerUtils;
-
 use function Castor\Attribute\AsArgument;
 use function Castor\capture;
 use function Castor\context;
@@ -154,7 +153,9 @@ function shell(
     ;
 }
 
-/** @noinspection t */
+/**
+ * @noinspection t
+ */
 #[AsTask]
 function generate_domain_dir(string $domainName): void
 {

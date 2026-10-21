@@ -13,7 +13,7 @@ class Composer extends Runner
     public function __construct(
         ?Context $context = null,
         ?ContainerDefinition $containerDefinition = null,
-        readonly bool $preventRunningUsingDocker = false,
+        public readonly bool $preventRunningUsingDocker = false,
     ) {
         parent::__construct(
             context: $context,
