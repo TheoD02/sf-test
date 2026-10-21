@@ -9,8 +9,7 @@ use Arkitect\Expression\ForClasses\ResideInOneOfTheseNamespaces;
 use Arkitect\RuleBuilders\Architecture\Architecture;
 use Arkitect\Rules\Rule;
 
-$projectRoot = isset($_SERVER['CI']) ? $_SERVER['GITHUB_WORKSPACE'] : '';
-$appPathPrefix = "{$projectRoot}/app";
+$appPathPrefix = dirname(__DIR__, 2);
 
 return static function (Config $config) use ($appPathPrefix): void {
     $classSet = ClassSet::fromDir("{$appPathPrefix}/src");

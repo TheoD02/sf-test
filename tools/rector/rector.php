@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\Doctrine\Set\DoctrineSetList;
@@ -20,8 +19,7 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
-$projectRoot = isset($_SERVER['CI']) ? $_SERVER['GITHUB_WORKSPACE'] : '';
-$appPathPrefix = "{$projectRoot}/app";
+$appPathPrefix = dirname(__DIR__, 2);
 
 $paths = ["{$appPathPrefix}/src"];
 if (file_exists("{$appPathPrefix}/tests")) {
@@ -49,37 +47,30 @@ return RectorConfig::configure()
         naming: true,
         instanceOf: true,
         earlyReturn: true,
-        strictBooleans: true,
         carbon: true,
         rectorPreset: true,
         phpunitCodeQuality: true,
         doctrineCodeQuality: true,
         symfonyCodeQuality: true,
         symfonyConfigs: true,
-        phpunit: true,
     )
     ->withImportNames(
         importShortClasses: false,
         removeUnusedImports: true,
     )
     ->withSets([
-        SymfonySetList::SYMFONY_64,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
         SymfonySetList::SYMFONY_CODE_QUALITY,
-        DoctrineSetList::DOCTRINE_ORM_214,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
-        DoctrineSetList::DOCTRINE_COMMON_20,
-        DoctrineSetList::DOCTRINE_DBAL_40,
-        PHPUnitSetList::PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_CODE_QUALITY,
 //        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
         LevelSetList::UP_TO_PHP_83,
     ])
+    ->withComposerBased(doctrine: true, phpunit: true, symfony: true)
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
     ])
     ->withSkip([
-        EncapsedStringsToSprintfRector::class,
         RenamePropertyToMatchTypeRector::class,
         NullCoalescingOperatorRector::class,
         RenameParamToMatchTypeRector::class,

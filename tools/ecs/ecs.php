@@ -16,8 +16,8 @@ use Symplify\CodingStandard\Fixer\Spacing\StandaloneLineConstructorParamFixer;
 use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
-$projectRoot = isset($_SERVER['CI']) ? $_SERVER['GITHUB_WORKSPACE'] : '';
-$appPathPrefix = "{$projectRoot}/app";
+$projectRoot = dirname(__DIR__, 2);
+$appPathPrefix = $projectRoot;
 
 $castorFilesFinder = (new Finder())
     ->files()
@@ -64,15 +64,13 @@ return ECSConfig::configure()
     ->withPreparedSets(
         psr12: true,
         //common: true,
-        symplify: true,
+        standaloneLine: true,
         arrays: true,
         comments: true,
         docblocks: true,
         spaces: true,
         namespaces: true,
         controlStructures: true,
-        phpunit: true,
-        strict: true,
         cleanCode: true,
     )
     ->withSpacing(

@@ -1,5 +1,5 @@
 {
     "require-dev": {
-        "phparkitect/phparkitect": "^0.3.29"
+        "phparkitect/phparkitect": "^1.3"
     }
 }
